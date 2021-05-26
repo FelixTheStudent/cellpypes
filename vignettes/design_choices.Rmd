@@ -1,0 +1,88 @@
+---
+title: "Design choices"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{design_choices}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(cellpypes)
+```
+
+Here I explain why cellpypes is written the way it is written,
+so that I can re-evaluate pros and cons systematically before 
+changing the code.
+
+
+
+
+# Cellpypes object structure
+
+Cellpype objects have these slots:
+
+  * **raw**: raw UMI counts, N cells in rows, P genes in columns.
+  * **neighbors**: either NxN boolean matrix, or Nxk numeric matrix with indices
+  * **embed**
+  * **.data**
+    * original_object
+    * computations: s, S, K of the most recent genes
+
+
+
+# R package cheet sheet and code structure
+
+Good places to read about package development:
+
+  * "Whole game" section in *R packages* (2nd edition): https://r-pkgs.org/whole-game.html
+  * Writing R extensions: https://cran.r-project.org/doc/manuals/R-exts.html#Creating-R-packages
+  * how to write functions: https://r4ds.had.co.nz/functions.html#checking-values
+
+
+Whenever you write a new function:
+
+  1. use_r("foo"); write some function code; use_package("dependency")
+  2. RStudio > Code > Insert roxygen2 skeleton
+  3. use_test("foo")
+    expect_identical, etc. inside test_that
+  4. `load_all()`, `document()`, `test()` [or Cntrl+Shift+T]
+
+
+library(testthat)   # test_that("foo fulfills function x") {..} need that
+library(devtools)   # load_all() needs that
+covr package to check percentage of tested code in package
+
+
+
+
+
+
+
+# gitHub issues
+I use gitHub issues myself a lot to stay organized while developing cellpypes.
+
+
+**Issue title: side-effect functions should return invisible(obj)**
+Functions are typically transforming (rule) or side-effects (plot_rule).
+Make sure that side-effect functions return the invisible object, so that you
+can use them in pipes:
+obj %>% rule("T", "CD3E", ">", .1) %>% plot_rule() %>% rule("T", "CD3G", ">", .5)
+
+**Issue Recent genes: save pooled counts**
+I do not want to re-compute the pooled counts every time I change the 
+threshold value and plot.
+Problem: the marker gene which I want to pool is specified together with
+  the threshold value, not sure in which use case the counts are already 
+  pooled when a new threshold value is specified.
+  The problem is that no one will be doing this ever:
+  obj %>% rule("T", "CD3E", ">", .1) %>% rule("T", "CD3E", ">", .5)
+  
+  
