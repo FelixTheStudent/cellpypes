@@ -38,7 +38,7 @@ Cellpype objects have these slots:
 
 
 
-# R package cheet sheet and code structure
+# Developer's cheat sheet
 
 Good places to read about package development:
 
@@ -55,11 +55,35 @@ Whenever you write a new function:
     expect_identical, etc. inside test_that
   4. `load_all()`, `document()`, `test()` [or Cntrl+Shift+T]
 
+Whenever you're working on the package:
+```{R message=FALSE, warning=FALSE}
+library(devtools)   # load_all() requires devtools
+library(testthat)   # develop unit tests requires testthat::test_that and obj_min
+obj_min <- list(raw=matrix(rpois(12, .5),ncol=3), embed=data.frame(u1=1:4, u2=4:1))
 
-library(testthat)   # test_that("foo fulfills function x") {..} need that
-library(devtools)   # load_all() needs that
-covr package to check percentage of tested code in package
+```
 
+
+
+Conditional statements are short one-liners or nicely formatted multiliners:
+```{R}
+x <- if (10 < 20) "Too low" else "Too high"
+
+if (TRUE || FALSE) {      # never use | or & in if statement because vectorized
+  # do that
+} else if (TRUE) {
+  # do something else
+} else {
+  # 
+}
+
+```
+
+Use spaces:
+```{R}
+average <- mean(obj_min$embed[,1]/ 12 + obj_min$embed[,2], na.rm = TRUE)   # Good
+average<-mean(obj_min$embed[,1]/12+obj_min$embed[,2],na.rm=TRUE)            # Bad
+```
 
 
 
@@ -85,4 +109,5 @@ Problem: the marker gene which I want to pool is specified together with
   The problem is that no one will be doing this ever:
   obj %>% rule("T", "CD3E", ">", .1) %>% rule("T", "CD3E", ">", .5)
   
-  
+**Issue title: check how much of my code is tested**
+covr package to check percentage of tested code in package
