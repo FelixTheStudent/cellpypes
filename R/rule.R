@@ -37,10 +37,9 @@ rule <- function(obj,
 
 # examples:
 #   obj %>% rule("T", "CD3E", ">", .1)
-#   obj %>% rule("T", "CD3E", t=.1)
 #   obj %>% rule("T", "percent.mito", "<", .25)
 
-
+# write `rule` function by completing each step in the following:
 (rule_cases <- expand.grid(list(existing_class=c(F,T), existing_feature=c(T,F), NULL_parent = c(T,F))))
 cbind(rule_cases, action = c(
  "new class can't have existing feature, throw error", 
