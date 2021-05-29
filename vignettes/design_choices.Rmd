@@ -32,9 +32,52 @@ Cellpype objects have these slots:
   * **raw**: raw UMI counts, N cells in rows, P genes in columns.
   * **neighbors**: either NxN boolean matrix, or Nxk numeric matrix with indices
   * **embed**
+  * **classes**: df with columns: class, parent
+  * **rules**: df with columns: class, feature, operator, threshold
   * **.data**
     * original_object
     * computations: s, S, K of the most recent genes
+
+
+**classes** and **rules** are separate data.frames because they have 
+different unique ('primary') keys. In classes, the class-column uniquely 
+identifies an entry, while in rules, it is the combination of the two columns
+class and feature.
+
+*class example*
+ class  parent
+  T     NULL
+  Th     T
+
+*rules example*
+ class  feature  operator  threshold
+  T     CD3E       ">"        .5
+  T     MS4A1      "<"        .9
+  Th    CD4        ">"        .1
+
+
+```{r}
+# rule function preps these two and then modifies obj with them:
+class_dat <- data.frame(class="T", parent="root")
+rule_dat  <- data.frame(class="T", feature="CD3E", operator=">", threshold=.1)
+
+
+# init:
+classes <- data.frame(class=c(), parent=c())
+# if class is new (!existing_class):
+classes <- rbind(class_dat, classes)
+# if existing_class:
+classes[classes$class=="T"] <- class_dat
+
+
+# init:
+rules <- data.frame(class=c(), feature=c(), operator=c(), threshold=c())
+# if class is new (!existing_class):
+rules <- rbind(rule_dat, rules) # newest rule is on top
+# if existing_class:
+rules[rules$class=="T"&&rules$feature=="CD3E"] <- 
+```
+
 
 
 
@@ -94,13 +137,13 @@ average<-mean(obj_min$embed[,1]/12+obj_min$embed[,2],na.rm=TRUE)            # Ba
 I use gitHub issues myself a lot to stay organized while developing cellpypes.
 
 
-**Issue title: side-effect functions should return invisible(obj)**
+**Side-effect functions should return invisible(obj)**
 Functions are typically transforming (rule) or side-effects (plot_rule).
 Make sure that side-effect functions return the invisible object, so that you
 can use them in pipes:
 obj %>% rule("T", "CD3E", ">", .1) %>% plot_rule() %>% rule("T", "CD3G", ">", .5)
 
-**Issue Recent genes: save pooled counts**
+**Recent genes: save pooled counts**
 I do not want to re-compute the pooled counts every time I change the 
 threshold value and plot.
 Problem: the marker gene which I want to pool is specified together with
@@ -109,5 +152,5 @@ Problem: the marker gene which I want to pool is specified together with
   The problem is that no one will be doing this ever:
   obj %>% rule("T", "CD3E", ">", .1) %>% rule("T", "CD3E", ">", .5)
   
-**Issue title: check how much of my code is tested**
+**Check how much of my code is tested**
 covr package to check percentage of tested code in package
