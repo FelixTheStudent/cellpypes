@@ -32,8 +32,10 @@ Cellpype objects have these slots:
   * **raw**: raw UMI counts, N cells in rows, P genes in columns.
   * **neighbors**: either NxN boolean matrix, or Nxk numeric matrix with indices
   * **embed**
-  * **classes**: df with columns: class, parent
+  * **classes**: df with columns: class, parent.
+    Most recent class is first row in data.frame.
   * **rules**: df with columns: class, feature, operator, threshold
+    Most recent rule is first row in data.frame.
   * **.data**
     * original_object
     * computations: s, S, K of the most recent genes
@@ -56,9 +58,21 @@ class and feature.
   Th    CD4        ">"        .1
 
 
+## Rule function
+
+  * Default value *parent = NULL* (and not "..root..").
+    This enables the user to ignore the 'parent' argument when additional rules
+    are added to an existing class. Cellpypes handles NULL as "use existing parent
+    (for new class: use ..root..)".
+
 ```{r}
-# rule function preps these two and then modifies obj with them:
-class_dat <- data.frame(class="T", parent="root")
+if (is.null(parent)) {
+  parent <- ifelse(existing_class,
+                   obj$classes$parent[obj$classes==class],
+                   "..root..")
+}
+
+class_dat <- data.frame(class="T", parent="..root..")
 rule_dat  <- data.frame(class="T", feature="CD3E", operator=">", threshold=.1)
 
 
@@ -77,6 +91,7 @@ rules <- rbind(rule_dat, rules) # newest rule is on top
 # if existing_class:
 rules[rules$class=="T"&&rules$feature=="CD3E"] <- 
 ```
+
 
 
 
