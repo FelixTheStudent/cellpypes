@@ -37,11 +37,19 @@ test_that("rule has sanity checks in place.", {
 
 test_that("rule adds rules as intended", {
   hasT <- rule(obj=simulated_umis, class="T", feature="CD3E", operator=">", threshold=42)
-  hasT <- rule(obj=hasT,           class="T", feature="CD3E", operator=">", threshold=42)
   # class can't be added twice:
+  hasT <- rule(obj=hasT,           class="T", feature="CD3E", operator=">", threshold=42)
   expect_equal(hasT$classes,
                data.frame(class="T", parent="..root.."))
+  
+  hasB <- rule(obj=hasT,           class="B", feature="MS4A1", operator="<", threshold=42)
+  hasM <- rule(obj=hasB,           class="M", feature="MS4A1", operator="<", threshold=42)
+  # parent can be changed in retrospect:
+  hasM <- rule(obj=hasM, class="M", feature="MS4A1", operator="<", threshold=42,
+               parent="B")
+  expect_equal(hasM$classes, data.frame(class=c("M","B","T"), parent=c("B","..root..","..root..")))
 })
+
 
 
 
