@@ -27,8 +27,22 @@ test_that("rule verifies its inputs are of expected class", {
 
 
 
-test_that("rule meets sanity checks", {
+test_that("rule has sanity checks in place.", {
   expect_error( rule(obj=obj_min, class = "a", feature="b", t=.42, parent="a"),
                 "Class and parent cannot be the same.")
   
 })
+
+
+
+test_that("rule adds rules as intended", {
+  hasT <- rule(obj=simulated_umis, class="T", feature="CD3E", operator=">", threshold=42)
+  hasT <- rule(obj=hasT,           class="T", feature="CD3E", operator=">", threshold=42)
+  # class can't be added twice:
+  expect_equal(hasT$classes,
+               data.frame(class="T", parent="..root.."))
+})
+
+
+
+
