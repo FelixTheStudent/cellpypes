@@ -116,9 +116,7 @@ Whenever you write a new function:
 Whenever you're working on the package:
 ```{R message=FALSE, warning=FALSE}
 library(devtools)   # load_all() requires devtools
-library(testthat)   # develop unit tests requires testthat::test_that and obj_min
-obj_min <- list(raw=matrix(rpois(12, .5),ncol=3), embed=data.frame(u1=1:4, u2=4:1))
-
+library(testthat)   # developing unit tests requires testthat::test_that
 ```
 
 
