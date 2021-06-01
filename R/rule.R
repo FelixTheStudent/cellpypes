@@ -71,8 +71,8 @@ rule <- function(obj,
   stopifnot(is.null(obj$rules) || is_rules(obj$rules) )
   stopifnot(is.null(obj$classes) == is.null(obj$rules))
   
-  # is_classes also checks if obj$class is NULL
-  existing_class <- ifelse(is_classes(obj$class) && class %in% obj$class,
+  # is_classes also checks if obj$classes is NULL
+  existing_class <- ifelse(is_classes(obj$classes) && class %in% obj$classes$class,
                            TRUE,
                            FALSE)
   existing_feature <- ifelse(is_rules(obj$rules) && class %in% obj$rules$class &&
@@ -101,7 +101,7 @@ rule <- function(obj,
   if (existing_feature) {
     obj$rules[obj$rules$class==class && obj$rules$feature==feature,] <- rule_dat
   } else {
-    obj$rules <- rbind(rule_dat, rules) # newest rule is on top
+    obj$rules <- rbind(rule_dat, obj$rules) # newest rule is on top
   }
   
   
