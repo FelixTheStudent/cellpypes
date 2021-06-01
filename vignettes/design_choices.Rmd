@@ -33,9 +33,9 @@ Cellpype objects have these slots:
   * **neighbors**: either NxN boolean matrix, or Nxk numeric matrix with indices
   * **embed**
   * **classes**: df with columns: class, parent.
-    Most recent class is first row in data.frame.
+    Most recent class is *last* row in data.frame.
   * **rules**: df with columns: class, feature, operator, threshold
-    Most recent rule is first row in data.frame.
+    Most recent rule is *last* row in data.frame.
   * **.data**
     * original_object
     * computations: s, S, K of the most recent genes

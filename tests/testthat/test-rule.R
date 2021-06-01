@@ -47,10 +47,25 @@ test_that("rule adds rules as intended", {
   # parent can be changed in retrospect:
   hasM <- rule(obj=hasM, class="M", feature="MS4A1", operator="<", threshold=42,
                parent="B")
-  expect_equal(hasM$classes, data.frame(class=c("M","B","T"), parent=c("B","..root..","..root..")))
+  expect_equal(hasM$classes, data.frame(class=c("T", "B", "M"), 
+                                        parent=c("..root..","..root..", "B")))
 })
 
-
+test_that("Existing classes and existing features are handled correctly", {
+  hasT <- rule(obj=simulated_umis, class="T", feature="CD3E", operator="<",
+               threshold=9001)
+  hasT <- rule(obj=hasT, class="T", feature="CD3E", operator=">",
+               threshold=42)
+  expect_equal(hasT$classes, data.frame(class="T", parent="..root.."))
+  expect_equal(hasT$rules, data.frame(class="T", feature="CD3E", operator=">",
+                                      threshold=42))
+  hasT <- rule(obj=hasT, class="T", feature="MS4A1", operator="<",
+               threshold=42) 
+  expect_equal(hasT$classes, data.frame(class="T", parent="..root.."))
+  expect_equal(hasT$rules, data.frame(
+    class=c("T","T"), feature=c("CD3E", "MS4A1"), operator=c(">", "<"),threshold=42) )
+})
+  
 
 
 

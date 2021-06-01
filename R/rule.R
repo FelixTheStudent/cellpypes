@@ -96,12 +96,12 @@ rule <- function(obj,
   if (existing_class) {
     obj$classes[obj$classes$class==class,] <- class_dat
   } else {
-    obj$classes <- rbind(class_dat, obj$classes)
+    obj$classes <- rbind(obj$classes, class_dat) # newest class comes last
   }
   if (existing_feature) {
     obj$rules[obj$rules$class==class && obj$rules$feature==feature,] <- rule_dat
   } else {
-    obj$rules <- rbind(rule_dat, obj$rules) # newest rule is on top
+    obj$rules <- rbind(obj$rules, rule_dat) # newest rule comes last
   }
   
   
