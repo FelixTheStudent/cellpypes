@@ -20,6 +20,7 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 
-    Matrix
+    Matrix,
+    rlang
 Depends: 
     R (>= 2.10)

@@ -58,9 +58,9 @@ rule <- function(obj,
   if( any(is.null(obj), is.null(class), is.null(feature), is.null(threshold) )) { 
     stop("rule does not accept NULL input for arguments: obj, class, feature and threshold.", call. = F) }
   stopifnot(all(
-    is_scalar_character(class), is_scalar_character(feature),
-    is_scalar_character(operator), is_scalar_character(parent)|is.null(parent),
-    is_scalar_double(threshold) ) )
+    rlang::is_scalar_character(class),    rlang::is_scalar_character(feature),
+    rlang::is_scalar_character(operator), rlang::is_scalar_character(parent)|is.null(parent),
+    rlang::is_scalar_double(threshold) ) )
   stopifnot(operator %in% c("<", ">", "<=", ">="))
   if(any(parent==class)) stop("Class and parent cannot be the same.")
   if(any(parent=="..root..")) stop("Cellpypes internally uses '..root..'. Call your parent something else!")
