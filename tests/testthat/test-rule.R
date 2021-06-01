@@ -1,7 +1,7 @@
 obj_min <- list(raw=matrix(rpois(12, .5),ncol=3), embed=data.frame(u1=1:4, u2=4:1))
 
 
-test_that("rule inputs are NULL in a healthy way", {
+test_that("rule checks whether its inputs are NULL in a healthy way", {
   null_error <- "rule does not accept NULL input for arguments: obj, class, feature and threshold."
   expect_error( rule(obj=NULL, class = "a", feature="b", threshold=1),      null_error )
   expect_error( rule(obj=obj_min, class = NULL, feature="b", threshold=1),  null_error )
@@ -10,9 +10,10 @@ test_that("rule inputs are NULL in a healthy way", {
   
 })
 
-test_that("rule inputs are of expected class", {
+test_that("rule verifies its inputs are of expected class", {
   # correct classes give no error:
-  expect_error( rule(obj=obj_min, class = "a", feature="b", threshold=1),  NA)
+  #    I'm not testing this currently, because the obj structure is still changing.
+  
   # a wrong class in the input arguments gives error:
   class_error <- "^all"
   expect_error( rule(obj=obj_min, class = 42, feature="b", threshold=1),  class_error )
