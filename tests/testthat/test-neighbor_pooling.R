@@ -23,3 +23,12 @@ test_that("pooling with square matrix gives expected result", {
   expect_equal( 104, sum(pool_across_neighbors(simulated_umis$raw[,"FOXP3"],
                                                 square_matrix)))
 })
+
+
+
+
+
+test_that("evaluate_rule gives expected result", {
+  expect_equal(600, sum(evaluate_rule(simulated_umis, "T", "CD3E", ">", 1e-04)))
+  expect_equal(65, sum(evaluate_rule(simulated_umis, "T", "FOXP3", ">", 1e-04)))
+})
