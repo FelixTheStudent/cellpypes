@@ -100,7 +100,7 @@ rule <- function(obj,
     obj$classes <- rbind(obj$classes, class_dat) # newest class comes last
   }
   if (existing_feature) {
-    obj$rules[obj$rules$class==class && obj$rules$feature==feature,] <- rule_dat
+    obj$rules[obj$rules$class==class & obj$rules$feature==feature,] <- rule_dat
   } else {
     obj$rules <- rbind(obj$rules, rule_dat) # newest rule comes last
   }

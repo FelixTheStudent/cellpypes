@@ -67,5 +67,16 @@ test_that("Existing classes and existing features are handled correctly", {
 })
   
 
+test_that("Existing feature is handled well even if obj is saved into variable.", {
+  x <- simulated_umis
+  x <- x %>% 
+   rule("T", "CD3E", threshold = .1e-3) %>%
+   rule("Treg", "FOXP3", threshold = .1e-3)
+  x <- x %>% 
+   rule("T", "CD3E", threshold = .1e-3)
+  expect_true(is_rules(x$rules))
+  
+})
+
 
 
