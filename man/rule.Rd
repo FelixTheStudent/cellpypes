@@ -2,7 +2,7 @@
 % Please edit documentation in R/rule.R
 \name{rule}
 \alias{rule}
-\title{Add}
+\title{Add a cell type rule.}
 \usage{
 rule(obj, class, feature, operator = ">", threshold, parent = NULL)
 }
@@ -13,9 +13,11 @@ rule(obj, class, feature, operator = ">", threshold, parent = NULL)
 
 \item{feature}{}
 
-\item{operator}{}
+\item{operator}{One of the following: \code{c("<", ">", "<=", ">=")}.}
 
-\item{parent}{}
+\item{parent}{The parent class (e.g. "T" or "T cell").
+If NULL, new classes get "..root.." and
+existing classes keep their current parent.}
 
 \item{t}{}
 }
@@ -23,5 +25,5 @@ rule(obj, class, feature, operator = ">", threshold, parent = NULL)
 
 }
 \description{
-Add
+Add a cell type rule.
 }

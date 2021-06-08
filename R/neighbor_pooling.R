@@ -10,10 +10,9 @@
 #'
 #' @examples
 #' 
-#' @importFrom purrr is_scalar_double
-#' @importFrom purrr is_scalar_integer
+#' @importFrom rlang is_double is_integer
 pool_across_neighbors <- function(x, neighbors) {
-  stopifnot(is_scalar_double(x) || is_scalar_integer(x))
+  stopifnot(is_double(x) || is_integer(x))
   stopifnot(length(x)==nrow(neighbors))  
   
   if (ncol(neighbors)==nrow(neighbors)) {
@@ -28,7 +27,13 @@ pool_across_neighbors <- function(x, neighbors) {
 }
 
 
-
+# evaluate_rule <- function(obj,
+#                           class,
+#                           feature,
+#                           operator,
+#                           threshold) {
+#  
+# 
 # rule <- sobj$rules[1,,drop=TRUE]
 # K <- pool_nn(pcpc$raw[, rule$gene], pcpc$neighbors)
 # S <- pool_nn(pcpc$totals,           pcpc$neighbors)
@@ -38,3 +43,5 @@ pool_across_neighbors <- function(x, neighbors) {
 #        ">=" =cdf > .01,
 #        "<"  =cdf < .01,
 #        "<=" =cdf < .99)
+#   
+# }
