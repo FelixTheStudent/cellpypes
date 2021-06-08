@@ -10,10 +10,10 @@
 
 
 
-#' Title
+#' Find parent, parent's parent and so on for a class using recursive programming
 #'
-#' @param classes 
-#' @param class 
+#' @param classes The class definitions of a cellpypes object, i.e. obj$classes.
+#' @param class A character vector of length one with the class.
 #'
 #' @return
 #' @export
@@ -31,13 +31,14 @@ recursive_ancestry<- function(classes, class) {
 }
 
 
-#' Title
+#' Classify cells with boolean logic
 #'
-#' @param obj 
-#' @param classes 
-#' @param simplify 
+#' @param obj Cellpypes object.
+#' @param classes Character vector with one or more class names.
+#' @param simplify If TRUE (default) and only a single class is supplied,
+#' a boolean vector is returned. A boolean matrix otherwise.
 #'
-#' @return
+#' @return A boolean vector or matrix.
 #' @export
 #'
 #' @examples

@@ -7,11 +7,12 @@
 class_boolean(obj, classes, simplify = TRUE)
 }
 \arguments{
-\item{obj}{}
+\item{obj}{Cellpypes object.}
 
-\item{classes}{}
+\item{classes}{Character vector with one or more class names.}
 
-\item{simplify}{}
+\item{simplify}{If TRUE (default) and only a single class is supplied,
+a boolean vector is returned. A boolean matrix otherwise.}
 }
 \value{
 

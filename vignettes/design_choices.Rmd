@@ -113,7 +113,8 @@ Whenever you write a new function:
   2. RStudio > Code > Insert roxygen2 skeleton
   3. use_test("foo")
     expect_identical, etc. inside test_that
-  4. `load_all()`, `document()`, `test()` [or Cntrl+Shift+T]
+  4. `load_all()`, `document()`, `test()` [or Cntrl+Shift+T], 
+    occasionally: `devtools::build_readme()`
 
 Furthermore:
 If you are using functions repeatedly, you can avoid :: by importing the function with @importFrom pkg fun.
