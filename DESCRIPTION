@@ -21,6 +21,7 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 
     Matrix,
-    rlang
+    rlang,
+    purrr
 Depends: 
     R (>= 2.10)

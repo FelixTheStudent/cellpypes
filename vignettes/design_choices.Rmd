@@ -115,6 +115,12 @@ Whenever you write a new function:
     expect_identical, etc. inside test_that
   4. `load_all()`, `document()`, `test()` [or Cntrl+Shift+T]
 
+Furthermore:
+If you are using functions repeatedly, you can avoid :: by importing the function with @importFrom pkg fun.
+Operators can also be imported in a similar manner, e.g.,
+@importFrom magrittr %>%.
+
+
 Whenever you're working on the package:
 ```{R message=FALSE, warning=FALSE}
 library(devtools)   # load_all() requires devtools
