@@ -27,21 +27,34 @@ pool_across_neighbors <- function(x, neighbors) {
 }
 
 
-# evaluate_rule <- function(obj,
-#                           class,
-#                           feature,
-#                           operator,
-#                           threshold) {
-#  
-# 
-# rule <- sobj$rules[1,,drop=TRUE]
-# K <- pool_nn(pcpc$raw[, rule$gene], pcpc$neighbors)
-# S <- pool_nn(pcpc$totals,           pcpc$neighbors)
-# cdf <- ppois(K, S*rule$threshold)
-# switch(rule$operator,
-#        ">" = cdf > .99,
-#        ">=" =cdf > .01,
-#        "<"  =cdf < .01,
-#        "<=" =cdf < .99)
-#   
-# }
+
+#' Title
+#'
+#' @param obj 
+#' @param class 
+#' @param feature 
+#' @param operator 
+#' @param threshold 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+evaluate_rule <- function(obj,
+                          class,
+                          feature,
+                          operator,
+                          threshold) {
+
+K <- pool_across_neighbors(obj$raw[, feature], 
+                           obj$neighbors)
+S <- pool_across_neighbors(Matrix::rowSums(obj$raw),
+                           obj$neighbors)
+cdf <- ppois(K, S*threshold)
+switch(operator,
+       ">" = cdf > .99,
+       ">=" =cdf > .01,
+       "<"  =cdf < .01,
+       "<=" =cdf < .99)
+
+}
