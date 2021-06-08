@@ -100,8 +100,10 @@ rules[rules$class=="T"&&rules$feature=="CD3E"] <-
 
 Good places to read about package development:
 
-  * "Whole game" section in *R packages* (2nd edition): https://r-pkgs.org/whole-game.html
-  * Writing R extensions: https://cran.r-project.org/doc/manuals/R-exts.html#Creating-R-packages
+  * "Whole game" section in *R packages* (2nd edition):
+  https://r-pkgs.org/whole-game.html
+  * Writing R extensions:
+  https://cran.r-project.org/doc/manuals/R-exts.html#Creating-R-packages
   * how to write functions: https://r4ds.had.co.nz/functions.html#checking-values
 
 
