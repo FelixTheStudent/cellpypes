@@ -109,25 +109,27 @@ rule <- function(obj,
   
   return(obj)
 }
-
-
-# examples:
+# backlog:
+#  * compute pooled counts if(existing_feature=F)
+#  * add examples
+#  * perhaps allow using meta-data such as percent.mito or totalUMI in rules. 
+#    This is how it could look like:
 #   obj %>% rule("T", "CD3E", ">", .1)
 #   obj %>% rule("T", "percent.mito", "<", .25)
 
-# write `rule` function by completing each step in the following:
-rule_cases <- expand.grid(list(existing_class=c(F,T), existing_feature=c(T,F), NULL_parent = c(T,F)))
-cbind(rule_cases, action = c(
- "new class can't have existing feature, throw error", 
- "modify class, modify rule, parent=parent",
- "create class, create rule, parent=parent",
- 1, 
- "new class can't have existing feature, throw error", 
- 1, 
- "create class, create rule, create parent",
- "modify class, create rule, modify parent"
- )) 
 
-# compute pooled counts if(existing_feature=F)
+# I have written the `rule` function by considering each case in the following:
+# rule_cases <- expand.grid(list(existing_class=c(F,T), existing_feature=c(T,F), NULL_parent = c(T,F)))
+# cbind(rule_cases, action = c(
+#  "new class can't have existing feature, throw error", 
+#  "modify class, modify rule, parent=parent",
+#  "create class, create rule, parent=parent",
+#  1, 
+#  "new class can't have existing feature, throw error", 
+#  1, 
+#  "create class, create rule, create parent",
+#  "modify class, create rule, modify parent"
+#  )) 
+
 
 
