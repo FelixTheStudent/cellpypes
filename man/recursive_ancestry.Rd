@@ -2,18 +2,18 @@
 % Please edit documentation in R/classify.R
 \name{recursive_ancestry}
 \alias{recursive_ancestry}
-\title{Title}
+\title{Find parent, parent's parent and so on for a class using recursive programming}
 \usage{
 recursive_ancestry(classes, class)
 }
 \arguments{
-\item{classes}{}
+\item{classes}{The class definitions of a cellpypes object, i.e. obj$classes.}
 
-\item{class}{}
+\item{class}{A character vector of length one with the class.}
 }
 \value{
 
 }
 \description{
-Title
+Find parent, parent's parent and so on for a class using recursive programming
 }

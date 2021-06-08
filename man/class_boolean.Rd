@@ -2,7 +2,7 @@
 % Please edit documentation in R/classify.R
 \name{class_boolean}
 \alias{class_boolean}
-\title{Title}
+\title{Classify cells with boolean logic}
 \usage{
 class_boolean(obj, classes, simplify = TRUE)
 }
@@ -15,8 +15,8 @@ class_boolean(obj, classes, simplify = TRUE)
 a boolean vector is returned. A boolean matrix otherwise.}
 }
 \value{
-
+A boolean vector or matrix.
 }
 \description{
-Title
+Classify cells with boolean logic
 }
