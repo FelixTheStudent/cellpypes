@@ -35,14 +35,14 @@ recursive_ancestry<- function(classes, class) {
 #'
 #' @param obj Cellpypes object.
 #' @param classes Character vector with one or more class names.
-#' @param simplify If TRUE (default) and only a single class is supplied,
+#' @param drop If TRUE (default) and only a single class is supplied,
 #' a boolean vector is returned. A boolean matrix otherwise.
 #'
 #' @return A boolean vector or matrix.
 #' @export
 #'
 #' @examples
-class_boolean <- function(obj, classes, simplify=TRUE) {
+class_boolean <- function(obj, classes, drop=TRUE) {
   stopifnot(is.character(classes))
   stopifnot(is_classes(obj$classes))
   stopifnot(is_rules(obj$rules))
@@ -63,7 +63,7 @@ class_boolean <- function(obj, classes, simplify=TRUE) {
                 )
   })
   
-  if (ncol(boolean_matrix)==1 && simplify) {
+  if (ncol(boolean_matrix)==1 && drop) {
     drop(boolean_matrix)
   } else{
     boolean_matrix
