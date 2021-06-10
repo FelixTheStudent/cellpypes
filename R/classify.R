@@ -86,3 +86,46 @@ class_boolean <- function(obj, classes, drop=TRUE) {
 
 
 
+
+
+classify <- function(
+  classes=NULL,
+    # If NULL, uses all childless classes (leafs).
+    # unique(obj$classes$class) returns both leafs and parents.
+  replace_overlap_with="Unassigned", # alternatives: 'common_parent', NA or any scalar character
+  replace_unassigned_with="Unassigned"# "common_parent", NA or any scalar character
+  return_logical_matrix =FALSE # ignore overlap/resort_to_parent and just output a logical
+# matrix. If a single class is supplied, pipe it into "drop".
+) {
+  
+  # evaluate all rules in obj$rules to obtain a
+  # boolean matrix (see class_boolean function). 
+  # Doing this step first ensures this computation is not repeated for
+  # ancestor classes (parents of multiple leafs).
+  # Its columns correspond directly to class names in obj$rule$class,
+  # so you can use obj$rule$class to extract all rules for class "T", for example.
+  
+  # select classes you want to return. Could be all leaves, or user-defined.
+  
+  # for a given class, subset columns in boolean matrix with
+  #  obj$rule$class %in% recursive_ancestry(obj, class) and
+  # combine to obtain logical vector per class.
+  
+  # massage according to replace_overlap_with, replace_unassigned_with and
+  # return_logical
+  
+  # return
+}
+
+
+
+
+classes = c("Treg", "Ttox", "B"). 
+
+overlap = c("common_parent", NA or any character string: "Unassigned"/"multiplelabels"/...)
+resort_to_parent=TRUE/FALSE # for cells not assigned to classes 
+# (leafs or user-defined)
+output_logical=TRUE/FALSE  # ignore overlap/resort_to_parent and just output a logical
+# matrix. If a single class is supplied, pipe it into "drop".
+
+
