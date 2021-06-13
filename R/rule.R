@@ -87,7 +87,7 @@ rule <- function(obj,
     is_classes(obj$classes) && class %in% obj$classes$class,
     TRUE,
     FALSE)
-  existing_feature <- ifelse(
+  existing_rule <- ifelse(
     is_rules(obj$rules) && 
     any( obj$rules$class==class & obj$rules$feature == feature ),
     TRUE,
@@ -111,18 +111,19 @@ rule <- function(obj,
   } else {
     obj$classes <- rbind(obj$classes, class_dat) # newest class comes last
   }
-  if (existing_feature) {
-    obj$rules[obj$rules$class==class & obj$rules$feature==feature,] <- rule_dat
-  } else {
-    obj$rules <- rbind(obj$rules, rule_dat) # newest rule comes last
-  }
+  # Updating a rule also moves it to the position of most recent rule:
+  if (existing_rule) {
+    modified_rule <- obj$rules$class==class & obj$rules$feature==feature
+    obj$rules <- obj$rules[!modified_rule,] 
+  } 
+  obj$rules <- rbind(obj$rules, rule_dat) # newest rule comes last
   
   
   
   return(obj)
 }
 # backlog:
-#  * compute pooled counts if(existing_feature=F)
+#  * compute pooled counts if feature already exists in rules$feature
 #  * add examples
 #  * perhaps allow using meta-data such as percent.mito or totalUMI in rules. 
 #    This is how it could look like:
@@ -131,6 +132,8 @@ rule <- function(obj,
 
 
 # I have written the `rule` function by considering each case in the following:
+#       (note from 2 weeks later: existing_feature now is existing_rule, not
+#        sure if the table below still makes sense to look at)
 # rule_cases <- expand.grid(list(existing_class=c(F,T), existing_feature=c(T,F), NULL_parent = c(T,F)))
 # cbind(rule_cases, action = c(
 #  "new class can't have existing feature, throw error", 

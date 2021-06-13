@@ -65,6 +65,18 @@ test_that("rule can assign same feature to different classes.", {
                ))
 })
 
+
+test_that("rule moves modified rule to position of most recent rule.", {
+  x <- simulated_umis %>%
+    rule("T", "CD3E", ">",    42) %>%
+    rule("B", "MS4A1",">",    42) %>%
+    rule("Treg", "FOXP3",">", 42, parent="T") %>%
+    rule("T", "CD3E", "<",    41)
+  expect_equal(x$rules$class,
+               c("B", "Treg", "T")
+  )
+})
+
 test_that("Existing classes and existing features are handled correctly", {
   hasT <- rule(obj=simulated_umis, class="T", feature="CD3E", operator="<",
                threshold=9001)
