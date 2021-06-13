@@ -9,6 +9,25 @@
 #  tree_plot         function(obj)           ggplot object or something :)
 
 
+#' Finds leaf nodes, i.e. classes without children
+#'
+#' @param classes 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tree_leaf_nodes <- function(classes) {
+  stopifnot(is_classes(classes))
+  
+  res <- classes
+  res$hasChild <- FALSE
+  res$hasChild[res$class %in% res$parent] <- TRUE
+ 
+  res$class[!res$hasChild] 
+}
+
+
 
 
 #' Find parent, parent's parent and so on for a class using recursive programming
