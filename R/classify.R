@@ -93,7 +93,7 @@ classify <- function(
     # If NULL, uses all childless classes (leafs).
     # unique(obj$classes$class) returns both leafs and parents.
   replace_overlap_with="Unassigned", # alternatives: 'common_parent', NA or any scalar character
-  replace_unassigned_with="Unassigned"# "common_parent", NA or any scalar character
+  replace_unassigned_with="Unassigned", # "common_parent", NA or any scalar character
   return_logical_matrix =FALSE # ignore overlap/resort_to_parent and just output a logical
 # matrix. If a single class is supplied, pipe it into "drop".
 ) {
@@ -120,12 +120,14 @@ classify <- function(
 
 
 
-classes = c("Treg", "Ttox", "B"). 
 
-overlap = c("common_parent", NA or any character string: "Unassigned"/"multiplelabels"/...)
-resort_to_parent=TRUE/FALSE # for cells not assigned to classes 
-# (leafs or user-defined)
-output_logical=TRUE/FALSE  # ignore overlap/resort_to_parent and just output a logical
-# matrix. If a single class is supplied, pipe it into "drop".
+# Alternative parametrization, which I think is stupid (delete soon):
+# classes = c("Treg", "Ttox", "B"). 
+# 
+# overlap = c("common_parent", NA or any character string: "Unassigned"/"multiplelabels"/...)
+# resort_to_parent=TRUE/FALSE # for cells not assigned to classes 
+# # (leafs or user-defined)
+# output_logical=TRUE/FALSE  # ignore overlap/resort_to_parent and just output a logical
+# # matrix. If a single class is supplied, pipe it into "drop".
 
 
