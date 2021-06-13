@@ -4,14 +4,14 @@
 \alias{class_boolean}
 \title{Classify cells with boolean logic}
 \usage{
-class_boolean(obj, classes, simplify = TRUE)
+class_boolean(obj, classes, drop = TRUE)
 }
 \arguments{
 \item{obj}{Cellpypes object.}
 
 \item{classes}{Character vector with one or more class names.}
 
-\item{simplify}{If TRUE (default) and only a single class is supplied,
+\item{drop}{If TRUE (default) and only a single class is supplied,
 a boolean vector is returned. A boolean matrix otherwise.}
 }
 \value{
