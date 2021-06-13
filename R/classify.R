@@ -141,16 +141,18 @@ classify <- function(
     relevant_classes <- unique(do.call(c, relevant_classes))
   }
 
-  # omit irrelevant computations below:
-  the_rules <-obj$rules[obj$rules$class %in% relevant_classes,]
   
   
-  # evaluate all relevant rules to obtain a boolean matrix. 
-  # Doing this step first ensures this computation is not repeated for
-  # ancestor classes (parents of multiple leafs).
-  # Its columns correspond directly to class names in obj$rule$class,
-  # so you can use obj$rule$class to extract all rules for class "T", for example.
-  mapply(
+  
+  # rules_eval:
+  #   It is important to evaluate once for each rule (rather than once for 
+  #   each class), since in the latter case the computation is repeated for each
+  #   (grand)child node.
+  # rules_info:
+  #   Its columns correspond directly to the columns in rules_eval by design,
+  #   so we can use rules_info to subset rules_eval below.
+  rules_info <-obj$rules[obj$rules$class %in% relevant_classes, ]
+  rules_eval <- mapply(
     FUN = function(feature, operator, threshold) {
       K <- pool_across_neighbors(obj$raw[, feature], 
                                  obj$neighbors)
@@ -163,19 +165,31 @@ classify <- function(
              "<"  =cdf < .01,
              "<=" =cdf < .99)
       },
-    the_rules$feature,
-    the_rules$operator,
-    the_rules$threshold)
+    rules_info$feature,
+    rules_info$operator,
+    rules_info$threshold)
+  # mapply sets (non-unique) features as colnames, preclude confusion with NULL:
+  colnames(rules_eval) <- NULL
 
+  res <- sapply(relevant_classes, function(class) {
+    # We can use info to subset eval because their columns directly correspond:
+    is_class_rule <- rules_info$class %in% tree_ancestry(obj$classes, class)
+    sum(is_class_rule) == rowSums(rules_eval[, is_class_rule, drop=FALSE])
+  })
+  
     
-  # for a given class, subset columns in boolean matrix with
-  #  obj$rule$class %in% tree_ancestry(obj, class) and
-  # combine to obtain logical vector per class.
+  # massage according to replace_overlap_with, replace_unassigned_with, etc.
+  if (return_logical_matrix) {
+    return(res)
+    }
+ 
+  if (replace_overlap_with!="Unassigned" || replace_unassigned_with!="Unassigned")
+    stop("Not implemented yet, sorry.")
   
-  # massage according to replace_overlap_with, replace_unassigned_with and
-  # return_logical
-  
-  # return
+  memberships <- base::rowSums(res) 
+  class_vector <- rep(colnames(res), each=nrow(res))[ c(res) ]
+  class_vector[memberships!=1,] <- "Unassigned"
+  return(class_vector) 
 }
 
 # Useful to develop code:
