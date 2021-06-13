@@ -33,7 +33,8 @@ Cellpype objects have these slots:
   * **neighbors**: either NxN boolean matrix, or Nxk numeric matrix with indices
   * **embed**
   * **classes**: df with columns: class, parent.
-    Most recent class is *last* row in data.frame.
+    Order of classes does not change by recency, in contrast to rule
+    (because why should it? :D).
   * **rules**: df with columns: class, feature, operator, threshold
     Most recent rule is *last* row in data.frame.
   * **.data**
