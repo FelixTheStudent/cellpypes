@@ -186,20 +186,41 @@ classify <- function(
   if (replace_overlap_with!="Unassigned" || replace_unassigned_with!="Unassigned")
     stop("Not implemented yet, sorry.")
   
-  memberships <- base::rowSums(res) 
-  class_vector <- rep(colnames(res), each=nrow(res))[ c(res) ]
-  class_vector[memberships!=1,] <- "Unassigned"
-  return(class_vector) 
+  # once "common_parent" is dealt with, we can subset to classes of interest:
+  class_res <- res[, classes]
+  # perhaps a bit hacky:
+  class_res <- cbind(class_res, Unassigned=base::rowSums(class_res)==0)
+  class_factor <- rep(colnames(class_res), each=nrow(class_res))[ c(class_res) ]
+  # To do: change the following line according to replace_overlap_with:
+  class_factor[rowSums(class_res)>1] <- "Unassigned"
+  
+  # Unambigous class may or may not be present, convert to factor at very end:
+  return( factor( class_factor) )
 }
 
-# Useful to develop code:
-# obj <- simulated_umis %>%
-#   rule("T", "CD3E", ">", .1e-3) %>%
-#   rule("Treg", "FOXP3", ">", .01e-3, parent="T") %>%
-#   rule("Treg_act", "ICOS", ">", .01e-3, parent="Treg") %>%
-#   rule("B", "MS4A1", ">", .1e-3) %>%
-#   rule("B", "CD3E", "<", .1e-3)
-# obj %>% classify(classes=c("Treg_act", "B"))
+# test on arbitrary thresholds:
+x <- simulated_umis %>%
+  rule("T", "CD3E", ">", .1e-3) %>%
+  rule("Treg", "FOXP3", ">", .01e-3, parent="T") %>%
+  rule("Treg_act", "ICOS", ">", .01e-3, parent="Treg") %>%
+  rule("B", "MS4A1", ">", .1e-3) %>%
+  rule("B", "CD3E", "<", .1e-3)
+expect_equal(
+  classify(obj=x, classes=c("Treg_act", "B")),
+  factor(c(rep("Treg_act",    23),
+           rep("B",          649),
+           rep("Unassigned",1228)
+    ))
+)
+
+
+# skeleton:
+# obj %>%
+#   rule(  "A",       "gene1",          ">",   1e-3              )             %>%
+#   rule(  "A",       "gene1",          ">",   1e-3, parent = "A")             %>%
+#   rule(  "A",       "gene1",          ">",   1e-3, parent = "A")             
+
+
 
 # Alternative parametrization, which I think is stupid (delete soon):
 # classes = c("Treg", "Ttox", "B"). 
