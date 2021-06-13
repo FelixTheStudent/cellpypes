@@ -29,7 +29,16 @@ is_rules <- function(rules) {
     ncol(rules) > 0 &&  # handles this: `is_rules(data.frame())`
     all(colnames(rules)[1:4] == c("class","feature","operator","threshold")) &&
     all(!duplicated(paste0(rules$class, rules$feature)))
-  }
+}
+
+
+
+check_obj <- function(obj) {
+  # check that object has everything we expect from obj.
+  stopifnot(is.null(obj$classes) || is_classes(obj$classes) )
+  stopifnot(is.null(obj$rules) || is_rules(obj$rules) )
+  stopifnot(is.null(obj$classes) == is.null(obj$rules))
+}
 
 
 
@@ -68,9 +77,7 @@ rule <- function(obj,
 
   # check that obj has everything this rule needs:
   stopifnot(feature %in% colnames(obj$raw))
-  stopifnot(is.null(obj$classes) || is_classes(obj$classes) )
-  stopifnot(is.null(obj$rules) || is_rules(obj$rules) )
-  stopifnot(is.null(obj$classes) == is.null(obj$rules))
+  check_obj(obj)
   
   # is_classes also checks if obj$classes is NULL
   existing_class <- ifelse(is_classes(obj$classes) && class %in% obj$classes$class,
