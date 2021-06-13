@@ -51,6 +51,20 @@ test_that("rule adds rules as intended", {
                                         parent=c("..root..","..root..", "B")))
 })
 
+test_that("rule can assign same feature to different classes.", {
+  obj <- simulated_umis %>%
+    rule("T", "CD3E", ">", 42) %>%
+    rule("B", "MS4A1",">", 42) %>%
+    rule("B", "CD3E", "<", 42)
+  expect_equal(obj$rules,
+               data.frame(
+                 class=c("T","B","B"), 
+                 feature= c("CD3E", "MS4A1", "CD3E"),
+                 operator=c(">",">","<"),
+                 threshold=42
+               ))
+})
+
 test_that("Existing classes and existing features are handled correctly", {
   hasT <- rule(obj=simulated_umis, class="T", feature="CD3E", operator="<",
                threshold=9001)

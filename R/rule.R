@@ -83,13 +83,15 @@ rule <- function(obj,
 
   
   # is_classes also checks if obj$classes is NULL
-  existing_class <- ifelse(is_classes(obj$classes) && class %in% obj$classes$class,
-                           TRUE,
-                           FALSE)
-  existing_feature <- ifelse(is_rules(obj$rules) && class %in% obj$rules$class &&
-                               feature %in% obj$rules$feature,
-                             TRUE,
-                             FALSE)
+  existing_class <- ifelse(
+    is_classes(obj$classes) && class %in% obj$classes$class,
+    TRUE,
+    FALSE)
+  existing_feature <- ifelse(
+    is_rules(obj$rules) && 
+    any( obj$rules$class==class & obj$rules$feature == feature ),
+    TRUE,
+    FALSE)
   
   # design choices:
   #  * parent=NULL means "use existing parent"
