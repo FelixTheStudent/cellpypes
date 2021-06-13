@@ -38,6 +38,11 @@ check_obj <- function(obj) {
   stopifnot(is.null(obj$classes) || is_classes(obj$classes) )
   stopifnot(is.null(obj$rules) || is_rules(obj$rules) )
   stopifnot(is.null(obj$classes) == is.null(obj$rules))
+  
+  # If rules exist they make sense:
+  if (is_rules(obj$rules)) {
+    stopifnot( all(obj$rules$feature %in% colnames(obj$raw)) )
+  }
 }
 
 
@@ -65,6 +70,7 @@ rule <- function(obj,
                  threshold,
                  parent = NULL) {
   # check inputs:
+  check_obj(obj)
   if( any(is.null(obj), is.null(class), is.null(feature), is.null(threshold) )) { 
     stop("rule does not accept NULL input for arguments: obj, class, feature and threshold.", call. = F) }
   stopifnot(all(
@@ -75,9 +81,6 @@ rule <- function(obj,
   if(any(parent==class)) stop("Class and parent cannot be the same.")
   if(any(parent=="..root..")) stop("Cellpypes internally uses '..root..'. Call your parent something else!")
 
-  # check that obj has everything this rule needs:
-  stopifnot(feature %in% colnames(obj$raw))
-  check_obj(obj)
   
   # is_classes also checks if obj$classes is NULL
   existing_class <- ifelse(is_classes(obj$classes) && class %in% obj$classes$class,
