@@ -11,7 +11,8 @@
 
 #' Finds leaf nodes, i.e. classes without children
 #'
-#' @param classes 
+#' @param classes. Put obj$classes here, i.e. a tree of class definitions 
+#' created with the rule function.
 #'
 #' @return
 #' @export
