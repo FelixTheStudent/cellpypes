@@ -68,34 +68,34 @@ tree_ancestry <- function(classes, class) {
 #' @export
 #'
 #' @examples
-class_boolean <- function(obj, classes, drop=TRUE) {
-  stopifnot(is.character(classes))
-  stopifnot(is_classes(obj$classes))
-  stopifnot(is_rules(obj$rules))
-  
-
-  boolean_matrix <- sapply(classes, function(class) { # loop through classes
-    ancestry <- tree_ancestry(obj$classes, class)
-    class_rules <- obj$rules[obj$rules$class %in% ancestry,]
-    # Reduce can be thought of here as looping through class_rules:
-    base::Reduce(function(x,y) x&y, 
-                lapply(1:nrow(class_rules), function(i){
-                  evaluate_rule(obj      = obj,
-                                class    = class_rules[i, "class"],
-                                feature  = class_rules[i, "feature"],
-                                operator = class_rules[i, "operator"],
-                                threshold= class_rules[i, "threshold"]
-                                ) })
-                )
-  })
-  
-  if (ncol(boolean_matrix)==1 && drop) {
-    drop(boolean_matrix)
-  } else{
-    boolean_matrix
-  }
-     
-}
+# class_boolean <- function(obj, classes, drop=TRUE) {
+#   stopifnot(is.character(classes))
+#   stopifnot(is_classes(obj$classes))
+#   stopifnot(is_rules(obj$rules))
+#   
+# 
+#   boolean_matrix <- sapply(classes, function(class) { # loop through classes
+#     ancestry <- tree_ancestry(obj$classes, class)
+#     class_rules <- obj$rules[obj$rules$class %in% ancestry,]
+#     # Reduce can be thought of here as looping through class_rules:
+#     base::Reduce(function(x,y) x&y, 
+#                 lapply(1:nrow(class_rules), function(i){
+#                   evaluate_rule(obj      = obj,
+#                                 class    = class_rules[i, "class"],
+#                                 feature  = class_rules[i, "feature"],
+#                                 operator = class_rules[i, "operator"],
+#                                 threshold= class_rules[i, "threshold"]
+#                                 ) })
+#                 )
+#   })
+#   
+#   if (ncol(boolean_matrix)==1 && drop) {
+#     drop(boolean_matrix)
+#   } else{
+#     boolean_matrix
+#   }
+#      
+# }
 
 
 
@@ -116,7 +116,7 @@ class_boolean <- function(obj, classes, drop=TRUE) {
 
 classify <- function(
   obj,
-  classes,
+  classes=NULL,
     # If NULL, uses all childless classes (leafs).
     # unique(obj$classes$class) returns both leafs and parents.
   replace_overlap_with="Unassigned", # alternatives: 'common_parent', NA or any scalar character
@@ -129,21 +129,45 @@ classify <- function(
   check_obj(obj) 
   
 
+  if (is.null(classes)) {
+    # Convention: use tree leaves if classes=NULL 
+    classes <- tree_leaf_nodes(obj$classes)
+    # when using leaves, rules from all classes are relevant for classification:
+    relevant_classes <- obj$classes$class
+  } else {
+    stopifnot(all(classes %in% obj$classes$class))
+    # To omit irrelevant computations below I note down relevant classes here:
+    relevant_classes <- lapply(classes, tree_ancestry, classes=obj$classes)
+    relevant_classes <- unique(do.call(c, relevant_classes))
+  }
 
-  # all operations
-  relevant_classes <- lapply(classes, tree_ancestry, classes=obj$classes)
-  relevant_classes <- unique(do.call(c, relevant_classes))
+  # omit irrelevant computations below:
+  the_rules <-obj$rules[obj$rules$class %in% relevant_classes,]
   
   
-  # evaluate all rules in obj$rules to obtain a
-  # boolean matrix (see class_boolean function). 
+  # evaluate all relevant rules to obtain a boolean matrix. 
   # Doing this step first ensures this computation is not repeated for
   # ancestor classes (parents of multiple leafs).
   # Its columns correspond directly to class names in obj$rule$class,
   # so you can use obj$rule$class to extract all rules for class "T", for example.
-  
-  # select classes you want to return. Could be all leaves, or user-defined.
-  
+  mapply(
+    FUN = function(feature, operator, threshold) {
+      K <- pool_across_neighbors(obj$raw[, feature], 
+                                 obj$neighbors)
+      S <- pool_across_neighbors(Matrix::rowSums(obj$raw),
+                                 obj$neighbors)
+      cdf <- ppois(K, S*threshold)
+      switch(operator,
+             ">" = cdf > .99,
+             ">=" =cdf > .01,
+             "<"  =cdf < .01,
+             "<=" =cdf < .99)
+      },
+    the_rules$feature,
+    the_rules$operator,
+    the_rules$threshold)
+
+    
   # for a given class, subset columns in boolean matrix with
   #  obj$rule$class %in% tree_ancestry(obj, class) and
   # combine to obtain logical vector per class.
@@ -159,7 +183,8 @@ classify <- function(
 #   rule("T", "CD3E", ">", .1e-3) %>%
 #   rule("Treg", "FOXP3", ">", .01e-3, parent="T") %>%
 #   rule("Treg_act", "ICOS", ">", .01e-3, parent="Treg") %>%
-#   rule("B", "MS4A1", ">", .1e-3)
+#   rule("B", "MS4A1", ">", .1e-3) %>%
+#   rule("B", "CD3E", "<", .1e-3)
 # obj %>% classify(classes=c("Treg_act", "B"))
 
 # Alternative parametrization, which I think is stupid (delete soon):
