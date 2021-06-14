@@ -185,17 +185,22 @@ classify <- function(
  
   if (replace_overlap_with!="Unassigned" || replace_unassigned_with!="Unassigned")
     stop("Not implemented yet, sorry.")
-  
-  # once "common_parent" is dealt with, we can subset to classes of interest:
+  # Note to myself: for "common_parent" res[, classes] is not enough.
+ 
+   
   class_res <- res[, classes]
-  # perhaps a bit hacky:
-  class_res <- cbind(class_res, Unassigned=base::rowSums(class_res)==0)
-  class_factor <- rep(colnames(class_res), each=nrow(class_res))[ c(class_res) ]
-  # To do: change the following line according to replace_overlap_with:
-  class_factor[rowSums(class_res)>1] <- "Unassigned"
+  class_factor <- rep("Unassigned", nrow(class_res))
+  for (i in 1:ncol(class_res)) {
+    class_factor[ class_res[,i] ] <- classes[i]
+  }
+  class_factor[base::rowSums(class_res)>1] <- replace_overlap_with
   
-  # Unambigous class may or may not be present, convert to factor at very end:
-  return( factor( class_factor) )
+  # Unassigned class may or may not be present, under different names:
+  #  1. convert to factor at very end (adding new class to factor is hard)
+  #  2. It is a design choice whether to add classes with 0 cells or not:
+  class_factor <- factor( class_factor,
+                          levels=c(classes, "Unassigned"))
+  return( class_factor )
 }
 
 

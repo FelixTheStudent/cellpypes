@@ -7,12 +7,9 @@ test_that("Classify returns the expected factor", {
     rule("B", "MS4A1", ">", .1e-3) %>%
     rule("B", "CD3E", "<", .1e-3)
   expect_equal(
-    classify(obj=x, classes=c("Treg_act", "B")),
-    factor(c(rep("Treg_act",    23),
-             rep("B",          649),
-             rep("Unassigned",1228)
-    ))
-  )
+    as.numeric(table(classify(obj=x, classes=c("T", "Treg", "Treg_act", "B")))),
+    c(551, 0, 0, 649, 700))
+
 })
 
 
