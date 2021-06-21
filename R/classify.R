@@ -122,7 +122,8 @@ classify <- function(
   replace_overlap_with="Unassigned", # alternatives: 'common_parent', NA or any scalar character
   replace_unassigned_with="Unassigned", # "common_parent", NA or any scalar character
   return_logical_matrix =FALSE # ignore overlap/resort_to_parent and just output a logical
-# matrix. If a single class is supplied, pipe it into "drop".
+# matrix. If a single class is supplied, the matrix has exactly one column and 
+# the user can pipe it into "drop" to convert it to a vector.
 ) {
   # checks specific for classify: classes have to be present in obj$classes
   # other sanity checks:
@@ -180,7 +181,7 @@ classify <- function(
     
   # massage according to replace_overlap_with, replace_unassigned_with, etc.
   if (return_logical_matrix) {
-    return(res)
+    return(res[, classes, drop=FALSE])
     }
  
   if (replace_overlap_with!="Unassigned" || replace_unassigned_with!="Unassigned")
