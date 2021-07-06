@@ -114,6 +114,22 @@ tree_ancestry <- function(classes, class) {
 
 
 
+#' Title
+#'
+#' @param obj 
+#' @param classes 
+#' @param replace_overlap_with 
+#' @param replace_unassigned_with 
+#' @param return_logical_matrix 
+#'
+#' @return I think the order of factor levels is the same as classes, and
+#' if is.null(classes) then it's the same as in obj$classes$class, i.e. the
+#' order in which classes were created by the user. I am not sure, however,
+#' but realize this is important (see e.g. f1_all.Rmd, building an f1-data.frame
+#' relies on it).
+#' @export
+#'
+#' @examples
 classify <- function(
   obj,
   classes=NULL,
@@ -121,9 +137,9 @@ classify <- function(
     # unique(obj$classes$class) returns both leafs and parents.
   replace_overlap_with="Unassigned", # alternatives: 'common_parent', NA or any scalar character
   replace_unassigned_with="Unassigned", # "common_parent", NA or any scalar character
-  return_logical_matrix =FALSE # ignore overlap/resort_to_parent and just output a logical
-# matrix. If a single class is supplied, the matrix has exactly one column and 
-# the user can pipe it into "drop" to convert it to a vector.
+  return_logical_matrix =FALSE # ignore overlap/unassigned rules and just output 
+  # a logical matrix. If a single class is supplied, the matrix has exactly one
+  # column and the user can pipe it into "drop" to convert it to a vector.
 ) {
   # checks specific for classify: classes have to be present in obj$classes
   # other sanity checks:
