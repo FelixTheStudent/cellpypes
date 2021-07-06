@@ -47,11 +47,19 @@ evaluate_rule <- function(obj,
                           threshold) {
   # check that obj has everything this rule needs:
   stopifnot(feature %in% colnames(obj$raw))
+  
+  # check_obj(obj) is called in functions calling evaluate_rule.
 
   K <- pool_across_neighbors(obj$raw[, feature], 
                              obj$neighbors)
-  S <- pool_across_neighbors(Matrix::rowSums(obj$raw),
-                             obj$neighbors)
+  if (is.null(obj$totalUMI)) { 
+    S <- pool_across_neighbors(Matrix::rowSums(obj$raw),
+                               obj$neighbors)   
+  } else {
+    S <- pool_across_neighbors(obj$totalUMI,
+                               obj$neighbors)
+    }
+
   cdf <- ppois(K, S*threshold)
   switch(operator,
          ">" = cdf > .99,

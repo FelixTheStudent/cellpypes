@@ -43,6 +43,13 @@ check_obj <- function(obj) {
   if (is_rules(obj$rules)) {
     stopifnot( all(obj$rules$feature %in% colnames(obj$raw)) )
   }
+  
+  # If totalUMI exist they make sense:
+  if (!is.null(obj$totalUMI)) {
+    s <- obj$totalUMI
+    stopifnot( length(s) == nrow(obj$raw) )
+    stopifnot( all.equal(s, as.integer(s), check.attributes=FALSE) )
+  }
 }
 
 
