@@ -173,7 +173,10 @@ classify <- function(
     FUN = function(feature, operator, threshold) {
       K <- pool_across_neighbors(obj$raw[, feature], 
                                  obj$neighbors)
-      S <- pool_across_neighbors(Matrix::rowSums(obj$raw),
+      if (is.null(obj$totalUMI)) { 
+        obj$totalUMI <- Matrix::rowSums(obj$raw)
+      } 
+      S <- pool_across_neighbors(obj$totalUMI,
                                  obj$neighbors)
       cdf <- ppois(K, S*threshold)
       switch(operator,
@@ -205,7 +208,7 @@ classify <- function(
   # Note to myself: for "common_parent" res[, classes] is not enough.
  
    
-  class_res <- res[, classes]
+  class_res <- res[, classes, drop=FALSE]
   class_factor <- rep("Unassigned", nrow(class_res))
   for (i in 1:ncol(class_res)) {
     class_factor[ class_res[,i] ] <- classes[i]

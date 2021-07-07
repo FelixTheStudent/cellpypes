@@ -53,12 +53,11 @@ evaluate_rule <- function(obj,
   K <- pool_across_neighbors(obj$raw[, feature], 
                              obj$neighbors)
   if (is.null(obj$totalUMI)) { 
-    S <- pool_across_neighbors(Matrix::rowSums(obj$raw),
-                               obj$neighbors)   
-  } else {
-    S <- pool_across_neighbors(obj$totalUMI,
-                               obj$neighbors)
-    }
+    obj$totalUMI <- Matrix::rowSums(obj$raw)
+  } 
+  S <- pool_across_neighbors(obj$totalUMI,
+                             obj$neighbors)
+    
 
   cdf <- ppois(K, S*threshold)
   switch(operator,
