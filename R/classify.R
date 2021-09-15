@@ -165,7 +165,7 @@ classify <- function(
     return(res[, classes, drop=FALSE])
     }
  
-  if (replace_overlap_with!="Unassigned" || replace_unassigned_with!="Unassigned")
+  if (replace_overlap_with=="common_parent" || is.na(replace_overlap_with))
     stop("Not implemented yet, sorry.")
   # Note to myself: for "common_parent" res[, classes] is not enough.
  
@@ -181,7 +181,7 @@ classify <- function(
   #  1. convert to factor at very end (adding new class to factor is hard)
   #  2. It is a design choice whether to add classes with 0 cells or not:
   class_factor <- factor( class_factor,
-                          levels=c(classes, "Unassigned"))
+                          levels=c(classes, unique(c("Unassigned", replace_overlap_with))))
   return( class_factor )
 }
 
