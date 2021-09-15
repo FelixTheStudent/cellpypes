@@ -39,7 +39,10 @@ plot_last <- function(obj, what="rule") {
     geom_point()  +
     xlab( colnames(obj$embed)[1] ) + 
     ylab( colnames(obj$embed)[2] ) +
-    ggtitle(plot_title)
+    ggtitle(plot_title) + 
+    scale_color_manual(values = c("TRUE"="#44AA99", # cartoColors (colorblind friendly)
+                                  "FALSE"="#888888")) +
+    theme_bw()
   
   # Functions are either transforming (rule) or side-effects (plot_last). 
   # Side-effect functions return the obj so that you can use them in pipes.
@@ -49,6 +52,44 @@ plot_last <- function(obj, what="rule") {
 
 
 
+
+
+#' Call and visualize 'classify' function
+#'
+#' @param obj 
+#' @param ... Same parameters as \link[cellpypes]{classify}.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_classes <- function(obj, ...) {
+  check_obj(obj)
+  
+  labels <- classify(obj, ...)
+  # manually set Unassigned color:
+  colors <- scales::hue_pal()(length(unique(labels))-1) 
+  names(colors) <- unique(labels)[unique(labels)!="Unassigned"]
+  colors <- c(colors, Unassigned="#888888")
+  # do the plot
+  plot_dat = bind_cols(
+    dim1=obj$embed[,1],
+    dim2=obj$embed[,2],
+    class=labels)
+  axis_names <- if (is.null(colnames(obj$embed))) {
+    c("Dim1", "Dim2")
+  } else {
+    colnames(obj$embed)
+  }
+  ggplot(plot_dat, aes(dim1, dim2, col=class))+
+    coord_fixed()+
+    geom_point(size=.4) +
+    scale_color_manual(values=colors) + 
+    xlab(axis_names[1]) +
+    ylab(axis_names[2]) +
+    theme_bw()
+  
+}
 
 
 

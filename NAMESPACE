@@ -3,6 +3,7 @@
 export(classify)
 export(evaluate_rule)
 export(feat)
+export(plot_classes)
 export(plot_last)
 export(pool_across_neighbors)
 export(rule)
