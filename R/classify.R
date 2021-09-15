@@ -57,46 +57,7 @@ tree_ancestry <- function(classes, class) {
 
 
 
-#' Classify cells with boolean logic
-#'
-#' @param obj Cellpypes object.
-#' @param classes Character vector with one or more class names.
-#' @param drop If TRUE (default) and only a single class is supplied,
-#' a boolean vector is returned. A boolean matrix otherwise.
-#'
-#' @return A boolean vector or matrix.
-#' @export
-#'
-#' @examples
-# class_boolean <- function(obj, classes, drop=TRUE) {
-#   stopifnot(is.character(classes))
-#   stopifnot(is_classes(obj$classes))
-#   stopifnot(is_rules(obj$rules))
-#   
-# 
-#   boolean_matrix <- sapply(classes, function(class) { # loop through classes
-#     ancestry <- tree_ancestry(obj$classes, class)
-#     class_rules <- obj$rules[obj$rules$class %in% ancestry,]
-#     # Reduce can be thought of here as looping through class_rules:
-#     base::Reduce(function(x,y) x&y, 
-#                 lapply(1:nrow(class_rules), function(i){
-#                   evaluate_rule(obj      = obj,
-#                                 class    = class_rules[i, "class"],
-#                                 feature  = class_rules[i, "feature"],
-#                                 operator = class_rules[i, "operator"],
-#                                 threshold= class_rules[i, "threshold"]
-#                                 ) })
-#                 )
-#   })
-#   
-#   if (ncol(boolean_matrix)==1 && drop) {
-#     drop(boolean_matrix)
-#   } else{
-#     boolean_matrix
-#   }
-#      
-# }
-
+#
 
 
 
@@ -114,10 +75,11 @@ tree_ancestry <- function(classes, class) {
 
 
 
-#' Title
+#' Classify cells on previously defined rules
 #'
 #' @param obj 
-#' @param classes 
+#' @param classes Character vector with one or more class names.
+#' If NULL (the default), all classes for which rules exist are used.
 #' @param replace_overlap_with 
 #' @param replace_unassigned_with 
 #' @param return_logical_matrix 

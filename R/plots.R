@@ -64,7 +64,9 @@ plot_last <- function(obj, what="rule") {
 #'
 #' @examples
 feat_data <- function(obj, feature_name) {
-  if(is.null(obj$totalUMI))  stop("totalUMI required, add with `obj$totalUMI <- colSums(obj$raw)`.")
+  if (is.null(obj$totalUMI)) { 
+    obj$totalUMI <- Matrix::rowSums(obj$raw)
+  } 
   df <- data.frame(obj$embed,
                    obj$raw[,feature_name],
                    obj$totalUMI)

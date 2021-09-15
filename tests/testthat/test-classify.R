@@ -28,3 +28,15 @@ test_that("classify's boolean output is as expected.", {
 
 
 
+test_that("classify does not require totalUMI", {
+  obj_without_totalUMI <- list(
+    raw=data.frame(CD3E=rep(2, 20)),
+    embed=data.frame(u1=1:20, u2=20:1),
+    neighbors  =matrix(1:20, nrow=20, ncol=10))
+  # NA checks that there is no error:
+  expect_error(classify(obj_without_totalUMI %>% rule("T","CD3E",">",.1e-3)),
+               NA)
+  # Next to running without error, classify should return class labels:
+  expect_equal( as.character(classify(obj_without_totalUMI %>% rule("T","CD3E",">",.1e-3))),
+                rep("T", 20))
+})

@@ -2,7 +2,7 @@
 % Please edit documentation in R/classify.R
 \name{classify}
 \alias{classify}
-\title{Classify cells with boolean logic}
+\title{Classify cells on previously defined rules}
 \usage{
 classify(
   obj,
@@ -13,16 +13,24 @@ classify(
 )
 }
 \arguments{
-\item{obj}{Cellpypes object.}
+\item{obj}{}
 
-\item{classes}{Character vector with one or more class names.}
+\item{classes}{Character vector with one or more class names.
+If NULL (the default), all classes for which rules exist are used.}
 
-\item{drop}{If TRUE (default) and only a single class is supplied,
-a boolean vector is returned. A boolean matrix otherwise.}
+\item{replace_overlap_with}{}
+
+\item{replace_unassigned_with}{}
+
+\item{return_logical_matrix}{}
 }
 \value{
-A boolean vector or matrix.
+I think the order of factor levels is the same as classes, and
+if is.null(classes) then it's the same as in obj$classes$class, i.e. the
+order in which classes were created by the user. I am not sure, however,
+but realize this is important (see e.g. f1_all.Rmd, building an f1-data.frame
+relies on it).
 }
 \description{
-Classify cells with boolean logic
+Classify cells on previously defined rules
 }
