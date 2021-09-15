@@ -175,6 +175,10 @@ Make sure that side-effect functions return the invisible object, so that you
 can use them in pipes:
 obj %>% rule("T", "CD3E", ">", .1) %>% plot_rule() %>% rule("T", "CD3G", ">", .5)
 
+Then again, perhaps it's better to return the plot itself. 
+This way, you can use them with cowplot and patchwork.
+
+
 **Recent genes: save pooled counts**
 I do not want to re-compute the pooled counts every time I change the 
 threshold value and plot.
