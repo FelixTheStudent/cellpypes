@@ -6,6 +6,8 @@
 #' Plot the last modified rule or class
 #'
 #' @param obj A cellpypes object.
+#' @param show_feat If TRUE (default), a second panel shows the feature plot of
+#' the relevant gene.
 #' @param what Either "rule" or "class".
 #'
 #' @return The plot is drawn as side-effect with `print`. The function
@@ -17,7 +19,7 @@
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle
 #'
 #' @examples
-plot_last <- function(obj, what="rule") {
+plot_last <- function(obj, show_feat=TRUE, what="rule") {
   check_obj(obj)
   if(what=="rule") {
     last_rule <- obj$rules[nrow(obj$rules),]
@@ -46,7 +48,7 @@ plot_last <- function(obj, what="rule") {
   
   # Functions are either transforming (rule) or side-effects (plot_last). 
   # Side-effect functions return the obj so that you can use them in pipes.
-  print(p)
+  if(show_feat) print(p+feat(obj, last_rule$feature)) else print(p)
   return( invisible(obj) ) # enables this: obj %>% plot_last() %>% rule(...)
 }
 
