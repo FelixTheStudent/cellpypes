@@ -4,10 +4,13 @@
 \alias{plot_last}
 \title{Plot the last modified rule or class}
 \usage{
-plot_last(obj, what = "rule")
+plot_last(obj, show_feat = TRUE, what = "rule")
 }
 \arguments{
 \item{obj}{A cellpypes object.}
+
+\item{show_feat}{If TRUE (default), a second panel shows the feature plot of
+the relevant gene.}
 
 \item{what}{Either "rule" or "class".}
 }

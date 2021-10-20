@@ -16,7 +16,8 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    Seurat
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 

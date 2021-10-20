@@ -17,6 +17,7 @@
 #' @export
 #' 
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle
+#' @importFrom ggplot2 scale_color_manual theme_bw
 #'
 #' @examples
 plot_last <- function(obj, show_feat=TRUE, what="rule") {
@@ -131,7 +132,8 @@ feat_data <- function(obj, feature_name) {
 #'
 #' @return
 #' @export
-#' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle
+#' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle theme
+#' @importFrom ggplot2 element_blank element_rect
 #' @examples
 feat <- function(obj, features, ...) {
   check_obj(obj)
