@@ -49,7 +49,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
   
   # Functions are either transforming (rule) or side-effects (plot_last). 
   # Side-effect functions return the obj so that you can use them in pipes.
-  if(show_feat) print(p+feat(obj, last_rule$feature)) else print(p)
+  if(show_feat&what=="rule") print(p+feat(obj, last_rule$feature)) else print(p)
   return( invisible(obj) ) # enables this: obj %>% plot_last() %>% rule(...)
 }
 
