@@ -13,6 +13,17 @@ test_that("Classify returns the expected factor", {
 })
 
 
+test_that("replace_overlap_with may be one of the classes", {
+  replace_with_class <- function(){
+    simulated_umis %>%
+      rule("CD3E+", "CD3E", ">", .5e-4) %>%
+      rule("CD3E++","CD3E", ">", 5e-4) %>%
+      classify(c("CD3E+","CD3E++"), replace_overlap_with="CD3E++")  
+  }
+  expect_error(replace_with_class(), NA)
+})
+
+
 test_that("classify's boolean output is as expected.", {
   obj <- simulated_umis %>% rule("T", "CD3E", ">", 1e-3) %>%
     rule("notT", "CD3E", "<", 1e-3) %>%

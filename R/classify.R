@@ -181,7 +181,7 @@ classify <- function(
   #  1. convert to factor at very end (adding new class to factor is hard)
   #  2. It is a design choice whether to add classes with 0 cells or not:
   class_factor <- factor( class_factor,
-                          levels=c(classes, unique(c("Unassigned", replace_overlap_with))))
+                          levels=unique(c(classes, "Unassigned", replace_overlap_with)))
   return( class_factor )
 }
 
