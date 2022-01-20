@@ -38,6 +38,11 @@ pype_from_seurat <- function(seurat) {
     dimension_names <- c("UMAP_1", "UMAP_2")
   } else if ("tsne" %in% names(seurat@reductions)) {
     dimension_names <- c("tSNE_1", "tSNE_2")
+  } else if (any(grepl("umap|tsne", names(seurat@reductions)))) {
+    # reductions may have arbitrary names, e.g. rna50.umap
+    use <- names(seurat@reductions)[grepl("umap|tsne|UMAP|TSNE", names(seurat@reductions))]
+    use <- use[1] # in case there are multiple reductions
+    dimension_names <- colnames(seurat@reductions[[use]]@cell.embeddings)
   } else {
     stop("Neither UMAP nor tSNE found.")
   }
