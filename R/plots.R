@@ -27,8 +27,8 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
     boolean=evaluate_rule(obj,
                           last_rule$class, last_rule$feature,
                           last_rule$operator,   last_rule$threshold)
-    plot_title <- paste0("Rule: ", last_rule$feature, last_rule$operator, 
-                         last_rule$threshold)
+    plot_title <- paste0(last_rule$feature, " ", last_rule$operator, " ",
+                         1e4*last_rule$threshold, " (per 10k UMI)")
   } else if (what=="class") {
     last_class <- obj$rules[nrow(obj$rules), "class"]
     boolean=drop(classify(obj, classes=last_class, return_logical_matrix = T))
