@@ -19,7 +19,7 @@
 #'
 #' @examples
 pype_from_seurat <- function(seurat) {
-  stopifnot(inherits(malt, "Seurat"))
+  stopifnot(inherits(seurat, "Seurat"))
   
   
   # I pick graphs according to this wish list (order matters):
