@@ -64,6 +64,8 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
 #'
 #' @return
 #' @export
+#' 
+#' @importFrom dplyr bind_cols
 #'
 #' @examples
 plot_classes <- function(obj, ...) {
@@ -76,8 +78,8 @@ plot_classes <- function(obj, ...) {
   colors <- c(colors, Unassigned="#888888")
   # do the plot
   plot_dat = bind_cols(
-    dim1=obj$embed[,1],
-    dim2=obj$embed[,2],
+    dim1=obj$embed[,1, drop=TRUE],
+    dim2=obj$embed[,2, drop=TRUE],
     class=labels)
   axis_names <- if (is.null(colnames(obj$embed))) {
     c("Dim1", "Dim2")

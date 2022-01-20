@@ -19,3 +19,10 @@ test_that("plot_last does not require totalUMI", {
 })
 
 
+
+test_that("plot_classes handles embed tibbles", {
+  obj <- simulated_umis
+  obj$embed <- tibble::as_tibble(obj$embed)
+  obj <- obj %>% rule("T", "CD3E", ">", 1e-4)
+  expect_error(print(plot_classes(obj)), NA)
+})
