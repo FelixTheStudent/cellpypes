@@ -72,3 +72,12 @@ test_that("overlap between class and its ancestry is not replaced.", {
   expect_error(  classify(obj2, classes=c("B","T","Treg"), replace_overlap_with = "common_parent"),
                  regexp = "Not implemented yet, sorry.")
 })
+
+
+test_that("Non-existing parent gives intelligible error message.", {
+  obj <- simulated_umis %>%
+    rule("B", "MS4A1", ">", 1e-4) %>% 
+    rule("T", "CD3E", ">", .1e-4) %>% 
+    rule("Treg", "FOXP3", ">", .05e-4, parent="non-existing!") 
+  expect_error(classify(obj), regexp = "A class has parent that does not exist -- double-check your rules!")
+})

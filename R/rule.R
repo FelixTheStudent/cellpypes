@@ -11,10 +11,15 @@
 #'
 #' @examples
 is_classes <- function(classes) {
+  # Helpful messages to the user:
+  if(!all(classes$parent %in% c("..root..",classes$class))) {
+    stop("A class has parent that does not exist -- double-check your rules!")
+  }
     inherits(classes, "data.frame"  ) &&
     ncol(classes) > 0 &&  # handles this: `is_classes(data.frame())`
     all(colnames(classes)[1:2] == c("class", "parent")) &&
-    all(!duplicated(classes$class))
+    all(!duplicated(classes$class)) &&
+    all(classes$parent %in% c("..root..",classes$class))
   }
 
 #' Check if obj$rules looks as expected.
