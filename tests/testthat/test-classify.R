@@ -8,7 +8,7 @@ test_that("Classify returns the expected factor", {
     rule("B", "CD3E", "<", .1e-3)
   expect_equal(
     as.numeric(table(classify(obj=x, classes=c("T", "Treg", "Treg_act", "B")))),
-    c(551, 0, 0, 649, 700))
+    c(551, 26, 23, 649, 651))
 
 })
 
@@ -50,4 +50,25 @@ test_that("classify does not require totalUMI", {
   # Next to running without error, classify should return class labels:
   expect_equal( as.character(classify(obj_without_totalUMI %>% rule("T","CD3E",">",.1e-3))),
                 rep("T", 20))
+})
+
+
+
+
+
+test_that("overlap between class and its ancestry is not replaced.", {
+  obj2 <- simulated_umis %>% 
+    rule("B", "MS4A1", ">", 1e-4) %>% 
+    rule("T", "CD3E", ">", .1e-4) %>% 
+    rule("Treg", "FOXP3", ">", .05e-4, parent="T") 
+    
+  class_labels <- classify(obj2, classes=c("B","T","Treg"))
+  expect_true( any(class_labels =="Treg")) 
+  # When you implement common_parent, this error is supposed to remind you
+  # to create same test as above, but with these class_labels:
+  #     class_labels2 <- classify(obj2,
+  #                               classes=c("B","T","Treg"), 
+  #                               replace_overlap_with = "common_parent")
+  expect_error(  classify(obj2, classes=c("B","T","Treg"), replace_overlap_with = "common_parent"),
+                 regexp = "Not implemented yet, sorry.")
 })

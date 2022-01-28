@@ -13,19 +13,21 @@
 #'
 #' @param classes. Put obj$classes here, i.e. a tree of class definitions 
 #' created with the rule function.
+#' @param invert. If TRUE, return classes that are NOT leafs instead of leaf nodes.
 #'
 #' @return
 #' @export
 #'
 #' @examples
-tree_leaf_nodes <- function(classes) {
+tree_leaf_nodes <- function(classes, invert=FALSE) {
   stopifnot(is_classes(classes))
   
   res <- classes
   res$hasChild <- FALSE
   res$hasChild[res$class %in% res$parent] <- TRUE
- 
-  res$class[!res$hasChild] 
+  
+  if(invert) return(res$class[res$hasChild] )
+  return( res$class[!res$hasChild] )
 }
 
 
@@ -50,6 +52,33 @@ tree_ancestry <- function(classes, class) {
     return(c(tree_ancestry(classes, current_parent), current_class))
   }
 }
+
+#' Find child, child's child and so on for class(es) using recursive programming
+#'
+#' @param classes The class definitions of a cellpypes object, i.e. obj$classes.
+#' @param class A character vector with one or multiple classes. 
+#' @param leafs Has to be the output of tree_leaf_nodes(classes). It's passed
+#' as argument so that tree_leaf_nodes is not executed in each recurions.
+#'
+#' @return Character vector with the descendants of a class.
+#' @export
+#'
+tree_descendants <- function(classes, class, leafs) {
+
+  current_children <- classes[classes$parent %in% class,"class"]
+  is_leaf <- current_children %in% leafs
+  if(all(current_children %in% leafs)) {
+    return(current_children)
+  } else {
+    return(c(current_children[is_leaf],
+             current_children[!is_leaf],
+             tree_descendants(classes, current_children[!is_leaf], leafs)))
+    
+  }
+  
+
+}
+
 
 
 
@@ -114,6 +143,7 @@ classify <- function(
     # when using leaves, rules from all classes are relevant for classification:
     relevant_classes <- obj$classes$class
   } else {
+    if("Unassigned" %in% classes) stop("Don't pass 'Unassigned' to the 'classes' argument.")
     stopifnot(all(classes %in% obj$classes$class))
     # To omit irrelevant computations below I note down relevant classes here:
     relevant_classes <- lapply(classes, tree_ancestry, classes=obj$classes)
@@ -160,11 +190,12 @@ classify <- function(
   })
   
     
-  # massage according to replace_overlap_with, replace_unassigned_with, etc.
   if (return_logical_matrix) {
     return(res[, classes, drop=FALSE])
     }
  
+  # massage according to replace_overlap_with, replace_unassigned_with, etc.
+  
   if (replace_overlap_with=="common_parent" || is.na(replace_overlap_with))
     stop("Not implemented yet, sorry.")
   # Note to myself: for "common_parent" res[, classes] is not enough.
@@ -172,9 +203,18 @@ classify <- function(
    
   class_res <- res[, classes, drop=FALSE]
   class_factor <- rep("Unassigned", nrow(class_res))
+  the_leafs <- tree_leaf_nodes(obj$classes) 
   for (i in 1:ncol(class_res)) {
+    # If a class has overlap with one of its ancestor classes, 
+    # I set the ancestor to FALSE here.
+    # This way, classify replaces overlap EXCEPT for overlap with ones ancestor.
+    descendants <- tree_descendants(obj$classes, classes[i], leafs=the_leafs)
+    cell_is_descendant <- base::rowSums(class_res[,descendants, drop=F]) > 0
+    class_res[cell_is_descendant,i] <- FALSE
+    # assign class:
     class_factor[ class_res[,i] ] <- classes[i]
   }
+  # replace overlap, except for overlap with ones ancestors.
   class_factor[base::rowSums(class_res)>1] <- replace_overlap_with
   
   # Unassigned class may or may not be present, under different names:

@@ -4,11 +4,13 @@
 \alias{tree_leaf_nodes}
 \title{Finds leaf nodes, i.e. classes without children}
 \usage{
-tree_leaf_nodes(classes)
+tree_leaf_nodes(classes, invert = FALSE)
 }
 \arguments{
 \item{classes.}{Put obj$classes here, i.e. a tree of class definitions
 created with the rule function.}
+
+\item{invert.}{If TRUE, return classes that are NOT leafs instead of leaf nodes.}
 }
 \value{
 
