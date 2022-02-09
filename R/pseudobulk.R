@@ -84,14 +84,20 @@ pseudobulk <- function(raw, pseudobulk_id) {
 #' counts <- pseudobulk(simulated_umis$raw, coldata$pseudobulk_id)
 #' # Use counts/coldata as input for DESeqDataSetFromMatrix (DESeq2).
 pseudobulk_id <- function(factor_df) {
-  
+ 
   id <- do.call(paste, factor_df)
   # machine-readable and unique:
   id_df <- data.frame(id = unique(id),
-             pseudobulk_id = make.names(unique(id), unique=TRUE))
+                      pseudobulk_id = make.names(unique(id), unique=TRUE))
   # pseudobulk_ids fit factor_df (which may have multiple cells with same ID):
-  res <- cbind(factor_df, id)
-  res <- merge(res, id_df, by="id")
+  colnames(factor_df)[colnames(factor_df)=="id"] <- "dummy_name2"
+  factor_df <- cbind(factor_df, id=id)
+  # preserving order after merge requires this:
+  colnames(factor_df)[colnames(factor_df)=="rank"] <- "dummy_name"
+  factor_df$rank <- 1:nrow(factor_df)
+  res <- merge(factor_df, id_df, by="id", sort=FALSE)
+  # merge does not presever order, let's make sure:
+  res <- res[order(res$rank),]
   
   factor(res$pseudobulk_id)
   
