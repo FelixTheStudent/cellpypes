@@ -28,10 +28,9 @@ fac2matrix <- function(factor){
 #' @param pseudobulk_id A factor that identifies which cells should go to
 #' which pseudobulk. Generate pseudobulk_ids with the \link[cellpypes]{pseudobulk_id} function! 
 #'
-#' @return
+#' @return A matrix where each column is a pseudobulk and each row a gene.
 #' @export
 #'
-#' @examples
 #' @examples
 #' # Create pseudobulk counts and coldata for DESeq2: 
 #' coldata <- data.frame(
