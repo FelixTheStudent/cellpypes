@@ -43,7 +43,8 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
     xlab( colnames(obj$embed)[1] ) + 
     ylab( colnames(obj$embed)[2] ) +
     ggtitle(plot_title) + 
-    scale_color_manual(values = c("TRUE"="#44AA99", # cartoColors (colorblind friendly)
+    scale_color_manual(name="Rule",
+                       values = c("TRUE"="#44AA99", # cartoColors (colorblind friendly)
                                   "FALSE"="#888888")) +
     theme_bw()
   
