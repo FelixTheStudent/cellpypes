@@ -27,6 +27,14 @@ test_that("plot_classes handles embed tibbles", {
   expect_error(print(plot_classes(obj)), NA)
 })
 
+test_that(
+  paste0("classify returns factor; otherwise ",
+         "plot_classes has to use unique instead of levels"),
+  {
+    labels <- classify(rule(simulated_umis, "T", "CD3E", ">", .1e-3)) 
+    expect_true(inherits(labels, "factor"))
+  })
+
 
 
 test_that("feat gives intelligible error messages", {

@@ -80,8 +80,8 @@ plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=
   
   labels <- classify(obj, ...)
   # manually set Unassigned color:
-  colors <- scales::hue_pal()(length(unique(labels))-1) 
-  names(colors) <- unique(labels)[unique(labels)!="Unassigned"]
+  colors <- scales::hue_pal()(length(levels(labels))-1) 
+  names(colors) <- levels(labels)[levels(labels)!="Unassigned"]
   colors <- c(colors, Unassigned="#888888")
   # do the plot
   plot_dat = bind_cols(
