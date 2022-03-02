@@ -12,7 +12,7 @@ tree_descendants(classes, class, leafs)
 \item{class}{A character vector with one or multiple classes.}
 
 \item{leafs}{Has to be the output of tree_leaf_nodes(classes). It's passed
-as argument so that tree_leaf_nodes is not executed in each recurions.}
+as argument so that tree_leaf_nodes is not executed in each recursion.}
 }
 \value{
 Character vector with the descendants of a class.

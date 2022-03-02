@@ -13,7 +13,7 @@ pseudobulk(raw, pseudobulk_id)
 which pseudobulk. Generate pseudobulk_ids with the \link[cellpypes]{pseudobulk_id} function!}
 }
 \value{
-
+A matrix where each column is a pseudobulk and each row a gene.
 }
 \description{
 Form pseudobulks from single cells.
