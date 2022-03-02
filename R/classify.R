@@ -58,7 +58,7 @@ tree_ancestry <- function(classes, class) {
 #' @param classes The class definitions of a cellpypes object, i.e. obj$classes.
 #' @param class A character vector with one or multiple classes. 
 #' @param leafs Has to be the output of tree_leaf_nodes(classes). It's passed
-#' as argument so that tree_leaf_nodes is not executed in each recurions.
+#' as argument so that tree_leaf_nodes is not executed in each recursion.
 #'
 #' @return Character vector with the descendants of a class.
 #' @export
@@ -209,6 +209,8 @@ classify <- function(
     # I set the ancestor to FALSE here.
     # This way, classify replaces overlap EXCEPT for overlap with ones ancestor.
     descendants <- tree_descendants(obj$classes, classes[i], leafs=the_leafs)
+    # Not all descendants are necessarily in class_res:
+    descendants <- descendants[descendants %in% colnames(class_res)]
     cell_is_descendant <- base::rowSums(class_res[,descendants, drop=F]) > 0
     class_res[cell_is_descendant,i] <- FALSE
     # assign class:

@@ -63,7 +63,13 @@ test_that("overlap between class and its ancestry is not replaced.", {
     rule("Treg", "FOXP3", ">", .05e-4, parent="T") 
     
   class_labels <- classify(obj2, classes=c("B","T","Treg"))
+  # All Tregs overlap with Ts. In this case, I want Treg, not Unassigned:
   expect_true( any(class_labels =="Treg")) 
+  # I solved bug triggered by 'class_res[,descendants, drop=F]', here's two tests for it:
+  expect_error(classify(obj2, classes="T"), regexp = NA)  # test for error-free 
+  expect_true(all(classify(obj2, classes="T") %in% c("T","Unassigned"))) 
+  
+  
   # When you implement common_parent, this error is supposed to remind you
   # to create same test as above, but with these class_labels:
   #     class_labels2 <- classify(obj2,
