@@ -59,8 +59,15 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
 
 #' Call and visualize 'classify' function
 #'
-#' @param obj 
-#' @param ... Same parameters as \link[cellpypes]{classify}.
+#' @param obj Cellpypes object, i.e. a list with four slots:
+#' raw, neighbors, embed, totalUMI.
+#' @param ... Same parameters as \link[cellpypes]{classify}: classes,
+#' replace_overlap_with, replace_unassigned_with.
+#' @param point_size Dot size used by \link[ggplot2]{geom_point}.
+#' @param point_size_legend Dot size displayed in legend. 
+#' Legend colors are easier to read with larger points.
+#' @param base_size The base_size of \link[ggplot2]{theme_bw}, i.e. 
+#' how large text is displayed. Default: 15.
 #'
 #' @return
 #' @export
@@ -68,7 +75,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
 #' @importFrom dplyr bind_cols
 #'
 #' @examples
-plot_classes <- function(obj, ...) {
+plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=15) {
   check_obj(obj)
   
   labels <- classify(obj, ...)
@@ -88,11 +95,13 @@ plot_classes <- function(obj, ...) {
   }
   ggplot(plot_dat, aes(dim1, dim2, col=class))+
     coord_fixed()+
-    geom_point(size=.4) +
+    geom_point(size=point_size) +
     scale_color_manual(values=colors) + 
     xlab(axis_names[1]) +
     ylab(axis_names[2]) +
-    theme_bw()
+    theme_bw(base_size = base_size) +
+    ggplot2::guides(
+      colour = ggplot2::guide_legend(override.aes = list(size = point_size_legend)))
   
 }
 
@@ -127,19 +136,24 @@ feat_data <- function(obj, feature_name) {
 
 
 #' Feature plots: Color gene expression in 2D embeddings
+#' 
+#' Highlight gene expression in UMAP embeddings, for example.
 #'
-#' @param obj 
-#' @param features 
-#' @param ... 
+#' @param obj Cellpypes object, i.e. a list with four slots: raw, embed, neighbors, totalUMI.
+#' @param features A vector of genes (features) to colour by.
+#' @param ... Arguments passed to cowplot's \link[cowplot]{plot_grid} function,
+#' for example ncol or rel_widths.
+#' 
 #'
-#' @return
+#' @return A ggplot object (assembled by cowplot).
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle theme
 #' @importFrom ggplot2 element_blank element_rect
 #' @examples
+#' feat(simulated_umis, "CD3E")
 feat <- function(obj, features, ...) {
   check_obj(obj)
-  
+ 
   axis_names <- if (is.null(colnames(obj$embed))) {
     c("Dim1", "Dim2")
   } else {
@@ -157,6 +171,15 @@ feat <- function(obj, features, ...) {
         "\n")
   }
   features <- features[does_exist]
+  
+  # User may pass features individuall, not as vector, by accident.
+  # This happens to myself once per day, so I want an intelligible error message:
+  plotgrid_args <- list(...)
+  if(any(plotgrid_args %in% colnames(obj$raw))) {
+    warning(paste0("Make sure to pass features as vector, not individually.\n",
+    "This warning appears because arguments in ... are genes in your object." )
+    )}
+  
   
   l = lapply(features, function(gene) {
     dat <- feat_data(obj, gene)

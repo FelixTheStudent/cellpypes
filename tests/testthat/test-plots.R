@@ -26,3 +26,13 @@ test_that("plot_classes handles embed tibbles", {
   obj <- obj %>% rule("T", "CD3E", ">", 1e-4)
   expect_error(print(plot_classes(obj)), NA)
 })
+
+
+
+test_that("feat gives intelligible error messages", {
+  res <- evaluate_promise(feat(simulated_umis, "CD3E", "MS4A1"))
+  expect_true(grepl("Make sure to pass features as vector", res$warnings[1]))
+  expect_true(grepl("Cannot convert object of class character into a grob", res$warnings[2]))
+  
+ 
+})

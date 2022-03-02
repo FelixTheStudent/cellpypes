@@ -4,12 +4,22 @@
 \alias{plot_classes}
 \title{Call and visualize 'classify' function}
 \usage{
-plot_classes(obj, ...)
+plot_classes(obj, ..., point_size = 0.4, point_size_legend = 2, base_size = 15)
 }
 \arguments{
-\item{obj}{}
+\item{obj}{Cellpypes object, i.e. a list with four slots:
+raw, neighbors, embed, totalUMI.}
 
-\item{...}{Same parameters as \link[cellpypes]{classify}.}
+\item{...}{Same parameters as \link[cellpypes]{classify}: classes,
+replace_overlap_with, replace_unassigned_with.}
+
+\item{point_size}{Dot size used by \link[ggplot2]{geom_point}.}
+
+\item{point_size_legend}{Dot size displayed in legend.
+Legend colors are easier to read with larger points.}
+
+\item{base_size}{The base_size of \link[ggplot2]{theme_bw}, i.e.
+how large text is displayed. Default: 15.}
 }
 \value{
 

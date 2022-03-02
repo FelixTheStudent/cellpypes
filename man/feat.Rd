@@ -7,15 +7,19 @@
 feat(obj, features, ...)
 }
 \arguments{
-\item{obj}{}
+\item{obj}{Cellpypes object, i.e. a list with four slots: raw, embed, neighbors, totalUMI.}
 
-\item{features}{}
+\item{features}{A vector of genes (features) to colour by.}
 
-\item{...}{}
+\item{...}{Arguments passed to cowplot's \link[cowplot]{plot_grid} function,
+for example ncol or rel_widths.}
 }
 \value{
-
+A ggplot object (assembled by cowplot).
 }
 \description{
-Feature plots: Color gene expression in 2D embeddings
+Highlight gene expression in UMAP embeddings, for example.
+}
+\examples{
+feat(simulated_umis, "CD3E")
 }
