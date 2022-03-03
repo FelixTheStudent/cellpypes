@@ -108,6 +108,10 @@ rules[rules$class=="T"&&rules$feature=="CD3E"] <-
 
 # Developer's cheat sheet
 
+Don't forget devtools::build_readme() before 
+pushing to git.
+
+
 Good places to read about package development:
 
   * "Whole game" section in *R packages* (2nd edition):
