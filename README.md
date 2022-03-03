@@ -24,14 +24,29 @@ devtools::install_github("FelixTheStudent/cellpypes")
 
 ## Quick start
 
+Let’s classify T cells in your `seurat_object`, by requiring high CD3E
+expression:
+
 ``` r
 seurat_object %>%
   pype_from_seurat() %>%
-  rule("T", "CD3E", ">", 3.5e-4) %>%
+  rule("CD3E+ T cells", "CD3E", ">", 3.5e-4) %>%
   plot_last()
 ```
 
 ![pbmc2700](man/figures/README-pbmc_cd3e.png)
+
+As we can see, the chosen threshold of `3.5e-4` results in good
+agreement between positive cells (left plot) and high marker gene
+expression (right plot). The threshold is given as a fraction of total
+library size (total UMI counts), in this case 3.5 UMIs per ten thousand
+UMIs. Intuitively, cellpypes judges if the expression in a cell’s
+neighborhood is larger than that threshold, taking the uncertainty due
+to technical noise into account. The cell’s neighborhood consists of its
+nearest neighbors, which are typically transcriptionally similar. Thus,
+cellpypes defines CD3E-positive cells as those that that are virtually
+indistinguishable from highly-expressing cells, at the given
+signal-to-noise ratio.
 
 ## Annotating PBMCs
 
@@ -66,12 +81,15 @@ pype %>% plot_classes
 
 A few observations:
 
+-   Note how `rule`’s *parent* argument is used to build a hierarchy.
+-   A cell type can have multiple rules, such as `CD14+ Mono`. Only
+    cells for which all relevant rules apply are counted to this cell
+    type.
 -   cellpypes works with **classes** defined by gene-based **rules**.
     Whether your classes correspond to biologically relevant **cell
     types** is best answered in a passionate discussion on their marker
     genes you would have with your peers. Until you are sure, “MS4A1+”
     is a better class name than “B cell”.
--   Note how `rule`’s *parent* argument is used to build a hierarchy.
 -   Unassigned cells (grey) are not necessarily bad but a way to respect
     the signal-to-noise limit. Unassigned cells arise for two reasons:
     -   Not enough signal for any rule to apply. For example, outlier
@@ -83,9 +101,6 @@ A few observations:
         them to *Unassigned*, but this behaviour can be controlled with
         the *replace\_overlap\_with* argument in `classify` and
         `plot_classes`.
--   A cell type can have multiple rules, as the above example shows for
-    CD14+ Monocytes. Only cells for which all rules apply are counted to
-    this cell type.
 -   There are Naive CD8+ T cells amongst the naive CD4 cells. While
     overlooked in the original tutorial, the marker-based nature of
     cellpypes revealed this. This is a good example for *cellpype*’s
