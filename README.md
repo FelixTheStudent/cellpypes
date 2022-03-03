@@ -1,16 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cellpypes
+# cellpypes – Cell type pipes for R
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of cellpypes is to …
+With cellpypes, you can quickly construct simple and clear cell type
+hierarchies with marker gene rules and the popular piping operator
+`%>%`. The goal of cellpypes is to make manual cell type assignments of
+single-cell RNAseq data convenient, clear and reproducible.
 
 ## Installation
 
-Install *cellpypes* with the following commands:
+Install cellpypes with the following commands:
 <!-- You can install the released version of cellpypes from [CRAN](https://CRAN.R-project.org) with: -->
 <!-- ``` r --> <!-- install.packages("cellpypes") --> <!-- ``` -->
 
@@ -20,6 +23,15 @@ devtools::install_github("FelixTheStudent/cellpypes")
 ```
 
 ## Quick start
+
+``` r
+seurat_object %>%
+  pype_from_seurat() %>%
+  rule("T", "CD3E", ">", 3.5e-4) %>%
+  plot_last()
+```
+
+![pbmc2700](man/figures/README-pbmc_cd3e.png)
 
 ## Annotating PBMCs
 
@@ -54,7 +66,7 @@ pype %>% plot_classes
 
 A few observations:
 
--   *cellpypes* works with **classes** defined by gene-based **rules**.
+-   cellpypes works with **classes** defined by gene-based **rules**.
     Whether your classes correspond to biologically relevant **cell
     types** is best answered in a passionate discussion on their marker
     genes you would have with your peers. Until you are sure, “MS4A1+”
@@ -66,30 +78,21 @@ A few observations:
         them negative for most rules.
     -   Not enough separation. If two classes are highly similar, such
         as CD4+ and CD8+ T cells, cells in the noisy class border may be
-        positive for rules from both classes. By default, *cellpypes*
-        sets them to *Unassigned*, but this behaviour can be controlled
-        with the *replace\_overlap\_with* argument in `classify` and
+        positive for rules from both classes. By default, cellpypes sets
+        them to *Unassigned*, but this behaviour can be controlled with
+        the *replace\_overlap\_with* argument in `classify` and
         `plot_classes`.
 -   A cell type can have multiple rules, as the above example shows for
     CD14+ Monocytes. Only cells for which all rules apply are counted to
     this cell type.
 -   There are Naive CD8+ T cells amongst the naive CD4 cells. While
     overlooked in the original tutorial, the marker-based nature of
-    *cellpypes* revealed this. This is a good example for *cellpype*’s
-    resolution limit: If UMAP cannot separate cells properly,
-    *cellpypes* will also struggle – but at least it will be obvious. In
-    practice, one would re-cluster the T cells and try to separate naive
-    CD8+ from naive CD4+, or train a specialized machine learning
-    algorithm to discriminate these two cell types in particular.
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(cellpypes)
-## basic example code
-```
+    cellpypes revealed this. This is a good example for *cellpype*’s
+    resolution limit: If UMAP cannot separate cells properly, cellpypes
+    will also struggle – but at least it will be obvious. In practice,
+    one would re-cluster the T cells and try to separate naive CD8+ from
+    naive CD4+, or train a specialized machine learning algorithm to
+    discriminate these two cell types in particular.
 
 # notes to myself
 
