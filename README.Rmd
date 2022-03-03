@@ -89,7 +89,9 @@ A few observations:
   have with your peers. 
   Until you are sure, "MS4A1+" is a better class name than "B cell".
   * Note how `rule`'s *parent* argument is used to build a hierarchy.
-  * Unassigned cells (grey) can arise for multiple reasons:
+  * Unassigned cells (grey) are not necessarily bad but
+  a way to respect the signal-to-noise limit.
+  Unassigned cells arise for two reasons:
      * Not enough signal for any rule to apply.
      For example, outlier cells typically get few 
      neighbors in Seurat's SNN graph, making them negative for most rules.
