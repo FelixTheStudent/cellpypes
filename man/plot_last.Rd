@@ -15,8 +15,7 @@ the relevant gene.}
 \item{what}{Either "rule" or "class".}
 }
 \value{
-The plot is drawn as side-effect with \code{print}. The function
-returns obj invisibly, so that you can use it in a pipe.
+Returns a ggplot2 object with the plot.
 }
 \description{
 Plot the last modified rule or class

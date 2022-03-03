@@ -10,8 +10,7 @@
 #' the relevant gene.
 #' @param what Either "rule" or "class".
 #'
-#' @return The plot is drawn as side-effect with `print`. The function
-#' returns obj invisibly, so that you can use it in a pipe.
+#' @return Returns a ggplot2 object with the plot.
 #' 
 #' 
 #' @export
@@ -47,11 +46,14 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
                        values = c("TRUE"="#44AA99", # cartoColors (colorblind friendly)
                                   "FALSE"="#888888")) +
     theme_bw()
+ 
+  # For saving etc. it is convenient to return the plot directly. 
+  # I wanted plotting as side-effect, so with return(invisible(obj)),
+  # to enable pipes like rule %>% plot_last %>% rule, but I learned
+  # from Sveta that a T-pipe can do this anyways.
+  if(show_feat&what=="rule") return(p+feat(obj, last_rule$feature)) 
+  return(p)
   
-  # Functions are either transforming (rule) or side-effects (plot_last). 
-  # Side-effect functions return the obj so that you can use them in pipes.
-  if(show_feat&what=="rule") print(p+feat(obj, last_rule$feature)) else print(p)
-  return( invisible(obj) ) # enables this: obj %>% plot_last() %>% rule(...)
 }
 
 
