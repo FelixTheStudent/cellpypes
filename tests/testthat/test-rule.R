@@ -1,4 +1,4 @@
-obj_min <- list(raw=matrix(rpois(12, .5),ncol=3), embed=data.frame(u1=1:4, u2=4:1))
+obj_min <- list(raw=t(matrix(rpois(12, .5),ncol=3)), embed=data.frame(u1=1:4, u2=4:1))
 
 
 test_that("rule checks whether its inputs are NULL in a healthy way", {

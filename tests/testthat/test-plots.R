@@ -5,7 +5,7 @@
 
 test_that("plot_last does not require totalUMI", {
   obj_without_totalUMI <- list(
-    raw=data.frame(CD3E=rpois(20, 5)),
+    raw=t(data.frame(CD3E=rpois(20, 5))),
     embed=data.frame(u1=1:20, u2=20:1),
     neighbors  =matrix(1:20, nrow=20, ncol=10))
   plot_WO_feat <- function() plot_last(

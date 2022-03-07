@@ -29,11 +29,15 @@ ump %>% ggplot(aes(u1,u2, col=celltype))+geom_point()+ coord_fixed()
 scUtils::feat(ump[,1:2], raw[, "FOXP3"]/raw[,"totalUMI"])
 scUtils::feat(ump[,1:2], raw[, "ICOS"]/raw[,"totalUMI"])
 
-nn <- scpr::get.knn.annoy(as.matrix(sqrt(raw[,-ncol(raw)] / raw[, "totalUMI"])))
+#nn <- scpr::get.knn.annoy(as.matrix(sqrt(raw[,-ncol(raw)] / raw[, "totalUMI"])))
+tmp <- uwot::umap(as.matrix(sqrt(raw[,-ncol(raw)] / raw[, "totalUMI"])),
+                  n_neighbors = 50,
+                  ret_nn=TRUE)
 
 simulated_umis <- list(
-  raw=raw,
-  neighbors=nn$idx,
+  # March 2022: I start following genes-in-row conventions that's prevalent in Bioinformatics.
+  raw=t(raw),
+  neighbors=tmp$nn$euclidean$idx,
   embed    = ump[,1:2],
   celltype = ump$celltype
 )
