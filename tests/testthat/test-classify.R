@@ -30,7 +30,7 @@ test_that("classify's boolean output is as expected.", {
     rule("B", "MS4A1", ">", 1e-3, parent="notT") 
   res <- classify(obj, classes="B", return_logical_matrix=T )
   expect_equal(dim(res),
-               dim(matrix(rep(FALSE,nrow(simulated_umis$raw)),
+               dim(matrix(rep(FALSE,ncol(simulated_umis$raw)),
                           ncol=1)))
   expect_equal(sum(res), 145)
   expect_true(is.logical(res))
@@ -41,7 +41,7 @@ test_that("classify's boolean output is as expected.", {
 
 test_that("classify does not require totalUMI", {
   obj_without_totalUMI <- list(
-    raw=data.frame(CD3E=rep(2, 20)),
+    raw=t(data.frame(CD3E=rep(2, 20))),
     embed=data.frame(u1=1:20, u2=20:1),
     neighbors  =matrix(1:20, nrow=20, ncol=10))
   # NA checks that there is no error:

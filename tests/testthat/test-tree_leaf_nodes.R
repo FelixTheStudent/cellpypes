@@ -1,6 +1,6 @@
 test_that("tree_leaf_nodes returns expected leaves", {
   x <- simulated_umis
-  x$raw <- cbind(x$raw, CD4=0, CXCL13=0, CD8B=0)
+  x$raw <- rbind(x$raw, CD4=0, CXCL13=0, CD8B=0)
   x <- x %>%
     rule("B", "MS4A1", ">", .1e-3) %>% 
     rule("T", "CD3E", ">", .1e-3) %>% 

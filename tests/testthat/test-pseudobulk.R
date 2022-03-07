@@ -23,7 +23,7 @@ test_that("Example in pseudobulk_ids docu is working", {
   coldata <- df_meta
   expect_error( { # expect this runs without error
    coldata$pseudobulk_id <- pseudobulk_id(coldata)
-   counts <- pseudobulk(Matrix::t(simulated_umis$raw), coldata$pseudobulk_id)   
+   counts <- pseudobulk(simulated_umis$raw, coldata$pseudobulk_id)   
   }, NA)
 
 

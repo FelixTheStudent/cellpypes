@@ -46,14 +46,14 @@ evaluate_rule <- function(obj,
                           operator,
                           threshold) {
   # check that obj has everything this rule needs:
-  stopifnot(feature %in% colnames(obj$raw))
+  stopifnot(feature %in% rownames(obj$raw))
   
   # check_obj(obj) is called in functions calling evaluate_rule.
 
-  K <- pool_across_neighbors(obj$raw[, feature], 
+  K <- pool_across_neighbors(obj$raw[feature,], 
                              obj$neighbors)
   if (is.null(obj$totalUMI)) { 
-    obj$totalUMI <- Matrix::rowSums(obj$raw)
+    obj$totalUMI <- Matrix::colSums(obj$raw)
   } 
   S <- pool_across_neighbors(obj$totalUMI,
                              obj$neighbors)

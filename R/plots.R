@@ -123,10 +123,10 @@ plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=
 #' @examples
 feat_data <- function(obj, feature_name) {
   if (is.null(obj$totalUMI)) { 
-    obj$totalUMI <- Matrix::rowSums(obj$raw)
+    obj$totalUMI <- Matrix::colSums(obj$raw)
   } 
   df <- data.frame(obj$embed,
-                   obj$raw[,feature_name],
+                   obj$raw[feature_name,],
                    obj$totalUMI)
   colnames(df) <- c("X1","X2","k","s")
   
@@ -165,7 +165,7 @@ feat <- function(obj, features, ...) {
   
   # user might enter duplicated or nonsensical feature names:
   features <- unique(features)
-  does_exist<- features %in% colnames(obj$raw)
+  does_exist<- features %in% rownames(obj$raw)
   if(sum(does_exist)==0) stop("None of the supplied features were found in your object.") 
   if(sum(does_exist) < length(does_exist)) {
     cat("These features were not found and will be ignored: ",
@@ -178,7 +178,7 @@ feat <- function(obj, features, ...) {
   # User may pass features individuall, not as vector, by accident.
   # This happens to myself once per day, so I want an intelligible error message:
   plotgrid_args <- list(...)
-  if(any(plotgrid_args %in% colnames(obj$raw))) {
+  if(any(plotgrid_args %in% rownames(obj$raw))) {
     warning(paste0("Make sure to pass features as vector, not individually.\n",
     "This warning appears because arguments in ... are genes in your object." )
     )}

@@ -163,10 +163,10 @@ classify <- function(
   rules_info <-obj$rules[obj$rules$class %in% relevant_classes, ]
   rules_eval <- mapply(
     FUN = function(feature, operator, threshold) {
-      K <- pool_across_neighbors(obj$raw[, feature], 
+      K <- pool_across_neighbors(obj$raw[feature,], 
                                  obj$neighbors)
       if (is.null(obj$totalUMI)) { 
-        obj$totalUMI <- Matrix::rowSums(obj$raw)
+        obj$totalUMI <- Matrix::colSums(obj$raw)
       } 
       S <- pool_across_neighbors(obj$totalUMI,
                                  obj$neighbors)
