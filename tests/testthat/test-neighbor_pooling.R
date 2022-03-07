@@ -1,8 +1,8 @@
 
 test_that("pooling with neighbor indices gives expected result", {
-  expect_equal(41372, sum(pool_across_neighbors(simulated_umis$raw["CD3E",],
+  expect_equal(41781, sum(pool_across_neighbors(simulated_umis$raw["CD3E",],
                                                 simulated_umis$neighbors)))
-  expect_equal( 2193, sum(pool_across_neighbors(simulated_umis$raw["FOXP3",],
+  expect_equal( 2382, sum(pool_across_neighbors(simulated_umis$raw["FOXP3",],
                                                 simulated_umis$neighbors)))
 })
 
@@ -29,6 +29,7 @@ test_that("pooling with square matrix gives expected result", {
 
 
 test_that("evaluate_rule gives expected result", {
-  expect_equal(600, sum(evaluate_rule(simulated_umis, "T", "CD3E", ">", 1e-04)))
-  expect_equal(65, sum(evaluate_rule(simulated_umis, "T", "FOXP3", ">", 1e-04)))
+  expect_equal(602, sum(evaluate_rule(simulated_umis, "T", "CD3E", ">", 1e-04)))
+  expect_equal(66, sum(evaluate_rule(simulated_umis, "T", "FOXP3", ">", 1e-04)))
 })
+

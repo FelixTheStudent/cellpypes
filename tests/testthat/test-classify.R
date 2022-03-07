@@ -8,7 +8,7 @@ test_that("Classify returns the expected factor", {
     rule("B", "CD3E", "<", .1e-3)
   expect_equal(
     as.numeric(table(classify(obj=x, classes=c("T", "Treg", "Treg_act", "B")))),
-    c(551, 26, 23, 649, 651))
+    c(551, 24, 27, 654, 644))
 
 })
 
@@ -32,7 +32,7 @@ test_that("classify's boolean output is as expected.", {
   expect_equal(dim(res),
                dim(matrix(rep(FALSE,ncol(simulated_umis$raw)),
                           ncol=1)))
-  expect_equal(sum(res), 145)
+  expect_equal(sum(res), 133)
   expect_true(is.logical(res))
 })
 
