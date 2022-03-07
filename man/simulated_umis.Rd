@@ -7,7 +7,7 @@
 \format{
 A list with 4 entries:
 \describe{
-\item{raw}{Raw (unnormalized) UMI counts for a handful of genes, last columns are totalUMI. }
+\item{raw}{Raw (unnormalized) UMI counts for a handful of genes, last row are totalUMI. }
 \item{neighbors}{Indices of each cell's 50 nearest neighbors.}
 \item{embed}{Simulated UMAP embedding.}
 \item{celltype}{Cell type label that I used to simulate the data.}
