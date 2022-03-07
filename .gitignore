@@ -5,3 +5,4 @@
 .DS_Store
 inst/doc
 man/figures/*.png
+tests/testthat/Rplots.pdf
