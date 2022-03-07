@@ -23,3 +23,4 @@ evaluate_rule(obj, class, feature, operator, threshold)
 \description{
 Title
 }
+\keyword{internal}
