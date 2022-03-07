@@ -16,7 +16,7 @@
 #' @param invert. If TRUE, return classes that are NOT leafs instead of leaf nodes.
 #'
 #' @return
-#' @export
+#' @keywords internal
 #'
 #' @examples
 tree_leaf_nodes <- function(classes, invert=FALSE) {
@@ -39,7 +39,7 @@ tree_leaf_nodes <- function(classes, invert=FALSE) {
 #' @param class A character vector of length one with the class.
 #'
 #' @return
-#' @export
+#' @keywords internal
 #'
 tree_ancestry <- function(classes, class) {
   sel <- classes$class==class
@@ -61,7 +61,7 @@ tree_ancestry <- function(classes, class) {
 #' as argument so that tree_leaf_nodes is not executed in each recursion.
 #'
 #' @return Character vector with the descendants of a class.
-#' @export
+#' @keywords internal
 #'
 tree_descendants <- function(classes, class, leafs) {
 

@@ -18,3 +18,4 @@ created with the rule function.}
 \description{
 Finds leaf nodes, i.e. classes without children
 }
+\keyword{internal}

@@ -37,7 +37,7 @@ pool_across_neighbors <- function(x, neighbors) {
 #' @param threshold 
 #'
 #' @return
-#' @export
+#' @keywords internal
 #'
 #' @examples
 evaluate_rule <- function(obj,

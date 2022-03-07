@@ -20,3 +20,4 @@ Character vector with the descendants of a class.
 \description{
 Find child, child's child and so on for class(es) using recursive programming
 }
+\keyword{internal}

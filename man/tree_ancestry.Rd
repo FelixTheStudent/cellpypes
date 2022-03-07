@@ -17,3 +17,4 @@ tree_ancestry(classes, class)
 \description{
 Find parent, parent's parent and so on for a class using recursive programming
 }
+\keyword{internal}
