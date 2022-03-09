@@ -1,16 +1,15 @@
 cellpypes – Cell type pipes for R
 ================
 
--   [cellpypes – Cell type pipes for
-    R](#cellpypes--cell-type-pipes-for-r)
-    -   [Installation](#installation)
-    -   [Quick start](#quick-start)
-    -   [Annotating PBMCs](#annotating-pbmcs)
+-   [Purpose](#purpose)
+-   [Installation](#installation)
+-   [Quick start](#quick-start)
+-   [Annotating PBMCs](#annotating-pbmcs)
 -   [notes to myself](#notes-to-myself)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cellpypes – Cell type pipes for R
+## Purpose
 
 <!-- badges: start -->
 <!-- badges: end -->

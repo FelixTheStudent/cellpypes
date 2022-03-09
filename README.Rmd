@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# cellpypes -- Cell type pipes for R
+## Purpose
 
 <!-- badges: start -->
 <!-- badges: end -->
