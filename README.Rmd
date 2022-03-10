@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Purpose
+# Purpose
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -26,9 +26,12 @@ with marker gene rules and the popular piping operator `%>%`.
 The goal of cellpypes is to make manual cell type assignments
 of single-cell RNAseq data
 convenient, clear and reproducible.
+It is intended for UMI data (10x and SMARTseq3, not SMARTseq2 protocol).
 
 
-## Installation
+
+
+# Installation
 
 Install cellpypes with the following commands:
 <!-- You can install the released version of cellpypes from [CRAN](https://CRAN.R-project.org) with: -->
@@ -41,11 +44,22 @@ Install cellpypes with the following commands:
 devtools::install_github("FelixTheStudent/cellpypes")
 ```
 
-## Quick start
+
+```{r readRDS, eval=TRUE, include=FALSE}
+library(tidyverse)  # for quick start and others
+pbmc <- readRDS("/home/felix/paper_class/paper_class/results/PBMC2700/pbmc.rds")
+seurat_object <- pbmc
+```
+
+
+
+# Quick start
 
 Let's classify T cells in your `seurat_object`, by requiring
 high CD3E expression: 
-```{r quickstart, eval=FALSE, include=TRUE}
+```{r quickstart, eval=TRUE, include=TRUE}
+library(tidyverse)
+library(cellpypes)
 seurat_object %>%
   pype_from_seurat() %>%
   rule("CD3E+ T cells", "CD3E", ">", 3.5e-4) %>%
@@ -71,13 +85,13 @@ from highly-expressing cells, at the given signal-to-noise ratio.
 
 
 
-## Annotating PBMCs
+# Annotating PBMCs
 
 Here, we annote the same PBMC data set as in the popular
 [Seurat tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
 using the Seurat object `pbmc` that comes out of it.
 
-```{r pbmc_rules, eval=FALSE, include=TRUE}
+```{r pbmc_rules, eval=TRUE, include=TRUE}
 library(cellpypes)
 library(tidyverse) # provides piping operator %>%
 
@@ -137,6 +151,120 @@ A few observations:
     In practice, one would re-cluster the T cells and try to separate
     naive CD8+ from naive CD4+, or train a specialized machine learning
     algorithm to discriminate these two cell types in particular.
+
+
+
+# Differential expression testing
+
+Differential expression (DE) in the following refers to 
+comparing multiple samples (patients/mice/...)
+from at least two different groups (control/treated/...).
+We note this is conceptually sound, while DE between clusters
+is circular and results in invalid p-values
+(which are useful for ranking marker genes, not for determining significance).
+
+This section shows how to sum cells to pseudobulks, followed by testing with
+DESeq2. Pseudobulk approaches have been shown to perform as advertised,
+while many single-cell methods do not adjust p-values correctly and fail
+to control the false-discovery rate.
+
+
+
+
+
+
+
+## Pipe into DESeq2 for differential expression
+
+All you need is a cellpypes object and a \code{data.frame} with meta data (patient, treatment, etc.).
+To demonstrate, let's make up patients and treatment
+for the pbmc Seurat object (generate it yourself by following 
+\href{https://satijalab.org/seurat/articles/pbmc3k_tutorial.html}{this tutorial}):
+```{r class_to_deseq2}
+# This dummy example again uses the pbmc object from the Seurat tutorial:
+pype <- pbmc %>% 
+  pype_from_seurat() %>%
+  rule("T",           "CD3E",    ">", 3.5e-4)  
+# To demonstrate, we make up meta data (patient and treatment) for each cell:
+dummy_variable <- function(x) factor(sample(x, ncol(pbmc), replace=TRUE))
+pbmc_meta <- data.frame(
+  patient   = dummy_variable(paste0("patient", 1:6)),
+  treatment = dummy_variable(c("control","treated")))
+rownames(pbmc_meta) <- colnames(pbmc)
+head(pbmc_meta)
+```
+
+
+
+With cellpypes, you can directly pipe a given cell type into DESeq2
+to create a DESeq2 DataSet (dds) and test it:
+```{r eval=FALSE, include=TRUE}
+library(DESeq2)
+dds <- pype %>% 
+  class_to_deseq2(pbmc_meta, "T", ~ treatment)
+# test for differential expression and get DE genes:
+dds <- DESeq(dds)
+data.frame(results(dds)) %>% filter(padj<0.05)
+```
+In this dummy example, there is no real DE to find because we assigned cells
+randomly to treated/control. 
+
+
+
+
+
+
+## Pseudobulk matrix
+
+If you prefer to compute the full pseudobulk matrix with all cell types,
+here is a fully-reproducible minimal example.
+The crucial command is \code{pseudobulk(counts, pseudobulk_id(meta_df))},
+where counts and meta_df can be easily obtained from a seurat object like this:
+
+  * counts could be \code{seurat@assays$RNA@counts}
+  * meta_df could be selected columns from seurat@meta.data
+
+For a Seurat-independent demonstration, I will simulate raw UMI counts
+and associated meta data:
+```{r}
+# simulate dummy UMI counts (all genes have same expression):
+ncell=1000; ngene=100
+counts <- matrix(rpois(ngene*ncell, 0.5),
+                 nrow=ngene, ncol=ncell,
+                 dimnames = list(paste0("gene", 1:ngene),
+                                 paste0("cell", 1:ncell)))
+# simulate meta data (two cell types, each patient has control and treatment)
+dummy_variable <- function(x) factor(sample(x, ncell, replace=TRUE))
+meta_df <- data.frame(
+  patient  =dummy_variable(paste0("patient", 1:6)),
+  condition=dummy_variable(c("control", "treated")),
+  celltype =dummy_variable(c("Tcell", "Bcell"))
+)
+head(meta_df)
+```
+
+Next to computing pseudobulks, 
+```{r bulk}
+library(tidyverse)
+bulks <- pseudobulk(counts, pseudobulk_id(meta_df))
+coldat<-meta_df %>% distinct %>%
+  mutate(ID=pseudobulk_id(.)) %>% column_to_rownames("ID")
+# bringg to same order (good practice and required for DESeq2)
+coldat <- coldat[colnames(bulks), ]  
+```
+
+
+```{r DESeq, eval=FALSE, include=TRUE}
+library(DESeq2)
+dds <- DESeqDataSetFromMatrix(countData = bulks,
+                              colData = coldat,
+                              design = ~ condition)
+dds <- DESeq(dds)
+results(dds)
+```
+
+
+
 
 
 

@@ -5,11 +5,15 @@ cellpypes – Cell type pipes for R
 -   [Installation](#installation)
 -   [Quick start](#quick-start)
 -   [Annotating PBMCs](#annotating-pbmcs)
+-   [Differential expression testing](#differential-expression-testing)
+    -   [Pipe into DESeq2 for differential
+        expression](#pipe-into-deseq2-for-differential-expression)
+    -   [Pseudobulk matrix](#pseudobulk-matrix)
 -   [notes to myself](#notes-to-myself)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-## Purpose
+# Purpose
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -17,9 +21,10 @@ cellpypes – Cell type pipes for R
 With cellpypes, you can quickly construct simple and clear cell type
 hierarchies with marker gene rules and the popular piping operator
 `%>%`. The goal of cellpypes is to make manual cell type assignments of
-single-cell RNAseq data convenient, clear and reproducible.
+single-cell RNAseq data convenient, clear and reproducible. It is
+intended for UMI data (10x and SMARTseq3, not SMARTseq2 protocol).
 
-## Installation
+# Installation
 
 Install cellpypes with the following commands:
 <!-- You can install the released version of cellpypes from [CRAN](https://CRAN.R-project.org) with: -->
@@ -30,18 +35,21 @@ Install cellpypes with the following commands:
 devtools::install_github("FelixTheStudent/cellpypes")
 ```
 
-## Quick start
+# Quick start
 
 Let’s classify T cells in your `seurat_object`, by requiring high CD3E
 expression:
 
 ``` r
+library(tidyverse)
+library(cellpypes)
 seurat_object %>%
   pype_from_seurat() %>%
   rule("CD3E+ T cells", "CD3E", ">", 3.5e-4) %>%
   plot_last()
 ```
 
+<img src="man/figures/README-quickstart-1.png" width="100%" />
 ![pbmc2700](man/figures/README-pbmc_cd3e.png)
 
 As we can see, the chosen threshold of `3.5e-4` results in good
@@ -56,7 +64,7 @@ cellpypes defines CD3E-positive cells as those that that are virtually
 indistinguishable from highly-expressing cells, at the given
 signal-to-noise ratio.
 
-## Annotating PBMCs
+# Annotating PBMCs
 
 Here, we annote the same PBMC data set as in the popular [Seurat
 tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
@@ -84,6 +92,8 @@ pype <- pype %>%
 
 pype %>% plot_classes
 ```
+
+<img src="man/figures/README-pbmc_rules-1.png" width="100%" />
 
 ![pbmc2700](man/figures/README-pbmc2700.jpg)
 
@@ -117,6 +127,118 @@ A few observations:
     one would re-cluster the T cells and try to separate naive CD8+ from
     naive CD4+, or train a specialized machine learning algorithm to
     discriminate these two cell types in particular.
+
+# Differential expression testing
+
+Differential expression (DE) in the following refers to comparing
+multiple samples (patients/mice/…) from at least two different groups
+(control/treated/…). We note this is conceptually sound, while DE
+between clusters is circular and results in invalid p-values (which are
+useful for ranking marker genes, not for determining significance).
+
+This section shows how to sum cells to pseudobulks, followed by testing
+with DESeq2. Pseudobulk approaches have been shown to perform as
+advertised, while many single-cell methods do not adjust p-values
+correctly and fail to control the false-discovery rate.
+
+## Pipe into DESeq2 for differential expression
+
+All you need is a cellpypes object and a with meta data (patient,
+treatment, etc.). To demonstrate, let’s make up patients and treatment
+for the pbmc Seurat object (generate it yourself by following ):
+
+``` r
+# This dummy example again uses the pbmc object from the Seurat tutorial:
+pype <- pbmc %>% 
+  pype_from_seurat() %>%
+  rule("T",           "CD3E",    ">", 3.5e-4)  
+# To demonstrate, we make up meta data (patient and treatment) for each cell:
+dummy_variable <- function(x) factor(sample(x, ncol(pbmc), replace=TRUE))
+pbmc_meta <- data.frame(
+  patient   = dummy_variable(paste0("patient", 1:6)),
+  treatment = dummy_variable(c("control","treated")))
+rownames(pbmc_meta) <- colnames(pbmc)
+head(pbmc_meta)
+#>                   patient treatment
+#> AAACATACAACCAC-1 patient4   control
+#> AAACATTGAGCTAC-1 patient1   control
+#> AAACATTGATCAGC-1 patient2   control
+#> AAACCGTGCTTCCG-1 patient3   control
+#> AAACCGTGTATGCG-1 patient4   control
+#> AAACGCACTGGTAC-1 patient2   control
+```
+
+With cellpypes, you can directly pipe a given cell type into DESeq2 to
+create a DESeq2 DataSet (dds) and test it:
+
+``` r
+library(DESeq2)
+dds <- pype %>% 
+  class_to_deseq2(pbmc_meta, "T", ~ treatment)
+# test for differential expression and get DE genes:
+dds <- DESeq(dds)
+data.frame(results(dds)) %>% filter(padj<0.05)
+```
+
+In this dummy example, there is no real DE to find because we assigned
+cells randomly to treated/control.
+
+## Pseudobulk matrix
+
+If you prefer to compute the full pseudobulk matrix with all cell types,
+here is a fully-reproducible minimal example. The crucial command is ,
+where counts and meta\_df can be easily obtained from a seurat object
+like this:
+
+-   counts could be
+-   meta\_df could be selected columns from <seurat@meta.data>
+
+For a Seurat-independent demonstration, I will simulate raw UMI counts
+and associated meta data:
+
+``` r
+# simulate dummy UMI counts (all genes have same expression):
+ncell=1000; ngene=100
+counts <- matrix(rpois(ngene*ncell, 0.5),
+                 nrow=ngene, ncol=ncell,
+                 dimnames = list(paste0("gene", 1:ngene),
+                                 paste0("cell", 1:ncell)))
+# simulate meta data (two cell types, each patient has control and treatment)
+dummy_variable <- function(x) factor(sample(x, ncell, replace=TRUE))
+meta_df <- data.frame(
+  patient  =dummy_variable(paste0("patient", 1:6)),
+  condition=dummy_variable(c("control", "treated")),
+  celltype =dummy_variable(c("Tcell", "Bcell"))
+)
+head(meta_df)
+#>    patient condition celltype
+#> 1 patient1   control    Tcell
+#> 2 patient5   treated    Tcell
+#> 3 patient4   treated    Tcell
+#> 4 patient2   treated    Bcell
+#> 5 patient6   control    Bcell
+#> 6 patient4   control    Tcell
+```
+
+Next to computing pseudobulks,
+
+``` r
+library(tidyverse)
+bulks <- pseudobulk(counts, pseudobulk_id(meta_df))
+coldat<-meta_df %>% distinct %>%
+  mutate(ID=pseudobulk_id(.)) %>% column_to_rownames("ID")
+# bringg to same order (good practice and required for DESeq2)
+coldat <- coldat[colnames(bulks), ]  
+```
+
+``` r
+library(DESeq2)
+dds <- DESeqDataSetFromMatrix(countData = bulks,
+                              colData = coldat,
+                              design = ~ condition)
+dds <- DESeq(dds)
+results(dds)
+```
 
 # notes to myself
 
