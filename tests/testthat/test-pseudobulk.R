@@ -28,3 +28,30 @@ test_that("Example in pseudobulk_ids docu is working", {
 
 
 })
+
+
+
+
+
+
+
+
+
+# simulate dummy meta data for simulated_umis:
+ncells <- ncol(simulated_umis$raw)
+dummy_variable <- function(x) factor(sample(x, ncells, replace=TRUE))
+meta_data <- data.frame(patient=dummy_variable(paste0("patient", 1:6)),
+                        treatment=dummy_variable(c("control", "treated")))
+
+test_that("class_to_deseq2 stops gracefully if class has zero cells.", {
+  expect_error(
+    dds <- simulated_umis         %>% 
+      rule("T", "CD3E",">", 1000e-4) %>%
+      class_to_deseq2(meta_data, "T", ~ treatment),
+    "contains no cells"
+    
+  )
+  
+})
+
+

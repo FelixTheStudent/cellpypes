@@ -16,7 +16,7 @@ which pseudobulk. Generate pseudobulk_ids with the \link[cellpypes]{pseudobulk_i
 A matrix where each column is a pseudobulk and each row a gene.
 }
 \description{
-Form pseudobulks from single cells.
+Description.
 }
 \examples{
 # Create pseudobulk counts and coldata for DESeq2: 

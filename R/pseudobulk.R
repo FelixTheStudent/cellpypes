@@ -27,6 +27,10 @@ fac2matrix <- function(factor){
 #' @param raw A matrix with raw UMI counts, cells in columns. 
 #' @param pseudobulk_id A factor that identifies which cells should go to
 #' which pseudobulk. Generate pseudobulk_ids with the \link[cellpypes]{pseudobulk_id} function! 
+#' 
+#' @description 
+#' Sum up cells in count matrix \code{raw} for bulk RNA methods such as
+#' DESeq2.
 #'
 #' @return A matrix where each column is a pseudobulk and each row a gene.
 #' @export
@@ -54,21 +58,24 @@ pseudobulk <- function(raw, pseudobulk_id) {
 
 
 
-#' Generate syntactically valid and unique IDs to identify your pseudobulks.
+#' Generate unique IDs to identify your pseudobulks.
 #'
 #' @param factor_df Data frame where each column helps to identify a pseudobulk.
-#' Each row in factor_df usually corresponds to a single cell in your raw count matrix.
+#' Each row in factor_df corresponds to a single cell in your raw count matrix.
 #' Typical columns of factor_df are for example patient, treatment and cell type -- anything
 #' that uniquely identifies a replicate.
 #' @return Factor with syntactically valid and unique IDs.
 #' @details Wraps \link[base]{make.names} to generate syntactically valid IDs.
 #' Use these IDs in the \link[cellpypes]{pseudobulk} function.
 #' Note that this function combines all columns in factor_df, so only include
-#' The columns that uniquely identify replicates.
+#' the columns that uniquely identify replicates.
 #' Cells from the same experimental unit
 #  (combination of patient, treatment, celltype, etc.) 
 #  get the same pseudobulk_id.
 #' 
+#' @description 
+#' This function generates unique IDs that are valid colnames as well.
+#' Use these IDs in function pseudobulk.
 #' 
 #' @export
 #'
@@ -104,6 +111,80 @@ pseudobulk_id <- function(factor_df) {
 
 
 
+
+
+
+#' Create DESeq2 object for a given cell type
+#'
+#' @param obj A pype object, with at least one cell type classified.
+#' @param meta_df Data frame where each column helps to identify a pseudobulk.
+#' Typical columns of meta_df are for example patient, treatment and
+#' cell type -- anything
+#' that uniquely identifies a replicate / batch / 10x run. 
+#' Each row in meta_df corresponds to a single cell in your raw count matrix.
+#' @param class The name of cellpypes class for which you want to test 
+#' for differential expression.
+#' @param design A formula based on columns in \code{meta_df}.
+#' To test differential expression between two groups
+#' in meta_df$condition, use formula \code{~ condition}.
+#' More complex formulas (e.g. with interactions) are possible, for example 
+#' \code{~ genotype + treatment + genotype:treatment}.
+#' 
+#' @description 
+#' Create a DESeq2 data set (`dds' in the 
+#' \href{www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html}{DESeq2 vignette})
+#' for the specified class (cell type).
+#'
+#' @return A DESeq2 object (e.g. dds)
+#' @export
+#' 
+#' @importFrom rlang is_scalar_character
+#'
+#' @examples
+#' data("simulated_umis") 
+#' # Meta data
+#' ncells <- ncol(simulated_umis$raw)
+#' dummy_variable <- function(x) factor(sample(x, ncells, replace=TRUE))
+#' meta_data <- data.frame(patient=dummy_variable(paste0("patient", 1:6)),
+#'                         treatment=dummy_variable(c("control", "treated")))
+#' dds <- simulated_umis         %>% 
+#'   rule("T", "CD3E",">", 1e-4) %>%
+#'   class_to_deseq2(meta_data, "T", ~ treatment)
+#'   
+#'   
+class_to_deseq2 <- function(obj, meta_df, class, design = ~ condition) {
+  deseq_status <- requireNamespace("DESeq2", quietly = TRUE)
+  if(!deseq_status) stop("Install DESeq2 to use class_to_deseq2 function.")
+  check_obj(obj)
+  stopifnot(
+    inherits(meta_df, "data.frame"),
+    inherits(design, "formula"),
+    is_scalar_character(class),
+    any(obj$classes$class == class))
+  
+  # After the fact, colnames(dds) should reveal which cell type was used:
+  meta_df$celltype <- class
+  
+  # dds should only contain the relevant cell type to keep it simple:
+  is_class <- classify(obj, classes=class) == class
+  if(sum(is_class)==0) stop(paste0("Cell type '",class,"' contains no cells."))
+  bulks <- pseudobulk(obj$raw[,is_class], pseudobulk_id(meta_df[is_class,]))
+  # I don't want to depend on dplyr (huge package), so I write 'distinct' myself:
+  coldat <- meta_df[is_class,]
+  coldat$rowID <- pseudobulk_id(meta_df[is_class,])
+  coldat <- coldat[!duplicated(coldat$rowID),] 
+  rownames(coldat) <- coldat$rowID
+  coldat <- coldat[,colnames(coldat) != "rowID", drop=FALSE]
+  # bring to same order (good practice and required for DESeq2)
+  coldat <- coldat[colnames(bulks), , drop=FALSE] 
+  
+  
+  dds <- DESeq2::DESeqDataSetFromMatrix(
+    countData = bulks,
+    colData = coldat,
+    design = design)
+  dds
+}
 
 
 

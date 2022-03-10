@@ -2,7 +2,7 @@
 % Please edit documentation in R/pseudobulk.R
 \name{pseudobulk_id}
 \alias{pseudobulk_id}
-\title{Generate syntactically valid and unique IDs to identify your pseudobulks.}
+\title{Generate unique IDs to identify your pseudobulks.}
 \usage{
 pseudobulk_id(factor_df)
 }
@@ -16,13 +16,13 @@ that uniquely identifies a replicate.}
 Factor with syntactically valid and unique IDs.
 }
 \description{
-Generate syntactically valid and unique IDs to identify your pseudobulks.
+Generate unique IDs to identify your pseudobulks.
 }
 \details{
 Wraps \link[base]{make.names} to generate syntactically valid IDs.
 Use these IDs in the \link[cellpypes]{pseudobulk} function.
 Note that this function combines all columns in factor_df, so only include
-The columns that uniquely identify replicates.
+the columns that uniquely identify replicates.
 Cells from the same experimental unit
 }
 \examples{
