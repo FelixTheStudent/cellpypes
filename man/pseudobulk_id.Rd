@@ -8,7 +8,7 @@ pseudobulk_id(factor_df)
 }
 \arguments{
 \item{factor_df}{Data frame where each column helps to identify a pseudobulk.
-Each row in factor_df usually corresponds to a single cell in your raw count matrix.
+Each row in factor_df corresponds to a single cell in your raw count matrix.
 Typical columns of factor_df are for example patient, treatment and cell type -- anything
 that uniquely identifies a replicate.}
 }
@@ -16,7 +16,8 @@ that uniquely identifies a replicate.}
 Factor with syntactically valid and unique IDs.
 }
 \description{
-Generate unique IDs to identify your pseudobulks.
+This function generates unique IDs that are valid colnames as well.
+Use these IDs in function pseudobulk.
 }
 \details{
 Wraps \link[base]{make.names} to generate syntactically valid IDs.

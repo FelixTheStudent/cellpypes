@@ -16,7 +16,8 @@ which pseudobulk. Generate pseudobulk_ids with the \link[cellpypes]{pseudobulk_i
 A matrix where each column is a pseudobulk and each row a gene.
 }
 \description{
-Description.
+Sum up cells in count matrix \code{raw} for bulk RNA methods such as
+DESeq2.
 }
 \examples{
 # Create pseudobulk counts and coldata for DESeq2: 
