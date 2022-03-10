@@ -48,7 +48,7 @@ pype_from_seurat <- function(seurat) {
   }
   
   list(
-    raw      =Matrix::GetAssayData(seurat, "counts"),
+    raw      =SeuratObject::GetAssayData(seurat, "counts"),
     neighbors=as(seurat@graphs[[graph_choice]], "dgCMatrix")>.1,
     embed    =FetchData(seurat, dimension_names),
     totalUMI = seurat$nCount_RNA
