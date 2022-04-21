@@ -108,7 +108,7 @@ rules[rules$class=="T"&&rules$feature=="CD3E"] <-
 
 # Developer's cheat sheet
 
-Don't forget devtools::build_readme() before 
+Don't forget `devtools::build_readme()` before 
 pushing to git.
 
 
@@ -127,8 +127,8 @@ Whenever you write a new function:
   2. RStudio > Code > Insert roxygen2 skeleton
   3. use_test("foo")
     expect_identical, etc. inside test_that
-  4. `load_all()`, `document()`, `test()` [or Cntrl+Shift+T], 
-    occasionally: `devtools::build_readme()`
+  4. `load_all()`, `document()`, `test()` [or Cntrl+Shift+T]
+  5. if you changed the readme file: `devtools::build_readme()`
 
 Furthermore:
 If you are using functions repeatedly, you can avoid :: by importing the function with @importFrom pkg fun.
