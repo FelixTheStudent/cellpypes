@@ -143,15 +143,16 @@ correctly and fail to control the false-discovery rate.
 
 ## Pipe into DESeq2 for differential expression
 
-All you need is a cellpypes object and a with meta data (patient,
-treatment, etc.). To demonstrate, let’s make up patients and treatment
-for the pbmc Seurat object (generate it yourself by following ):
+All you need is a cellpypes object and a *data.frame* with meta data
+(patient, treatment, etc.). To demonstrate, let’s make up patients and
+treatment for the pbmc Seurat object (generate it yourself by following
+):
 
 ``` r
 # This dummy example again uses the pbmc object from the Seurat tutorial:
 pype <- pbmc %>% 
   pype_from_seurat() %>%
-  rule("T",           "CD3E",    ">", 3.5e-4)  
+  rule("T", "CD3E", ">", 3.5e-4)  
 # To demonstrate, we make up meta data (patient and treatment) for each cell:
 dummy_variable <- function(x) factor(sample(x, ncol(pbmc), replace=TRUE))
 pbmc_meta <- data.frame(
@@ -160,12 +161,12 @@ pbmc_meta <- data.frame(
 rownames(pbmc_meta) <- colnames(pbmc)
 head(pbmc_meta)
 #>                   patient treatment
-#> AAACATACAACCAC-1 patient4   control
-#> AAACATTGAGCTAC-1 patient1   control
+#> AAACATACAACCAC-1 patient5   treated
+#> AAACATTGAGCTAC-1 patient1   treated
 #> AAACATTGATCAGC-1 patient2   control
-#> AAACCGTGCTTCCG-1 patient3   control
+#> AAACCGTGCTTCCG-1 patient4   control
 #> AAACCGTGTATGCG-1 patient4   control
-#> AAACGCACTGGTAC-1 patient2   control
+#> AAACGCACTGGTAC-1 patient3   control
 ```
 
 With cellpypes, you can directly pipe a given cell type into DESeq2 to
@@ -212,24 +213,28 @@ meta_df <- data.frame(
 )
 head(meta_df)
 #>    patient condition celltype
-#> 1 patient1   control    Tcell
-#> 2 patient5   treated    Tcell
-#> 3 patient4   treated    Tcell
-#> 4 patient2   treated    Bcell
-#> 5 patient6   control    Bcell
-#> 6 patient4   control    Tcell
+#> 1 patient4   treated    Tcell
+#> 2 patient2   control    Tcell
+#> 3 patient3   treated    Bcell
+#> 4 patient5   treated    Tcell
+#> 5 patient1   control    Tcell
+#> 6 patient1   control    Bcell
 ```
 
-Next to computing pseudobulks,
+We aggregate single-cell counts to pseudobulks, and single-cell meta
+data to coldat (coldat=data on every column in the pseudobulk matrix):
 
 ``` r
 library(tidyverse)
 bulks <- pseudobulk(counts, pseudobulk_id(meta_df))
 coldat<-meta_df %>% distinct %>%
   mutate(ID=pseudobulk_id(.)) %>% column_to_rownames("ID")
-# bringg to same order (good practice and required for DESeq2)
+# bring to same order (good practice and required for DESeq2)
 coldat <- coldat[colnames(bulks), ]  
 ```
+
+After constructing the DESeq2 data set (dds), we can compute
+differentially expressed genes:
 
 ``` r
 library(DESeq2)

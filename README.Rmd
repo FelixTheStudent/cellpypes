@@ -176,7 +176,7 @@ to control the false-discovery rate.
 
 ## Pipe into DESeq2 for differential expression
 
-All you need is a cellpypes object and a \code{data.frame} with meta data (patient, treatment, etc.).
+All you need is a cellpypes object and a *data.frame* with meta data (patient, treatment, etc.).
 To demonstrate, let's make up patients and treatment
 for the pbmc Seurat object (generate it yourself by following 
 \href{https://satijalab.org/seurat/articles/pbmc3k_tutorial.html}{this tutorial}):
@@ -184,7 +184,7 @@ for the pbmc Seurat object (generate it yourself by following
 # This dummy example again uses the pbmc object from the Seurat tutorial:
 pype <- pbmc %>% 
   pype_from_seurat() %>%
-  rule("T",           "CD3E",    ">", 3.5e-4)  
+  rule("T", "CD3E", ">", 3.5e-4)  
 # To demonstrate, we make up meta data (patient and treatment) for each cell:
 dummy_variable <- function(x) factor(sample(x, ncol(pbmc), replace=TRUE))
 pbmc_meta <- data.frame(
@@ -243,17 +243,19 @@ meta_df <- data.frame(
 head(meta_df)
 ```
 
-Next to computing pseudobulks, 
+We aggregate single-cell counts to pseudobulks, and single-cell meta data to
+coldat (coldat=data on every column in the pseudobulk matrix):
 ```{r bulk}
 library(tidyverse)
 bulks <- pseudobulk(counts, pseudobulk_id(meta_df))
 coldat<-meta_df %>% distinct %>%
   mutate(ID=pseudobulk_id(.)) %>% column_to_rownames("ID")
-# bringg to same order (good practice and required for DESeq2)
+# bring to same order (good practice and required for DESeq2)
 coldat <- coldat[colnames(bulks), ]  
 ```
 
-
+After constructing the DESeq2 data set (dds), we can compute differentially
+expressed genes:
 ```{r DESeq, eval=FALSE, include=TRUE}
 library(DESeq2)
 dds <- DESeqDataSetFromMatrix(countData = bulks,
