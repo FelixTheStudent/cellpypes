@@ -9,7 +9,6 @@ cellpypes – Cell type pipes for R
     -   [Pipe into DESeq2 for differential
         expression](#pipe-into-deseq2-for-differential-expression)
     -   [Pseudobulk matrix](#pseudobulk-matrix)
--   [notes to myself](#notes-to-myself)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -49,7 +48,6 @@ seurat_object %>%
   plot_last()
 ```
 
-<img src="man/figures/README-quickstart-1.png" width="100%" />
 ![pbmc2700](man/figures/README-pbmc_cd3e.png)
 
 As we can see, the chosen threshold of `3.5e-4` results in good
@@ -90,12 +88,10 @@ pype <- pype %>%
   rule("Naive CD4+",  "CCR7",    ">", 1.5e-4, parent="CD4+ T") %>%
   rule("Memory CD4+",  "S100A4", ">", 13e-4,  parent="CD4+ T")
 
-pype %>% plot_classes
+plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
 ```
 
 <img src="man/figures/README-pbmc_rules-1.png" width="100%" />
-
-![pbmc2700](man/figures/README-pbmc2700.jpg)
 
 A few observations:
 
@@ -146,7 +142,8 @@ correctly and fail to control the false-discovery rate.
 All you need is a cellpypes object and a *data.frame* with meta data
 (patient, treatment, etc.). To demonstrate, let’s make up patients and
 treatment for the pbmc Seurat object (generate it yourself by following
-):
+[this
+tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
 
 ``` r
 # This dummy example again uses the pbmc object from the Seurat tutorial:
@@ -161,12 +158,12 @@ pbmc_meta <- data.frame(
 rownames(pbmc_meta) <- colnames(pbmc)
 head(pbmc_meta)
 #>                   patient treatment
-#> AAACATACAACCAC-1 patient5   treated
-#> AAACATTGAGCTAC-1 patient1   treated
-#> AAACATTGATCAGC-1 patient2   control
-#> AAACCGTGCTTCCG-1 patient4   control
-#> AAACCGTGTATGCG-1 patient4   control
-#> AAACGCACTGGTAC-1 patient3   control
+#> AAACATACAACCAC-1 patient4   treated
+#> AAACATTGAGCTAC-1 patient6   treated
+#> AAACATTGATCAGC-1 patient6   treated
+#> AAACCGTGCTTCCG-1 patient3   control
+#> AAACCGTGTATGCG-1 patient1   treated
+#> AAACGCACTGGTAC-1 patient6   control
 ```
 
 With cellpypes, you can directly pipe a given cell type into DESeq2 to
@@ -187,12 +184,12 @@ cells randomly to treated/control.
 ## Pseudobulk matrix
 
 If you prefer to compute the full pseudobulk matrix with all cell types,
-here is a fully-reproducible minimal example. The crucial command is ,
-where counts and meta\_df can be easily obtained from a seurat object
-like this:
+here is a fully-reproducible minimal example. The crucial command is
+`pseudobulk(counts, pseudobulk_id(meta_df))`, where counts and meta\_df
+can be easily obtained from a seurat object like this:
 
--   counts could be
--   meta\_df could be selected columns from <seurat@meta.data>
+-   counts could be `seurat@assays$RNA@counts`
+-   meta\_df could be selected columns from `seurat@meta.data`
 
 For a Seurat-independent demonstration, I will simulate raw UMI counts
 and associated meta data:
@@ -213,12 +210,12 @@ meta_df <- data.frame(
 )
 head(meta_df)
 #>    patient condition celltype
-#> 1 patient4   treated    Tcell
-#> 2 patient2   control    Tcell
-#> 3 patient3   treated    Bcell
-#> 4 patient5   treated    Tcell
-#> 5 patient1   control    Tcell
-#> 6 patient1   control    Bcell
+#> 1 patient1   treated    Bcell
+#> 2 patient4   treated    Bcell
+#> 3 patient3   control    Tcell
+#> 4 patient3   treated    Tcell
+#> 5 patient1   control    Bcell
+#> 6 patient5   treated    Tcell
 ```
 
 We aggregate single-cell counts to pseudobulks, and single-cell meta
@@ -244,12 +241,3 @@ dds <- DESeqDataSetFromMatrix(countData = bulks,
 dds <- DESeq(dds)
 results(dds)
 ```
-
-# notes to myself
-
--   execute but hide code: echo=FALSE
--   You’ll still need to render `README.Rmd` regularly, to keep
-    `README.md` up-to-date. `devtools::build_readme()` is handy for
-    this. You could also use GitHub Actions to re-render `README.Rmd`
-    every time you push. An example workflow can be found here:
-    <https://github.com/r-lib/actions/tree/master/examples>.

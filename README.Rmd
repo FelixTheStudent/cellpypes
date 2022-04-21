@@ -57,7 +57,7 @@ seurat_object <- pbmc
 
 Let's classify T cells in your `seurat_object`, by requiring
 high CD3E expression: 
-```{r quickstart, eval=TRUE, include=TRUE}
+```{r quickstart, eval=FALSE, include=TRUE}
 library(tidyverse)
 library(cellpypes)
 seurat_object %>%
@@ -65,7 +65,9 @@ seurat_object %>%
   rule("CD3E+ T cells", "CD3E", ">", 3.5e-4) %>%
   plot_last()
 ```
+
 ![pbmc2700](man/figures/README-pbmc_cd3e.png)
+
 
 As we can see, the chosen threshold of `3.5e-4` results in good agreement
 between positive cells (left plot) and high marker gene expression
@@ -111,46 +113,45 @@ pype <- pype %>%
   rule("Naive CD4+",  "CCR7",    ">", 1.5e-4, parent="CD4+ T") %>%
   rule("Memory CD4+",  "S100A4", ">", 13e-4,  parent="CD4+ T")
 
-pype %>% plot_classes
+plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
 ```
     
 
-![pbmc2700](man/figures/README-pbmc2700.jpg)
 
 A few observations:
 
-  * Note how `rule`'s *parent* argument is used to build a hierarchy.
-  * A cell type can have multiple rules, such as `CD14+ Mono`. 
-  Only cells for which all relevant rules apply are counted to
-  this cell type.
-  * cellpypes works with **classes** defined by gene-based **rules**.
-  Whether your classes correspond to
-  biologically relevant **cell types** is best answered in 
-  a passionate discussion on their marker genes you would 
-  have with your peers. 
-  Until you are sure, "MS4A1+" is a better class name than "B cell".
-  * Unassigned cells (grey) are not necessarily bad but
-  a way to respect the signal-to-noise limit.
-  Unassigned cells arise for two reasons:
-     * Not enough signal for any rule to apply.
-     For example, outlier cells typically get few 
-     neighbors in Seurat's SNN graph, making them negative for most rules.
-     * Not enough separation. If two classes are highly similar,
-     such as CD4+ and CD8+ T cells, 
-     cells in the noisy class border
-     may be positive for rules from both classes.
-     By default, cellpypes sets them to *Unassigned*, but this behaviour
-     can be controlled with the *replace_overlap_with* argument in 
-     `classify` and `plot_classes`.
-  * There are Naive CD8+ T cells amongst the naive CD4 cells.
-    While overlooked in the original tutorial, the marker-based
-    nature of cellpypes revealed this.
-    This is a good example for *cellpype*'s resolution limit:
-    If UMAP cannot separate cells properly, cellpypes will also
-    struggle -- but at least it will be obvious.
-    In practice, one would re-cluster the T cells and try to separate
-    naive CD8+ from naive CD4+, or train a specialized machine learning
-    algorithm to discriminate these two cell types in particular.
+* Note how `rule`'s *parent* argument is used to build a hierarchy.
+* A cell type can have multiple rules, such as `CD14+ Mono`. 
+Only cells for which all relevant rules apply are counted to
+this cell type.
+* cellpypes works with **classes** defined by gene-based **rules**.
+Whether your classes correspond to
+biologically relevant **cell types** is best answered in 
+a passionate discussion on their marker genes you would 
+have with your peers. 
+Until you are sure, "MS4A1+" is a better class name than "B cell".
+* Unassigned cells (grey) are not necessarily bad but
+a way to respect the signal-to-noise limit.
+Unassigned cells arise for two reasons:
+   * Not enough signal for any rule to apply.
+   For example, outlier cells typically get few 
+   neighbors in Seurat's SNN graph, making them negative for most rules.
+   * Not enough separation. If two classes are highly similar,
+   such as CD4+ and CD8+ T cells, 
+   cells in the noisy class border
+   may be positive for rules from both classes.
+   By default, cellpypes sets them to *Unassigned*, but this behaviour
+   can be controlled with the *replace_overlap_with* argument in 
+   `classify` and `plot_classes`.
+* There are Naive CD8+ T cells amongst the naive CD4 cells.
+  While overlooked in the original tutorial, the marker-based
+  nature of cellpypes revealed this.
+  This is a good example for *cellpype*'s resolution limit:
+  If UMAP cannot separate cells properly, cellpypes will also
+  struggle -- but at least it will be obvious.
+  In practice, one would re-cluster the T cells and try to separate
+  naive CD8+ from naive CD4+, or train a specialized machine learning
+  algorithm to discriminate these two cell types in particular.
 
 
 
@@ -179,7 +180,7 @@ to control the false-discovery rate.
 All you need is a cellpypes object and a *data.frame* with meta data (patient, treatment, etc.).
 To demonstrate, let's make up patients and treatment
 for the pbmc Seurat object (generate it yourself by following 
-\href{https://satijalab.org/seurat/articles/pbmc3k_tutorial.html}{this tutorial}):
+[this tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
 ```{r class_to_deseq2}
 # This dummy example again uses the pbmc object from the Seurat tutorial:
 pype <- pbmc %>% 
@@ -218,11 +219,11 @@ randomly to treated/control.
 
 If you prefer to compute the full pseudobulk matrix with all cell types,
 here is a fully-reproducible minimal example.
-The crucial command is \code{pseudobulk(counts, pseudobulk_id(meta_df))},
+The crucial command is `pseudobulk(counts, pseudobulk_id(meta_df))`,
 where counts and meta_df can be easily obtained from a seurat object like this:
 
-  * counts could be \code{seurat@assays$RNA@counts}
-  * meta_df could be selected columns from seurat@meta.data
+  * counts could be `seurat@assays$RNA@counts` 
+  * meta_df could be selected columns from `seurat@meta.data`
 
 For a Seurat-independent demonstration, I will simulate raw UMI counts
 and associated meta data:
@@ -271,9 +272,3 @@ results(dds)
 
 
 
-# notes to myself
-
-  * execute but hide code: echo=FALSE 
-  * You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
-  
-  
