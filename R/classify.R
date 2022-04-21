@@ -136,6 +136,8 @@ classify <- function(
   # other sanity checks:
   check_obj(obj) 
   
+  # factors give unexpected behaviour:
+  if(is.factor(classes)) stop("Argument classes should be character, not factor. Use as.character!")
 
   if (is.null(classes)) {
     # Convention: use tree leaves if classes=NULL 
