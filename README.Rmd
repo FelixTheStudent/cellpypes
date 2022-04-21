@@ -120,7 +120,7 @@ plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
 
 A few observations:
 
-* Note how `rule`'s *parent* argument is used to build a hierarchy.
+* Note how `rule`'s `parent` argument is used to build a hierarchy.
 * A cell type can have multiple rules, such as `CD14+ Mono`. 
 Only cells for which all relevant rules apply are counted to
 this cell type.
@@ -140,8 +140,8 @@ Unassigned cells arise for two reasons:
    such as CD4+ and CD8+ T cells, 
    cells in the noisy class border
    may be positive for rules from both classes.
-   By default, cellpypes sets them to *Unassigned*, but this behaviour
-   can be controlled with the *replace_overlap_with* argument in 
+   By default, cellpypes sets them to `Unassigned`, but this behaviour
+   can be controlled with the `replace_overlap_with` argument in 
    `classify` and `plot_classes`.
 * There are Naive CD8+ T cells amongst the naive CD4 cells.
   While overlooked in the original tutorial, the marker-based
@@ -177,7 +177,7 @@ to control the false-discovery rate.
 
 ## Pipe into DESeq2 for differential expression
 
-All you need is a cellpypes object and a *data.frame* with meta data (patient, treatment, etc.).
+All you need is a cellpypes object and a `data.frame` with meta data (patient, treatment, etc.).
 To demonstrate, let's make up patients and treatment
 for the pbmc Seurat object (generate it yourself by following 
 [this tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),

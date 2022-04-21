@@ -95,7 +95,7 @@ plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
 
 A few observations:
 
--   Note how `rule`’s *parent* argument is used to build a hierarchy.
+-   Note how `rule`’s `parent` argument is used to build a hierarchy.
 -   A cell type can have multiple rules, such as `CD14+ Mono`. Only
     cells for which all relevant rules apply are counted to this cell
     type.
@@ -112,8 +112,8 @@ A few observations:
     -   Not enough separation. If two classes are highly similar, such
         as CD4+ and CD8+ T cells, cells in the noisy class border may be
         positive for rules from both classes. By default, cellpypes sets
-        them to *Unassigned*, but this behaviour can be controlled with
-        the *replace\_overlap\_with* argument in `classify` and
+        them to `Unassigned`, but this behaviour can be controlled with
+        the `replace_overlap_with` argument in `classify` and
         `plot_classes`.
 -   There are Naive CD8+ T cells amongst the naive CD4 cells. While
     overlooked in the original tutorial, the marker-based nature of
@@ -139,7 +139,7 @@ correctly and fail to control the false-discovery rate.
 
 ## Pipe into DESeq2 for differential expression
 
-All you need is a cellpypes object and a *data.frame* with meta data
+All you need is a cellpypes object and a `data.frame` with meta data
 (patient, treatment, etc.). To demonstrate, let’s make up patients and
 treatment for the pbmc Seurat object (generate it yourself by following
 [this
@@ -158,12 +158,12 @@ pbmc_meta <- data.frame(
 rownames(pbmc_meta) <- colnames(pbmc)
 head(pbmc_meta)
 #>                   patient treatment
-#> AAACATACAACCAC-1 patient4   treated
-#> AAACATTGAGCTAC-1 patient6   treated
-#> AAACATTGATCAGC-1 patient6   treated
-#> AAACCGTGCTTCCG-1 patient3   control
-#> AAACCGTGTATGCG-1 patient1   treated
-#> AAACGCACTGGTAC-1 patient6   control
+#> AAACATACAACCAC-1 patient3   treated
+#> AAACATTGAGCTAC-1 patient4   treated
+#> AAACATTGATCAGC-1 patient4   treated
+#> AAACCGTGCTTCCG-1 patient4   control
+#> AAACCGTGTATGCG-1 patient5   control
+#> AAACGCACTGGTAC-1 patient3   control
 ```
 
 With cellpypes, you can directly pipe a given cell type into DESeq2 to
@@ -210,12 +210,12 @@ meta_df <- data.frame(
 )
 head(meta_df)
 #>    patient condition celltype
-#> 1 patient1   treated    Bcell
+#> 1 patient3   control    Bcell
 #> 2 patient4   treated    Bcell
-#> 3 patient3   control    Tcell
-#> 4 patient3   treated    Tcell
-#> 5 patient1   control    Bcell
-#> 6 patient5   treated    Tcell
+#> 3 patient5   treated    Tcell
+#> 4 patient3   control    Bcell
+#> 5 patient1   treated    Bcell
+#> 6 patient4   control    Tcell
 ```
 
 We aggregate single-cell counts to pseudobulks, and single-cell meta
