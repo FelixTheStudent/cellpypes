@@ -61,7 +61,7 @@ test_that("rule can assign same feature to different classes.", {
                  class=c("T","B","B"), 
                  feature= c("CD3E", "MS4A1", "CD3E"),
                  operator=c(">",">","<"),
-                 threshold=42
+                 threshold=42e-4
                ))
 })
 
@@ -84,12 +84,12 @@ test_that("Existing classes and existing features are handled correctly", {
                threshold=42)
   expect_equal(hasT$classes, data.frame(class="T", parent="..root.."))
   expect_equal(hasT$rules, data.frame(class="T", feature="CD3E", operator=">",
-                                      threshold=42))
+                                      threshold=42e-4))
   hasT <- rule(obj=hasT, class="T", feature="MS4A1", operator="<",
                threshold=42) 
   expect_equal(hasT$classes, data.frame(class="T", parent="..root.."))
   expect_equal(hasT$rules, data.frame(
-    class=c("T","T"), feature=c("CD3E", "MS4A1"), operator=c(">", "<"),threshold=42) )
+    class=c("T","T"), feature=c("CD3E", "MS4A1"), operator=c(">", "<"),threshold=42e-4) )
 })
   
 

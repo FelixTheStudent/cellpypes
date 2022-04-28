@@ -4,7 +4,15 @@
 \alias{rule}
 \title{Add a cell type rule.}
 \usage{
-rule(obj, class, feature, operator = ">", threshold, parent = NULL)
+rule(
+  obj,
+  class,
+  feature,
+  operator = ">",
+  threshold,
+  parent = NULL,
+  use_CP10K = TRUE
+)
 }
 \arguments{
 \item{obj}{}
@@ -15,11 +23,14 @@ rule(obj, class, feature, operator = ">", threshold, parent = NULL)
 
 \item{operator}{One of the following: \code{c("<", ">", "<=", ">=")}.}
 
+\item{threshold}{}
+
 \item{parent}{The parent class (e.g. "T" or "T cell").
 If NULL, new classes get "..root.." and
 existing classes keep their current parent.}
 
-\item{t}{}
+\item{use_CP10K}{Is the threshold provided as counts per 10 thousand UMIs
+(CP10K)? If TRUE, cellpypes multiplies the threshold with 1e-4.}
 }
 \value{
 

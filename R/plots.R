@@ -17,6 +17,7 @@
 #' 
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle
 #' @importFrom ggplot2 scale_color_manual theme_bw
+#' @importFrom cowplot plot_grid
 #'
 #' @examples
 plot_last <- function(obj, show_feat=TRUE, what="rule") {
@@ -27,7 +28,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
                           last_rule$class, last_rule$feature,
                           last_rule$operator,   last_rule$threshold)
     plot_title <- paste0(last_rule$feature, " ", last_rule$operator, " ",
-                         1e4*last_rule$threshold, " (per 10k UMI)")
+                         1e4*last_rule$threshold, " CP10K")
   } else if (what=="class") {
     last_class <- obj$rules[nrow(obj$rules), "class"]
     boolean=drop(classify(obj, classes=last_class, return_logical_matrix = T))
@@ -51,7 +52,11 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
   # I wanted plotting as side-effect, so with return(invisible(obj)),
   # to enable pipes like rule %>% plot_last %>% rule, but I learned
   # from Sveta that a T-pipe can do this anyways.
-  if(show_feat&what=="rule") return(p+feat(obj, last_rule$feature)) 
+  if(show_feat&what=="rule") return(cowplot::plot_grid(
+    p,
+    feat(obj,
+         last_rule$feature))) 
+  # with patchwork:   p+feat(obj, last_rule$feature)
   return(p)
   
 }
@@ -201,18 +206,19 @@ feat <- function(obj, features, ...) {
       geom_point(size=.4) +
       ggtitle(gene) + xlab(axis_names[1]) + ylab(axis_names[2]) +
       viridis::scale_color_viridis(
-        name = "per10k",
+        name = "CP10K",
         trans="log2",
         breaks=scUtils::closed_breaks_log2,
         labels= function(br) scUtils::closed_labels(
           br, 
           min_is_zero = any(dat$k==0))
       ) +
+      theme_bw()
       # declutter plots:
-      theme(axis.ticks = element_blank(),
-            axis.text = element_blank(),
-            panel.background = element_rect(fill="white", color = "black"),
-            panel.grid = element_blank())
+      # theme(axis.ticks = element_blank(),
+      #       axis.text = element_blank(),
+      #       panel.background = element_rect(fill="white", color = "black"),
+      #       panel.grid = element_blank())
       
   })
   

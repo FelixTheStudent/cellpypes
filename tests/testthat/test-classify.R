@@ -1,11 +1,11 @@
 test_that("Classify returns the expected factor", {
   # test on arbitrary thresholds:
   x <- simulated_umis %>%
-    rule("T", "CD3E", ">", .1e-3) %>%
-    rule("Treg", "FOXP3", ">", .01e-3, parent="T") %>%
-    rule("Treg_act", "ICOS", ">", .01e-3, parent="Treg") %>%
-    rule("B", "MS4A1", ">", .1e-3) %>%
-    rule("B", "CD3E", "<", .1e-3)
+    rule("T", "CD3E", ">", 1) %>%
+    rule("Treg", "FOXP3", ">", .1, parent="T") %>%
+    rule("Treg_act", "ICOS", ">", .1, parent="Treg") %>%
+    rule("B", "MS4A1", ">", 1) %>%
+    rule("B", "CD3E", "<", 1)
   expect_equal(
     as.numeric(table(classify(obj=x, classes=c("T", "Treg", "Treg_act", "B")))),
     c(551, 24, 27, 654, 644))
@@ -25,9 +25,9 @@ test_that("replace_overlap_with may be one of the classes", {
 
 
 test_that("classify's boolean output is as expected.", {
-  obj <- simulated_umis %>% rule("T", "CD3E", ">", 1e-3) %>%
-    rule("notT", "CD3E", "<", 1e-3) %>%
-    rule("B", "MS4A1", ">", 1e-3, parent="notT") 
+  obj <- simulated_umis %>% rule("T", "CD3E", ">", 10) %>%
+    rule("notT", "CD3E", "<", 10) %>%
+    rule("B", "MS4A1", ">", 10, parent="notT") 
   res <- classify(obj, classes="B", return_logical_matrix=T )
   expect_equal(dim(res),
                dim(matrix(rep(FALSE,ncol(simulated_umis$raw)),
@@ -60,9 +60,9 @@ test_that("classify does not require totalUMI", {
 
 test_that("overlap between class and its ancestry is not replaced.", {
   obj2 <- simulated_umis %>% 
-    rule("B", "MS4A1", ">", 1e-4) %>% 
-    rule("T", "CD3E", ">", .1e-4) %>% 
-    rule("Treg", "FOXP3", ">", .05e-4, parent="T") 
+    rule("B", "MS4A1", ">", 1) %>% 
+    rule("T", "CD3E", ">", .1) %>% 
+    rule("Treg", "FOXP3", ">", .05, parent="T") 
     
   class_labels <- classify(obj2, classes=c("B","T","Treg"))
   # All Tregs overlap with Ts. In this case, I want Treg, not Unassigned:
@@ -100,3 +100,4 @@ test_that("Factor instead of character gives intelligible error message.", {
   expect_error(classify(obj, classes = factor(c("B", "T", "Treg"))),
                regexp = "Argument classes should be character, not factor. Use as.character!")
 })
+

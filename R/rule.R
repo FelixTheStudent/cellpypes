@@ -65,7 +65,9 @@ check_obj <- function(obj) {
 #' @param class 
 #' @param feature 
 #' @param operator One of the following: \code{c("<", ">", "<=", ">=")}.
-#' @param t 
+#' @param threshold 
+#' @param use_CP10K Is the threshold provided as counts per 10 thousand UMIs
+#' (CP10K)? If TRUE, cellpypes multiplies the threshold with 1e-4.
 #' @param parent The parent class (e.g. "T" or "T cell").
 #' If NULL, new classes get "..root.." and
 #' existing classes keep their current parent.
@@ -80,7 +82,8 @@ rule <- function(obj,
                  feature,
                  operator = ">",
                  threshold,
-                 parent = NULL) {
+                 parent = NULL,
+                 use_CP10K=TRUE) {
   # check inputs:
   check_obj(obj)
   if( any(is.null(obj), is.null(class), is.null(feature), is.null(threshold) )) { 
@@ -115,6 +118,7 @@ rule <- function(obj,
   }
   
   class_dat <- data.frame(class=class, parent=parent)
+  if(use_CP10K) {threshold <- threshold * 1e-4}
   rule_dat  <- data.frame(class=class, feature=feature, 
                           operator=operator, threshold=threshold)
   # save to object
