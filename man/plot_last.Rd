@@ -4,7 +4,7 @@
 \alias{plot_last}
 \title{Plot the last modified rule or class}
 \usage{
-plot_last(obj, show_feat = TRUE, what = "rule")
+plot_last(obj, show_feat = TRUE, what = "rule", legend_rel_width = 0.3)
 }
 \arguments{
 \item{obj}{A cellpypes object.}

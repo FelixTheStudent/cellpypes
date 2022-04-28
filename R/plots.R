@@ -17,10 +17,11 @@
 #' 
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle
 #' @importFrom ggplot2 scale_color_manual theme_bw
-#' @importFrom cowplot plot_grid
+#' @importFrom cowplot plot_grid get_legend
 #'
 #' @examples
-plot_last <- function(obj, show_feat=TRUE, what="rule") {
+plot_last <- function(obj, show_feat=TRUE, what="rule",
+                      legend_rel_width=0.3) {
   check_obj(obj)
   if(what=="rule") {
     last_rule <- obj$rules[nrow(obj$rules),]
@@ -46,17 +47,26 @@ plot_last <- function(obj, show_feat=TRUE, what="rule") {
     scale_color_manual(name="Rule",
                        values = c("TRUE"="#44AA99", # cartoColors (colorblind friendly)
                                   "FALSE"="#888888")) +
-    theme_bw()
+    theme_bw()+
+    theme(plot.title = element_text(color="#44AA99"), legend.position = "none")
  
   # For saving etc. it is convenient to return the plot directly. 
   # I wanted plotting as side-effect, so with return(invisible(obj)),
   # to enable pipes like rule %>% plot_last %>% rule, but I learned
   # from Sveta that a T-pipe can do this anyways.
-  if(show_feat&what=="rule") return(cowplot::plot_grid(
-    p,
-    feat(obj,
-         last_rule$feature))) 
-  # with patchwork:   p+feat(obj, last_rule$feature)
+  if(show_feat&what=="rule") {
+    pfeat <- feat(obj, last_rule$feature)
+    legend <- cowplot::get_legend(pfeat +
+                                    # create some space to the right of the legend
+                                    theme(legend.box.margin = margin(0, 12, 0, 0))
+    )
+    assembled <- cowplot::plot_grid(
+      p, pfeat+theme(legend.position = "none"), legend,
+      ncol=3, rel_widths = c(1,1,legend_rel_width)
+    )
+    return(assembled) 
+    # with patchwork:   p+feat(obj, last_rule$feature)
+  }
   return(p)
   
 }
@@ -222,6 +232,7 @@ feat <- function(obj, features, ...) {
       
   })
   
+  if(length(l) == 1) return(l[[1]])   # single plot
 
   cowplot::plot_grid(plotlist = l, ...) 
 }
