@@ -44,7 +44,7 @@ library(tidyverse)
 library(cellpypes)
 seurat_object %>%
   pype_from_seurat() %>%
-  rule("CD3E+ T cells", "CD3E", ">", 3.5e-4) %>%
+  rule("CD3E+ T cells", "CD3E", ">", 3.5) %>%
   plot_last()
 ```
 
@@ -75,18 +75,18 @@ library(tidyverse) # provides piping operator %>%
 pype <- pype_from_seurat(pbmc)
 
 pype <- pype %>%
-  rule("B",           "MS4A1",   ">", 1e-4)                    %>%
-  rule("CD14+ Mono",  "CD14",    ">", 1e-4)                    %>%
-  rule("CD14+ Mono",  "LYZ",     ">", 20e-4)                   %>%
-  rule("FCGR3A+ Mono","MS4A7",   ">", 2e-4)                    %>%
-  rule("NK",          "GNLY",    ">", 75e-4)                   %>%
-  rule("DC",          "FCER1A",  ">", 1e-4)                    %>%
-  rule("Platelet",    "PPBP",    ">", 30e-4)                   %>%
-  rule("T",           "CD3E",    ">", 3.5e-4)                  %>% 
-  rule("CD8+ T",      "CD8A",    ">", .8e-4,  parent="T")      %>%
-  rule("CD4+ T",      "CD4",     ">", .05e-4, parent="T")      %>%
-  rule("Naive CD4+",  "CCR7",    ">", 1.5e-4, parent="CD4+ T") %>%
-  rule("Memory CD4+",  "S100A4", ">", 13e-4,  parent="CD4+ T")
+  rule("B",           "MS4A1",   ">", 1)                    %>%
+  rule("CD14+ Mono",  "CD14",    ">", 1)                    %>%
+  rule("CD14+ Mono",  "LYZ",     ">", 20)                   %>%
+  rule("FCGR3A+ Mono","MS4A7",   ">", 2)                    %>%
+  rule("NK",          "GNLY",    ">", 75)                   %>%
+  rule("DC",          "FCER1A",  ">", 1)                    %>%
+  rule("Platelet",    "PPBP",    ">", 30)                   %>%
+  rule("T",           "CD3E",    ">", 3.5)                  %>% 
+  rule("CD8+ T",      "CD8A",    ">", .8,  parent="T")      %>%
+  rule("CD4+ T",      "CD4",     ">", .05, parent="T")      %>%
+  rule("Naive CD4+",  "CCR7",    ">", 1.5, parent="CD4+ T") %>%
+  rule("Memory CD4+",  "S100A4", ">", 13,  parent="CD4+ T")
 
 plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
 ```
@@ -149,8 +149,9 @@ tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
 # This dummy example again uses the pbmc object from the Seurat tutorial:
 pype <- pbmc %>% 
   pype_from_seurat() %>%
-  rule("T", "CD3E", ">", 3.5e-4)  
+  rule("T", "CD3E", ">", 3.5)  
 # To demonstrate, we make up meta data (patient and treatment) for each cell:
+set.seed(42)
 dummy_variable <- function(x) factor(sample(x, ncol(pbmc), replace=TRUE))
 pbmc_meta <- data.frame(
   patient   = dummy_variable(paste0("patient", 1:6)),
@@ -158,12 +159,12 @@ pbmc_meta <- data.frame(
 rownames(pbmc_meta) <- colnames(pbmc)
 head(pbmc_meta)
 #>                   patient treatment
-#> AAACATACAACCAC-1 patient3   treated
-#> AAACATTGAGCTAC-1 patient4   treated
-#> AAACATTGATCAGC-1 patient4   treated
-#> AAACCGTGCTTCCG-1 patient4   control
-#> AAACCGTGTATGCG-1 patient5   control
-#> AAACGCACTGGTAC-1 patient3   control
+#> AAACATACAACCAC-1 patient1   treated
+#> AAACATTGAGCTAC-1 patient5   treated
+#> AAACATTGATCAGC-1 patient1   control
+#> AAACCGTGCTTCCG-1 patient1   treated
+#> AAACCGTGTATGCG-1 patient2   treated
+#> AAACGCACTGGTAC-1 patient4   control
 ```
 
 With cellpypes, you can directly pipe a given cell type into DESeq2 to
@@ -175,7 +176,7 @@ dds <- pype %>%
   class_to_deseq2(pbmc_meta, "T", ~ treatment)
 # test for differential expression and get DE genes:
 dds <- DESeq(dds)
-data.frame(results(dds)) %>% filter(padj<0.05)
+data.frame(results(dds)) %>% arrange(padj)
 ```
 
 In this dummy example, there is no real DE to find because we assigned
@@ -210,12 +211,12 @@ meta_df <- data.frame(
 )
 head(meta_df)
 #>    patient condition celltype
-#> 1 patient3   control    Bcell
-#> 2 patient4   treated    Bcell
-#> 3 patient5   treated    Tcell
-#> 4 patient3   control    Bcell
-#> 5 patient1   treated    Bcell
-#> 6 patient4   control    Tcell
+#> 1 patient2   control    Tcell
+#> 2 patient5   treated    Bcell
+#> 3 patient3   control    Tcell
+#> 4 patient5   treated    Bcell
+#> 5 patient5   control    Bcell
+#> 6 patient1   control    Tcell
 ```
 
 We aggregate single-cell counts to pseudobulks, and single-cell meta
