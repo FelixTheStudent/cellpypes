@@ -1,7 +1,7 @@
 cellpypes – Cell type pipes for R
 ================
 
--   [Purpose](#purpose)
+-   [Pipe your types!](#pipe-your-types)
 -   [Installation](#installation)
 -   [Quick start](#quick-start)
 -   [Annotating PBMCs](#annotating-pbmcs)
@@ -11,17 +11,25 @@ cellpypes – Cell type pipes for R
     -   [Pseudobulk matrix](#pseudobulk-matrix)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# Purpose
-
 <!-- badges: start -->
 <!-- badges: end -->
+
+# Pipe your types!
 
 With cellpypes, you can quickly construct simple and clear cell type
 hierarchies with marker gene rules and the popular piping operator
 `%>%`. The goal of cellpypes is to make manual cell type assignments of
 single-cell RNAseq data convenient, clear and reproducible. It is
 intended for UMI data (10x and SMARTseq3, not SMARTseq2 protocol).
+
+Define gene rules interactively:
+
+![Pype or pype not. There is no try.](man/figures/01_CD3_MS4A1.gif)
+
+Switch between cell type hierarchy levels in your analysis:
+
+![A Jedi’s strength lies in his marker
+genes.](man/figures/02_hierarchy.gif)
 
 # Installation
 
@@ -48,7 +56,7 @@ seurat_object %>%
   plot_last()
 ```
 
-![pbmc2700](man/figures/README-pbmc_cd3e.png)
+<img src="man/figures/README-quickstart-1.png" width="100%" />
 
 As we can see, the chosen threshold of `3.5e-4` results in good
 agreement between positive cells (left plot) and high marker gene
