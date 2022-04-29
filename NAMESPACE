@@ -3,6 +3,7 @@
 export(class_to_deseq2)
 export(classify)
 export(feat)
+export(find_knn)
 export(plot_classes)
 export(plot_last)
 export(pool_across_neighbors)

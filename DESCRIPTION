@@ -18,7 +18,8 @@ Suggests:
     knitr,
     rmarkdown,
     Seurat,
-    DESeq2
+    DESeq2,
+    RcppAnnoy
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 
