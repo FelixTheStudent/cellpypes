@@ -116,7 +116,7 @@ pseudobulk_id <- function(factor_df) {
 
 #' Create DESeq2 object for a given cell type
 #'
-#' @param obj A pype object, with at least one cell type classified.
+#' @param obj A pype object, with rules for at least one cell type.
 #' @param meta_df Data frame where each column helps to identify a pseudobulk.
 #' Typical columns of meta_df are for example patient, treatment and
 #' cell type -- anything

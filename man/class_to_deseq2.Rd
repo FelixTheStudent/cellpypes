@@ -7,7 +7,7 @@
 class_to_deseq2(obj, meta_df, class, design = ~condition)
 }
 \arguments{
-\item{obj}{A pype object, with at least one cell type classified.}
+\item{obj}{A pype object, with rules for at least one cell type.}
 
 \item{meta_df}{Data frame where each column helps to identify a pseudobulk.
 Typical columns of meta_df are for example patient, treatment and
