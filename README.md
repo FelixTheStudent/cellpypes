@@ -13,24 +13,13 @@ cellpypes – Cell type pipes for R
 -   [FAQ](#faq)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<style type="text/css">
+  body{
+  font-size: 12pt;
+}
+</style>
 <!-- badges: start -->
 <!-- badges: end -->
-
-``` r
-library(tidyverse)  # for quick start and others
-#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
-#> ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-#> ✓ tibble  3.1.3     ✓ dplyr   1.0.7
-#> ✓ tidyr   1.1.3     ✓ stringr 1.4.0
-#> ✓ readr   2.0.1     ✓ forcats 0.5.1
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#> x dplyr::filter() masks stats::filter()
-#> x dplyr::lag()    masks stats::lag()
-library(cellpypes)
-#> Registered S3 method overwritten by 'spatstat.geom':
-#>   method     from
-#>   print.boxx cli
-```
 
 # Pipe your types!
 
@@ -144,16 +133,16 @@ cellpypes uses CP10K (counts per 10 thousand) in functions `rule` and
 > to a user-provided threshold, taking the uncertainty due to technical
 > noise into account.
 
-**Intuition** cellpypes assumes a cell’s nearest neighbors are
-transcriptionally highly similar, so that the technical noise dominates
-the biological variation. This means that the UMI counts for a given
-marker gene, say CD3E, came from cells that roughly had the same
-fraction of CD3E mRNA. We can not use this reasoning to infer the
-individual cell’s mRNA fraction reliably (which is why [imputation
-introduces artifacts](https://f1000research.com/articles/7-1740)), but
-we can decide with reasonable confidence whether this cell was at least
-part of a subpopulation in which many cells expressed this gene highly.
-In other words:
+cellpypes assumes a cell’s nearest neighbors are transcriptionally
+highly similar, so that the technical noise dominates the biological
+variation. This means that the UMI counts for a given marker gene, say
+CD3E, came from cells that roughly had the same fraction of CD3E mRNA.
+We can not use this reasoning to infer the individual cell’s mRNA
+fraction reliably (which is why [imputation introduces
+artifacts](https://f1000research.com/articles/7-1740)), but we can
+decide with reasonable confidence whether this cell was at least part of
+a subpopulation in which many cells expressed this gene highly. In other
+words:
 
 > In cellpypes logic, CD3E+ cells are virtually indistinguishable from
 > cells with high CD3E expression. We just can’t prove they all had CD3E
@@ -236,18 +225,21 @@ pbmc %>%
   feat(c("NKG7", "MS4A1"))
 ```
 
-<img src="man/figures/README-feat-1.png" width="100%" /> \* The [viridis
-color
-scale](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
-is used because it encodes higher expression with higher color
-intensity, and is robust to colorblindness. \* Default UMAP setting
-produce crowded embeddings. To avoid overplotting, we recommend playing
-with UMAP’s `min_dist` and `spread` parameters. Compute UMAP with
-`spread` to 5 and you’ll be able to see much more in your embeddings! \*
-Manual thresholding is easier if you know whether your gene is expressed
-highly or lowly. In above example, I’d start with a large threshold for
-NKG7 (e.g. 10 CP10K) and a moderate one for MS4A1 (e.g. 1 CP10K), simply
-because NKG7 goes up to 381 CP10K in some cells.
+<img src="man/figures/README-feat-1.png" width="100%" />
+
+-   The [viridis color
+    scale](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+    is used because it encodes higher expression with higher color
+    intensity, and is robust to colorblindness.
+-   Default UMAP setting produce crowded embeddings. To avoid
+    overplotting, we recommend playing with UMAP’s `min_dist` and
+    `spread` parameters. Compute UMAP with `spread` to 5 and you’ll be
+    able to see much more in your embeddings!
+-   Manual thresholding is easier if you know whether your gene is
+    expressed highly or lowly. In above example, I’d start with a large
+    threshold for NKG7 (e.g. 10 CP10K) and a moderate one for MS4A1
+    (e.g. 1 CP10K), simply because NKG7 goes up to 381 CP10K in some
+    cells.
 
 Create a few cell type `rule`s and plot the most recent one with
 `plot_last`:

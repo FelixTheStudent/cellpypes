@@ -8,6 +8,17 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+
+
+<style type="text/css">
+  body{
+  font-size: 12pt;
+}
+</style>
+
+
+
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -22,7 +33,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 
-```{r}
+```{r include=FALSE}
 library(tidyverse)  # for quick start and others
 library(cellpypes)
 ```
@@ -159,7 +170,6 @@ This is why and what that means:
 nearest neighbors to a user-provided threshold,
 taking the uncertainty due to technical noise into account.
 
-**Intuition**
 cellpypes assumes a cell's nearest neighbors are transcriptionally highly
     similar, so that the technical noise dominates the biological variation. 
     This means that the UMI counts for a given marker gene,
@@ -280,6 +290,8 @@ Visualize marker gene expression with `feat` (short for feature plot):
 pbmc %>% 
   feat(c("NKG7", "MS4A1"))
 ```
+
+
   * The 
   [viridis color scale](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html) is used because it encodes higher expression with higher
   color intensity, and is robust to colorblindness.
