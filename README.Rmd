@@ -134,6 +134,31 @@ obj <- pype_from_seurat(seurat_object)
 
 
 
+# List of functions 
+
+
+
+Functions for manual classification:
+
+  * `feat`: feature plot (UMAP colored by gene expression)
+  * `rule`: add a cell type rule 
+  * `plot_last`: plot the most recent rule or class
+  * `classify`: classify cells by evaluating cell type rules
+  * `plot_classes`: call and visualize `classify`
+
+Functions for pseudobulking and differential gene expression (DE) analysis:
+
+  * `class_to_deseq2`: Create DESeq2 object for a given cell type
+  * `pseudobulk`: Form pseudobulks from single-cells
+  * `pseudobulk_id`: Generate unique IDs to identify pseudobulks
+
+
+
+
+
+
+
+
 
 # Annotating PBMCs
 
@@ -165,12 +190,12 @@ plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
 ```
     
 
-
-
-
-
-There are Naive CD8+ T cells amongst the naive CD4 cells.
-While overlooked in the original tutorial, the marker-based
+All major cell types are annotated with cell pypes.
+Note how there are naive CD8+ T cells among the 
+naive CD4 cells.
+While overlooked in the
+[original tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
+the marker-based
 nature of cellpypes revealed this.
 This is a good example for *cellpype*'s resolution limit:
 If UMAP cannot separate cells properly, cellpypes will also
@@ -186,6 +211,16 @@ algorithm to discriminate these two cell types in particular.
 
 
 # Understanding how cellpypes works
+
+
+cellpypes works with **classes** defined by gene-based rules.
+
+> Whether your classes correspond to
+biologically relevant **cell types** is best answered in 
+a passionate discussion on their marker genes you should 
+have with your peers. 
+
+Until you are sure, "MS4A1+" is a better class name than "B cell".
 
 
 
@@ -283,44 +318,20 @@ We just can't prove they all had CD3E mRNA due to data sparsity.
 
 
 
-# Using cellpypes
-
-
-cellpypes works with **classes** defined by gene-based rules.
-Whether your classes correspond to
-biologically relevant **cell types** is best answered in 
-a passionate discussion on their marker genes you should 
-have with your peers. 
-Until you are sure, "MS4A1+" is a better class name than "B cell".
 
 
 
 
-### List of functions 
-
-Functions for manual classification:
-
-  * `feat`: feature plot (UMAP colored by gene expression)
-  * `rule`: add a cell type rule 
-  * `plot_last`: plot the most recent rule or class
-  * `classify`: classify cells by evaluating cell type rules
-  * `plot_classes`: call and visualize `classify`
-
-Functions for pseudobulking and differential gene expression (DE) analysis:
-
-  * `class_to_deseq2`: Create DESeq2 object for a given cell type
-  * `pseudobulk`: Form pseudobulks from single-cells
-  * `pseudobulk_id`: Generate unique IDs to identify pseudobulks
 
 
 
 
-### Function demos
+
+# Function demos
 
 
 
-
-The following has short demo of every function.
+The following has a short demo of every function.
 Let's say you have completed the
 [Seurat pbmc2700 tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)
 (or it's [shortcut](https://satijalab.org/seurat/articles/essential_commands.html#seurat-standard-worflow-1)),
@@ -334,7 +345,7 @@ pbmc <- pype_from_seurat(seurat_object)
 
 
 
-#### Functions for manual classification
+### feat 
 
 Visualize marker gene expression with `feat` (short for feature plot):
 ```{r feat}
@@ -357,7 +368,7 @@ pbmc %>%
   simply because NKG7 goes up to 381 CP10K in some cells.
     
   
-
+### rule and plot_last
 
 Create a few cell type `rule`s and plot the most recent one with `plot_last`:
 ```{r}
@@ -385,7 +396,7 @@ pbmc %>%
 
 
 
-
+### classify and plot_classes
 Get cell type labels with `classify` or plot them directly with
 `plot_classes` (which wraps ggplot2 code around `classify`):
 ```{r}
@@ -424,11 +435,7 @@ head(classify(pbmc2))
 
 
 
-#### Functions for DE analysis 
-
-Differential gene expression (DE) analysis is a key outcome in
-single-cell data analysis.
-
+### class_to_deseq2
 
 
 ```{r eval=TRUE, include=FALSE}
@@ -466,6 +473,11 @@ data.frame(results(dds)) %>% arrange(padj) %>% head
 ```
 In this dummy example, there is no real DE to find because we assigned cells
 randomly to treated/control. 
+
+
+
+
+### pseudobulk and pseudobulk_id
 
 Instead of piping into DESeq2 directly, you can also form 
 pseudobulks with `pseudobulk` and helper function `pseudobulk_id`:

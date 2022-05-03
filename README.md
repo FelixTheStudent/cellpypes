@@ -4,10 +4,11 @@ cellpypes – Cell type pipes for R
 -   [Pipe your types!](#pipe-your-types)
 -   [Installation](#installation)
 -   [cellpypes input](#cellpypes-input)
+-   [List of functions](#list-of-functions)
 -   [Annotating PBMCs](#annotating-pbmcs)
 -   [Understanding how cellpypes
     works](#understanding-how-cellpypes-works)
--   [Using cellpypes](#using-cellpypes)
+-   [Function demos](#function-demos)
 -   [FAQ](#faq)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -98,6 +99,23 @@ obj <- list(
 obj <- pype_from_seurat(seurat_object)
 ```
 
+# List of functions
+
+Functions for manual classification:
+
+-   `feat`: feature plot (UMAP colored by gene expression)
+-   `rule`: add a cell type rule
+-   `plot_last`: plot the most recent rule or class
+-   `classify`: classify cells by evaluating cell type rules
+-   `plot_classes`: call and visualize `classify`
+
+Functions for pseudobulking and differential gene expression (DE)
+analysis:
+
+-   `class_to_deseq2`: Create DESeq2 object for a given cell type
+-   `pseudobulk`: Form pseudobulks from single-cells
+-   `pseudobulk_id`: Generate unique IDs to identify pseudobulks
+
 # Annotating PBMCs
 
 Here, we annote the same PBMC data set as in the popular [Seurat
@@ -129,16 +147,26 @@ plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
 
 <img src="man/figures/README-pbmc_rules-1.png" width="100%" />
 
-There are Naive CD8+ T cells amongst the naive CD4 cells. While
-overlooked in the original tutorial, the marker-based nature of
-cellpypes revealed this. This is a good example for *cellpype*’s
-resolution limit: If UMAP cannot separate cells properly, cellpypes will
-also struggle – but at least it will be obvious. In practice, one would
-re-cluster the T cells and try to separate naive CD8+ from naive CD4+,
-or train a specialized machine learning algorithm to discriminate these
-two cell types in particular.
+All major cell types are annotated with cell pypes. Note how there are
+naive CD8+ T cells among the naive CD4 cells. While overlooked in the
+[original
+tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
+the marker-based nature of cellpypes revealed this. This is a good
+example for *cellpype*’s resolution limit: If UMAP cannot separate cells
+properly, cellpypes will also struggle – but at least it will be
+obvious. In practice, one would re-cluster the T cells and try to
+separate naive CD8+ from naive CD4+, or train a specialized machine
+learning algorithm to discriminate these two cell types in particular.
 
 # Understanding how cellpypes works
+
+cellpypes works with **classes** defined by gene-based rules.
+
+> Whether your classes correspond to biologically relevant **cell
+> types** is best answered in a passionate discussion on their marker
+> genes you should have with your peers.
+
+Until you are sure, “MS4A1+” is a better class name than “B cell”.
 
 ### CP10K measure UMI fractions
 
@@ -216,34 +244,9 @@ words:
     threshold `t`. If cells were sequenced deeply, `S` becomes larger,
     which means we have more information to decide.
 
-# Using cellpypes
+# Function demos
 
-cellpypes works with **classes** defined by gene-based rules. Whether
-your classes correspond to biologically relevant **cell types** is best
-answered in a passionate discussion on their marker genes you should
-have with your peers. Until you are sure, “MS4A1+” is a better class
-name than “B cell”.
-
-### List of functions
-
-Functions for manual classification:
-
--   `feat`: feature plot (UMAP colored by gene expression)
--   `rule`: add a cell type rule
--   `plot_last`: plot the most recent rule or class
--   `classify`: classify cells by evaluating cell type rules
--   `plot_classes`: call and visualize `classify`
-
-Functions for pseudobulking and differential gene expression (DE)
-analysis:
-
--   `class_to_deseq2`: Create DESeq2 object for a given cell type
--   `pseudobulk`: Form pseudobulks from single-cells
--   `pseudobulk_id`: Generate unique IDs to identify pseudobulks
-
-### Function demos
-
-The following has short demo of every function. Let’s say you have
+The following has a short demo of every function. Let’s say you have
 completed the [Seurat pbmc2700
 tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)
 (or it’s
@@ -254,7 +257,7 @@ then you can start pyping from this `pbmc` object:
 pbmc <- pype_from_seurat(seurat_object)
 ```
 
-#### Functions for manual classification
+### feat
 
 Visualize marker gene expression with `feat` (short for feature plot):
 
@@ -278,6 +281,8 @@ pbmc %>%
     threshold for NKG7 (e.g. 10 CP10K) and a moderate one for MS4A1
     (e.g. 1 CP10K), simply because NKG7 goes up to 381 CP10K in some
     cells.
+
+### rule and plot\_last
 
 Create a few cell type `rule`s and plot the most recent one with
 `plot_last`:
@@ -307,6 +312,8 @@ pbmc %>%
 -   You can build hierarchy with the `parent` argument, to arbitrary
     depths. In this example, CD8+ T cells are `CD3E+CD8A+`, not just
     `CD8A+`, because their ancestor `Tcell` had a rule for CD3E.
+
+### classify and plot\_classes
 
 Get cell type labels with `classify` or plot them directly with
 `plot_classes` (which wraps ggplot2 code around `classify`):
@@ -351,10 +358,7 @@ head(classify(pbmc2))
     (e.g. `Tcell` and `CD8+ T`), the more detailed class is returned
     (`CD8+ T`).
 
-#### Functions for DE analysis
-
-Differential gene expression (DE) analysis is a key outcome in
-single-cell data analysis.
+### class\_to\_deseq2
 
 Let’s imagine the PBMC data had multiple patients and treatment
 conditions (we made them up here for illustraion):
@@ -409,6 +413,8 @@ data.frame(results(dds)) %>% arrange(padj) %>% head
 
 In this dummy example, there is no real DE to find because we assigned
 cells randomly to treated/control.
+
+### pseudobulk and pseudobulk\_id
 
 Instead of piping into DESeq2 directly, you can also form pseudobulks
 with `pseudobulk` and helper function `pseudobulk_id`:
