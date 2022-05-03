@@ -4,12 +4,10 @@ cellpypes – Cell type pipes for R
 -   [Pipe your types!](#pipe-your-types)
 -   [Installation](#installation)
 -   [cellpypes input](#cellpypes-input)
+-   [Annotating PBMCs](#annotating-pbmcs)
 -   [Understanding how cellpypes
     works](#understanding-how-cellpypes-works)
 -   [Using cellpypes](#using-cellpypes)
--   [Annotating PBMCs](#annotating-pbmcs)
--   [Differential expression testing](#differential-expression-testing)
-    -   [Pseudobulk matrix](#pseudobulk-matrix)
 -   [FAQ](#faq)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -99,6 +97,46 @@ obj <- list(
 # Object from Seurat (experimental short-cut):
 obj <- pype_from_seurat(seurat_object)
 ```
+
+# Annotating PBMCs
+
+Here, we annote the same PBMC data set as in the popular [Seurat
+tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
+using the Seurat object `seurat_object` that comes out of it.
+
+``` r
+library(cellpypes)
+library(tidyverse) # provides piping operator %>%
+
+
+pype <- seurat_object %>%
+  pype_from_seurat %>%
+  rule("B",           "MS4A1",   ">", 1)                    %>%
+  rule("CD14+ Mono",  "CD14",    ">", 1)                    %>%
+  rule("CD14+ Mono",  "LYZ",     ">", 20)                   %>%
+  rule("FCGR3A+ Mono","MS4A7",   ">", 2)                    %>%
+  rule("NK",          "GNLY",    ">", 75)                   %>%
+  rule("DC",          "FCER1A",  ">", 1)                    %>%
+  rule("Platelet",    "PPBP",    ">", 30)                   %>%
+  rule("T",           "CD3E",    ">", 3.5)                  %>% 
+  rule("CD8+ T",      "CD8A",    ">", .8,  parent="T")      %>%
+  rule("CD4+ T",      "CD4",     ">", .05, parent="T")      %>%
+  rule("Naive CD4+",  "CCR7",    ">", 1.5, parent="CD4+ T") %>%
+  rule("Memory CD4+",  "S100A4", ">", 13,  parent="CD4+ T")
+
+plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
+```
+
+<img src="man/figures/README-pbmc_rules-1.png" width="100%" />
+
+There are Naive CD8+ T cells amongst the naive CD4 cells. While
+overlooked in the original tutorial, the marker-based nature of
+cellpypes revealed this. This is a good example for *cellpype*’s
+resolution limit: If UMAP cannot separate cells properly, cellpypes will
+also struggle – but at least it will be obvious. In practice, one would
+re-cluster the T cells and try to separate naive CD8+ from naive CD4+,
+or train a specialized machine learning algorithm to discriminate these
+two cell types in particular.
 
 # Understanding how cellpypes works
 
@@ -190,18 +228,18 @@ name than “B cell”.
 
 Functions for manual classification:
 
--   `feat`
--   `rule`
--   `plot_last`
--   `plot_classes`
--   `classify`
+-   `feat`: feature plot (UMAP colored by gene expression)
+-   `rule`: add a cell type rule
+-   `plot_last`: plot the most recent rule or class
+-   `classify`: classify cells by evaluating cell type rules
+-   `plot_classes`: call and visualize `classify`
 
 Functions for pseudobulking and differential gene expression (DE)
 analysis:
 
--   `class_to_deseq2`
--   `pseudobulk`
--   `pseudobulk_id`
+-   `class_to_deseq2`: Create DESeq2 object for a given cell type
+-   `pseudobulk`: Form pseudobulks from single-cells
+-   `pseudobulk_id`: Generate unique IDs to identify pseudobulks
 
 ### Function demos
 
@@ -333,95 +371,12 @@ head(pbmc_meta)
 ```
 
 Every row in `pbmc_meta` corresponds to one cell in the `pbmc` object.
-It is important
 
 With cellpypes, you can directly pipe a given cell type into DESeq2 to
 create a DESeq2 DataSet (dds) and test it:
 
 ``` r
 library(DESeq2)
-#> Loading required package: S4Vectors
-#> Loading required package: stats4
-#> Loading required package: BiocGenerics
-#> 
-#> Attaching package: 'BiocGenerics'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     combine, intersect, setdiff, union
-#> The following objects are masked from 'package:stats':
-#> 
-#>     IQR, mad, sd, var, xtabs
-#> The following objects are masked from 'package:base':
-#> 
-#>     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
-#>     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
-#>     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
-#>     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-#>     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-#>     union, unique, unsplit, which.max, which.min
-#> 
-#> Attaching package: 'S4Vectors'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     first, rename
-#> The following object is masked from 'package:tidyr':
-#> 
-#>     expand
-#> The following objects are masked from 'package:base':
-#> 
-#>     expand.grid, I, unname
-#> Loading required package: IRanges
-#> 
-#> Attaching package: 'IRanges'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     collapse, desc, slice
-#> The following object is masked from 'package:purrr':
-#> 
-#>     reduce
-#> Loading required package: GenomicRanges
-#> Loading required package: GenomeInfoDb
-#> Loading required package: SummarizedExperiment
-#> Loading required package: MatrixGenerics
-#> Loading required package: matrixStats
-#> 
-#> Attaching package: 'matrixStats'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     count
-#> 
-#> Attaching package: 'MatrixGenerics'
-#> The following objects are masked from 'package:matrixStats':
-#> 
-#>     colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
-#>     colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
-#>     colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
-#>     colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
-#>     colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
-#>     colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
-#>     colWeightedMeans, colWeightedMedians, colWeightedSds,
-#>     colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
-#>     rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
-#>     rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
-#>     rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
-#>     rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
-#>     rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
-#>     rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
-#>     rowWeightedSds, rowWeightedVars
-#> Loading required package: Biobase
-#> Welcome to Bioconductor
-#> 
-#>     Vignettes contain introductory material; view with
-#>     'browseVignettes()'. To cite Bioconductor, see
-#>     'citation("Biobase")', and for packages 'citation("pkgname")'.
-#> 
-#> Attaching package: 'Biobase'
-#> The following object is masked from 'package:MatrixGenerics':
-#> 
-#>     rowMedians
-#> The following objects are masked from 'package:matrixStats':
-#> 
-#>     anyMissing, rowMedians
 dds <- pbmc %>% 
   rule("Bcell",   "MS4A1",   ">", 1)     %>%
   rule("Tcell",   "CD3E",    ">", 3.5)   %>% 
@@ -485,106 +440,6 @@ Note that `pseudobulk(counts, pseudobulk_id(meta_df))` can be used to
 pseudobulk any single-cell data even without cellpypes. For example,
 `counts` could be `seurat@assays$RNA@counts` and `meta_df` could be
 selected columns from `seurat@meta.data`.
-
-# Annotating PBMCs
-
-Here, we annote the same PBMC data set as in the popular [Seurat
-tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
-using the Seurat object `seurat_object` that comes out of it.
-
-``` r
-library(cellpypes)
-library(tidyverse) # provides piping operator %>%
-
-
-pype <- seurat_object %>%
-  pype_from_seurat %>%
-  rule("B",           "MS4A1",   ">", 1)                    %>%
-  rule("CD14+ Mono",  "CD14",    ">", 1)                    %>%
-  rule("CD14+ Mono",  "LYZ",     ">", 20)                   %>%
-  rule("FCGR3A+ Mono","MS4A7",   ">", 2)                    %>%
-  rule("NK",          "GNLY",    ">", 75)                   %>%
-  rule("DC",          "FCER1A",  ">", 1)                    %>%
-  rule("Platelet",    "PPBP",    ">", 30)                   %>%
-  rule("T",           "CD3E",    ">", 3.5)                  %>% 
-  rule("CD8+ T",      "CD8A",    ">", .8,  parent="T")      %>%
-  rule("CD4+ T",      "CD4",     ">", .05, parent="T")      %>%
-  rule("Naive CD4+",  "CCR7",    ">", 1.5, parent="CD4+ T") %>%
-  rule("Memory CD4+",  "S100A4", ">", 13,  parent="CD4+ T")
-
-plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
-```
-
-<img src="man/figures/README-pbmc_rules-1.png" width="100%" />
-
--   There are Naive CD8+ T cells amongst the naive CD4 cells. While
-    overlooked in the original tutorial, the marker-based nature of
-    cellpypes revealed this. This is a good example for *cellpype*’s
-    resolution limit: If UMAP cannot separate cells properly, cellpypes
-    will also struggle – but at least it will be obvious. In practice,
-    one would re-cluster the T cells and try to separate naive CD8+ from
-    naive CD4+, or train a specialized machine learning algorithm to
-    discriminate these two cell types in particular.
-
-# Differential expression testing
-
-## Pseudobulk matrix
-
-If you prefer to compute the full pseudobulk matrix with all cell types,
-here is a fully-reproducible minimal example. The crucial command is
-`pseudobulk(counts, pseudobulk_id(meta_df))`, where counts and meta\_df
-can be easily obtained from a seurat object like this:
-
-For a Seurat-independent demonstration, I will simulate raw UMI counts
-and associated meta data:
-
-``` r
-# simulate dummy UMI counts (all genes have same expression):
-ncell=1000; ngene=100
-counts <- matrix(rpois(ngene*ncell, 0.5),
-                 nrow=ngene, ncol=ncell,
-                 dimnames = list(paste0("gene", 1:ngene),
-                                 paste0("cell", 1:ncell)))
-# simulate meta data (two cell types, each patient has control and treatment)
-dummy_variable <- function(x) factor(sample(x, ncell, replace=TRUE))
-meta_df <- data.frame(
-  patient  =dummy_variable(paste0("patient", 1:6)),
-  condition=dummy_variable(c("control", "treated")),
-  celltype =dummy_variable(c("Tcell", "Bcell"))
-)
-head(meta_df)
-#>    patient condition celltype
-#> 1 patient2   control    Tcell
-#> 2 patient5   treated    Bcell
-#> 3 patient3   control    Tcell
-#> 4 patient5   treated    Bcell
-#> 5 patient5   control    Bcell
-#> 6 patient1   control    Tcell
-```
-
-We aggregate single-cell counts to pseudobulks, and single-cell meta
-data to coldat (coldat=data on every column in the pseudobulk matrix):
-
-``` r
-library(tidyverse)
-bulks <- pseudobulk(counts, pseudobulk_id(meta_df))
-coldat<-meta_df %>% distinct %>%
-  mutate(ID=pseudobulk_id(.)) %>% column_to_rownames("ID")
-# bring to same order (good practice and required for DESeq2)
-coldat <- coldat[colnames(bulks), ]  
-```
-
-After constructing the DESeq2 data set (dds), we can compute
-differentially expressed genes:
-
-``` r
-library(DESeq2)
-dds <- DESeqDataSetFromMatrix(countData = bulks,
-                              colData = coldat,
-                              design = ~ condition)
-dds <- DESeq(dds)
-results(dds)
-```
 
 # FAQ
 

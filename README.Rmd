@@ -36,6 +36,8 @@ knitr::opts_chunk$set(
 ```{r include=FALSE}
 library(tidyverse)  # for quick start and others
 library(cellpypes)
+
+seurat_object <- readRDS("/home/felix/paper_class/paper_class/results/PBMC2700/pbmc.rds")
 ```
 
 
@@ -129,6 +131,58 @@ obj <- list(
 # Object from Seurat (experimental short-cut):
 obj <- pype_from_seurat(seurat_object)
 ```
+
+
+
+
+# Annotating PBMCs
+
+Here, we annote the same PBMC data set as in the popular
+[Seurat tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
+using the Seurat object `seurat_object` that comes out of it.
+
+```{r pbmc_rules, eval=TRUE, include=TRUE}
+library(cellpypes)
+library(tidyverse) # provides piping operator %>%
+
+
+pype <- seurat_object %>%
+  pype_from_seurat %>%
+  rule("B",           "MS4A1",   ">", 1)                    %>%
+  rule("CD14+ Mono",  "CD14",    ">", 1)                    %>%
+  rule("CD14+ Mono",  "LYZ",     ">", 20)                   %>%
+  rule("FCGR3A+ Mono","MS4A7",   ">", 2)                    %>%
+  rule("NK",          "GNLY",    ">", 75)                   %>%
+  rule("DC",          "FCER1A",  ">", 1)                    %>%
+  rule("Platelet",    "PPBP",    ">", 30)                   %>%
+  rule("T",           "CD3E",    ">", 3.5)                  %>% 
+  rule("CD8+ T",      "CD8A",    ">", .8,  parent="T")      %>%
+  rule("CD4+ T",      "CD4",     ">", .05, parent="T")      %>%
+  rule("Naive CD4+",  "CCR7",    ">", 1.5, parent="CD4+ T") %>%
+  rule("Memory CD4+",  "S100A4", ">", 13,  parent="CD4+ T")
+
+plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
+```
+    
+
+
+
+
+
+There are Naive CD8+ T cells amongst the naive CD4 cells.
+While overlooked in the original tutorial, the marker-based
+nature of cellpypes revealed this.
+This is a good example for *cellpype*'s resolution limit:
+If UMAP cannot separate cells properly, cellpypes will also
+struggle -- but at least it will be obvious.
+In practice, one would re-cluster the T cells and try to separate
+naive CD8+ from naive CD4+, or train a specialized machine learning
+algorithm to discriminate these two cell types in particular.
+
+
+
+
+
 
 
 # Understanding how cellpypes works
@@ -246,17 +300,17 @@ Until you are sure, "MS4A1+" is a better class name than "B cell".
 
 Functions for manual classification:
 
-  * `feat`
-  * `rule`
-  * `plot_last` 
-  * `plot_classes` 
-  * `classify`
+  * `feat`: feature plot (UMAP colored by gene expression)
+  * `rule`: add a cell type rule 
+  * `plot_last`: plot the most recent rule or class
+  * `classify`: classify cells by evaluating cell type rules
+  * `plot_classes`: call and visualize `classify`
 
 Functions for pseudobulking and differential gene expression (DE) analysis:
 
-  * `class_to_deseq2`
-  * `pseudobulk`
-  * `pseudobulk_id`
+  * `class_to_deseq2`: Create DESeq2 object for a given cell type
+  * `pseudobulk`: Form pseudobulks from single-cells
+  * `pseudobulk_id`: Generate unique IDs to identify pseudobulks
 
 
 
@@ -265,9 +319,6 @@ Functions for pseudobulking and differential gene expression (DE) analysis:
 
 
 
-```{r readRDS, eval=TRUE, include=FALSE}
-seurat_object <- readRDS("/home/felix/paper_class/paper_class/results/PBMC2700/pbmc.rds")
-```
 
 The following has short demo of every function.
 Let's say you have completed the
@@ -396,10 +447,13 @@ Let's imagine the PBMC data had multiple patients and treatment conditions
 head(pbmc_meta)
 ```
 Every row in `pbmc_meta` corresponds to one cell in the `pbmc` object.
-It is important
 
 With cellpypes, you can directly pipe a given cell type into DESeq2
 to create a DESeq2 DataSet (dds) and test it:
+```{r include=FALSE}
+library(DESeq2) # messages are not included
+```
+
 ```{r eval=TRUE, include=TRUE}
 library(DESeq2)
 dds <- pbmc %>% 
@@ -433,112 +487,8 @@ and `meta_df` could be selected columns from `seurat@meta.data`.
 
 
 
-# Annotating PBMCs
-
-Here, we annote the same PBMC data set as in the popular
-[Seurat tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
-using the Seurat object `seurat_object` that comes out of it.
-
-```{r pbmc_rules, eval=TRUE, include=TRUE}
-library(cellpypes)
-library(tidyverse) # provides piping operator %>%
 
 
-pype <- seurat_object %>%
-  pype_from_seurat %>%
-  rule("B",           "MS4A1",   ">", 1)                    %>%
-  rule("CD14+ Mono",  "CD14",    ">", 1)                    %>%
-  rule("CD14+ Mono",  "LYZ",     ">", 20)                   %>%
-  rule("FCGR3A+ Mono","MS4A7",   ">", 2)                    %>%
-  rule("NK",          "GNLY",    ">", 75)                   %>%
-  rule("DC",          "FCER1A",  ">", 1)                    %>%
-  rule("Platelet",    "PPBP",    ">", 30)                   %>%
-  rule("T",           "CD3E",    ">", 3.5)                  %>% 
-  rule("CD8+ T",      "CD8A",    ">", .8,  parent="T")      %>%
-  rule("CD4+ T",      "CD4",     ">", .05, parent="T")      %>%
-  rule("Naive CD4+",  "CCR7",    ">", 1.5, parent="CD4+ T") %>%
-  rule("Memory CD4+",  "S100A4", ">", 13,  parent="CD4+ T")
-
-plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
-```
-    
-
-
-
-
-
-* There are Naive CD8+ T cells amongst the naive CD4 cells.
-  While overlooked in the original tutorial, the marker-based
-  nature of cellpypes revealed this.
-  This is a good example for *cellpype*'s resolution limit:
-  If UMAP cannot separate cells properly, cellpypes will also
-  struggle -- but at least it will be obvious.
-  In practice, one would re-cluster the T cells and try to separate
-  naive CD8+ from naive CD4+, or train a specialized machine learning
-  algorithm to discriminate these two cell types in particular.
-
-
-
-# Differential expression testing
-
-
-
-
-
-
-
-
-
-
-
-## Pseudobulk matrix
-
-If you prefer to compute the full pseudobulk matrix with all cell types,
-here is a fully-reproducible minimal example.
-The crucial command is `pseudobulk(counts, pseudobulk_id(meta_df))`,
-where counts and meta_df can be easily obtained from a seurat object like this:
-
-
-For a Seurat-independent demonstration, I will simulate raw UMI counts
-and associated meta data:
-```{r}
-# simulate dummy UMI counts (all genes have same expression):
-ncell=1000; ngene=100
-counts <- matrix(rpois(ngene*ncell, 0.5),
-                 nrow=ngene, ncol=ncell,
-                 dimnames = list(paste0("gene", 1:ngene),
-                                 paste0("cell", 1:ncell)))
-# simulate meta data (two cell types, each patient has control and treatment)
-dummy_variable <- function(x) factor(sample(x, ncell, replace=TRUE))
-meta_df <- data.frame(
-  patient  =dummy_variable(paste0("patient", 1:6)),
-  condition=dummy_variable(c("control", "treated")),
-  celltype =dummy_variable(c("Tcell", "Bcell"))
-)
-head(meta_df)
-```
-
-We aggregate single-cell counts to pseudobulks, and single-cell meta data to
-coldat (coldat=data on every column in the pseudobulk matrix):
-```{r bulk}
-library(tidyverse)
-bulks <- pseudobulk(counts, pseudobulk_id(meta_df))
-coldat<-meta_df %>% distinct %>%
-  mutate(ID=pseudobulk_id(.)) %>% column_to_rownames("ID")
-# bring to same order (good practice and required for DESeq2)
-coldat <- coldat[colnames(bulks), ]  
-```
-
-After constructing the DESeq2 data set (dds), we can compute differentially
-expressed genes:
-```{r DESeq, eval=FALSE, include=TRUE}
-library(DESeq2)
-dds <- DESeqDataSetFromMatrix(countData = bulks,
-                              colData = coldat,
-                              design = ~ condition)
-dds <- DESeq(dds)
-results(dds)
-```
 
 
 
