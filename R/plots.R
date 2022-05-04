@@ -16,7 +16,7 @@
 #' @export
 #' 
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle
-#' @importFrom ggplot2 scale_color_manual theme_bw
+#' @importFrom ggplot2 scale_color_manual theme_bw element_text margin
 #' @importFrom cowplot plot_grid get_legend
 #'
 #' @examples
@@ -166,7 +166,7 @@ feat_data <- function(obj, feature_name) {
 #' @return A ggplot object (assembled by cowplot).
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle theme
-#' @importFrom ggplot2 element_blank element_rect
+#' @importFrom ggplot2 element_blank element_rect element_text
 #' @examples
 #' feat(simulated_umis, "CD3E")
 feat <- function(obj, features, ...) {

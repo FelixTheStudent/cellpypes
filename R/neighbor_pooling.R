@@ -9,6 +9,13 @@
 #' @export
 #'
 #' @examples
+#' set.seed(42)
+#' # simulate 30 cells without biological signal:
+#' dummy_dat <- matrix(rpois(3000, .1), ncol=30) 
+#' # find 15 approximate nearest neighbors 
+#' neighbors <- find_knn(dummy_dat, k = 15) 
+#' # pool gene1 counts across neighbors:
+#' neighbor_sum_gene1 <- pool_across_neighbors(dummy_dat[1,], neighbors$idx)
 #' 
 #' @importFrom rlang is_double is_integer
 pool_across_neighbors <- function(x, neighbors) {
@@ -39,7 +46,6 @@ pool_across_neighbors <- function(x, neighbors) {
 #' @return
 #' @keywords internal
 #'
-#' @examples
 evaluate_rule <- function(obj,
                           class,
                           feature,
