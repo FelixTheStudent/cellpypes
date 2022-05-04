@@ -57,7 +57,7 @@ check_obj <- function(obj) {
 
 #' Add a cell type rule.
 #'
-#' @param obj 
+#' @template param_obj
 #' @param class 
 #' @param feature 
 #' @param operator One of the following: \code{c("<", ">", "<=", ">=")}.
@@ -67,7 +67,13 @@ check_obj <- function(obj) {
 #' @param parent The parent class (e.g. "T" or "T cell").
 #' If NULL, new classes get "..root.." and
 #' existing classes keep their current parent.
-#'
+#' 
+#' @description This is the heart of cellpypes and best used in 
+#' pipes \code{%>%}. Check out examples at
+#' https://github.com/FelixTheStudent/cellpypes!
+#' 
+#' @template cellpypes_obj
+#' 
 #' @return
 #' @export
 #'

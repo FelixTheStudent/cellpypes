@@ -7,7 +7,7 @@
 class_to_deseq2(obj, meta_df, class, design = ~condition)
 }
 \arguments{
-\item{obj}{A pype object, with rules for at least one cell type.}
+\item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
 
 \item{meta_df}{Data frame where each column helps to identify a pseudobulk.
 Typical columns of meta_df are for example patient, treatment and
@@ -32,6 +32,27 @@ Create a DESeq2 data set (`dds' in the
 \href{www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html}{DESeq2 vignette})
 for the specified class (cell type).
 }
+\section{cellpypes Objects}{
+
+A cellpypes object is a \link[base]{list} with four slots:
+\itemize{
+\item{\code{raw }}{(sparse) matrix with genes in rows, cells in columns}
+\item{\code{totalUMI }}{the colSums of obj$raw}
+\item{\code{embed }}{two-dimensional embedding of the cells, provided as data.frame
+or tibble with two columns and one row per cell.}
+\item{\code{neighbors }}{index matrix with one row per cell and k columns, where
+k is the number of nearest neighbors (we recommend 15<k<100, e.g. k=50).
+Here are two ways to get the neighbors index matrix:
+\itemize{
+\item Use find_knn(featureMatrix)$idx, where featureMatrix could be principal components, latent variables or normalized genes (features in rows, cells in columns).
+\item use as(seurat@graphs[\link{"RNA_nn"}], "dgCMatrix")>.1 to extract the kNN
+graph computed on RNA. This also works with RNA_snn, wknn/wsnn or any other
+available graph – check with names(seurat@graphs).
+}
+}
+}
+}
+
 \examples{
 data("simulated_umis") 
 # Meta data

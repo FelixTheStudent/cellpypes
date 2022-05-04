@@ -104,32 +104,14 @@ tree_descendants <- function(classes, class, leafs) {
 
 
 #' Classify cells on previously defined rules
-#'
-#' @param obj A cellpypes object, i.e. a list with four slots:
-#' \itemize{
-#'  \item{"raw"}{(sparse) matrix with genes in rows, cells in columns}
-#'  \item{"totalUMI"}{the colSums of obj$raw}
-#'  \item{"embed"}{two-dimensional embedding of the cells, provided as data.frame
-#'  or tibble with two columns and one row per cell.}
-#'  \item{"neighbors"}{index matrix with one row per cell and k columns, where
-#'  k is the number of nearest neighbors (we recommend 15<k<100, e.g. k=50). 
-#'  Here are two ways to get the neighbors index matrix:
-#'  \itemize{
-#'    \item Use find_knn(featureMatrix)$idx, where featureMatrix could be principal components, latent variables or normalized genes (features in rows, cells in columns).
-#'    \item use as(seurat@graphs[["RNA_nn"]], "dgCMatrix")>.1 to extract the kNN
-#'    graph computed on RNA. This also works with RNA_snn, wknn/wsnn or any other
-#'    available graph – check with names(seurat@graphs). 
-#'    }
-#'    }
-#'  
-#'
-#' }
-#' 
+#' @template param_obj
 #' @param classes Character vector with one or more class names.
 #' If NULL (the default), all classes for which rules exist are used.
 #' @param replace_overlap_with 
 #' @param replace_unassigned_with 
 #' @param return_logical_matrix 
+#' 
+#' @template cellpypes_obj
 #'
 #' @return I think the order of factor levels is the same as classes, and
 #' if is.null(classes) then it's the same as in obj$classes$class, i.e. the

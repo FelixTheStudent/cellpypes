@@ -15,6 +15,7 @@
 #' @param seurat A Seurat object.
 #'
 #' @return A cellpypes object.
+#' @template cellpypes_obj
 #' @export
 pype_from_seurat <- function(seurat) {
   seurat_status <- requireNamespace("Seurat", quietly=TRUE)

@@ -7,7 +7,7 @@
 feat_data(obj, feature_name)
 }
 \arguments{
-\item{obj}{}
+\item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
 
 \item{feature_name}{}
 }

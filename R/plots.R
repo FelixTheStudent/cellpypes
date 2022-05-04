@@ -5,13 +5,14 @@
 
 #' Plot the last modified rule or class
 #'
-#' @param obj A cellpypes object.
+#' @template param_obj
 #' @param show_feat If TRUE (default), a second panel shows the feature plot of
 #' the relevant gene.
 #' @param what Either "rule" or "class".
 #'
 #' @return Returns a ggplot2 object with the plot.
 #' 
+#' @template cellpypes_obj
 #' 
 #' @export
 #' 
@@ -78,8 +79,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
 
 #' Call and visualize 'classify' function
 #'
-#' @param obj Cellpypes object, i.e. a list with four slots:
-#' raw, neighbors, embed, totalUMI.
+#' @template param_obj
 #' @param ... Same parameters as \link[cellpypes]{classify}: classes,
 #' replace_overlap_with, replace_unassigned_with.
 #' @param point_size Dot size used by \link[ggplot2]{geom_point}.
@@ -89,6 +89,8 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
 #' how large text is displayed. Default: 15.
 #'
 #' @return
+#' @template cellpypes_obj
+#' 
 #' @export
 #' 
 #' @importFrom dplyr bind_cols
@@ -132,7 +134,7 @@ plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=
 
 #' Title
 #'
-#' @param obj 
+#' @template param_obj
 #' @param feature_name 
 #'
 #' @return
@@ -158,13 +160,15 @@ feat_data <- function(obj, feature_name) {
 #' 
 #' Highlight gene expression in UMAP embeddings, for example.
 #'
-#' @param obj Cellpypes object, i.e. a list with four slots: raw, embed, neighbors, totalUMI.
+#' @template param_obj
 #' @param features A vector of genes (features) to colour by.
 #' @param ... Arguments passed to cowplot's \link[cowplot]{plot_grid} function,
 #' for example ncol or rel_widths.
 #' 
 #'
 #' @return A ggplot object (assembled by cowplot).
+#' @template cellpypes_obj
+#' 
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle theme
 #' @importFrom ggplot2 element_blank element_rect element_text
