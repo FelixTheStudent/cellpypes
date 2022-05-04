@@ -19,7 +19,8 @@ Suggests:
     rmarkdown,
     Seurat,
     DESeq2,
-    RcppAnnoy
+    RcppAnnoy,
+    tibble
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 
@@ -29,6 +30,7 @@ Imports:
     rlang,
     viridis,
     patchwork,
-    cowplot
+    cowplot,
+    dplyr
 Depends: 
     R (>= 2.10)

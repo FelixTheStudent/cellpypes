@@ -6,7 +6,20 @@ df_meta <- data.frame(
   patient  = c("3", "500.", "*5", "/")
 )
 
-
+test_that("class_to_deseq2 example working", {
+  expect_error( # NA means no error
+    {
+      data("simulated_umis") 
+      # Meta data
+      ncells <- ncol(simulated_umis$raw)
+      dummy_variable <- function(x) factor(sample(x, ncells, replace=TRUE))
+      meta_data <- data.frame(patient=dummy_variable(paste0("patient", 1:6)),
+                              treatment=dummy_variable(c("control", "treated")))
+      
+      obj <- rule(simulated_umis, "T", "CD3E",">", 1e-4)
+      dds <- class_to_deseq2(obj, meta_data, "T", ~ treatment)
+    }, NA)
+})
 
 
 

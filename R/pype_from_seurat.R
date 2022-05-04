@@ -16,8 +16,6 @@
 #'
 #' @return A cellpypes object.
 #' @export
-#' 
-#' @importFrom Seurat FetchData
 pype_from_seurat <- function(seurat) {
   seurat_status <- requireNamespace("Seurat", quietly=TRUE)
   if(!seurat_status) stop("Install Seurat to use this function.")
@@ -52,7 +50,7 @@ pype_from_seurat <- function(seurat) {
   list(
     raw      =SeuratObject::GetAssayData(seurat, "counts"),
     neighbors=as(seurat@graphs[[graph_choice]], "dgCMatrix")>.1,
-    embed    =FetchData(seurat, dimension_names),
+    embed    =Seurat::FetchData(seurat, dimension_names),
     totalUMI = seurat$nCount_RNA
   ) 
 } 

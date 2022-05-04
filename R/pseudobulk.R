@@ -147,11 +147,9 @@ pseudobulk_id <- function(factor_df) {
 #' dummy_variable <- function(x) factor(sample(x, ncells, replace=TRUE))
 #' meta_data <- data.frame(patient=dummy_variable(paste0("patient", 1:6)),
 #'                         treatment=dummy_variable(c("control", "treated")))
-#' dds <- simulated_umis         %>% 
-#'   rule("T", "CD3E",">", 1e-4) %>%
-#'   class_to_deseq2(meta_data, "T", ~ treatment)
-#'   
-#'   
+#' 
+#' obj <- rule(simulated_umis, "T", "CD3E",">", 1e-4)
+#' dds <- class_to_deseq2(obj, meta_data, "T", ~ treatment)
 class_to_deseq2 <- function(obj, meta_df, class, design = ~ condition) {
   deseq_status <- requireNamespace("DESeq2", quietly = TRUE)
   if(!deseq_status) stop("Install DESeq2 to use class_to_deseq2 function.")
