@@ -27,3 +27,6 @@ how large text is displayed. Default: 15.}
 \description{
 Call and visualize 'classify' function
 }
+\examples{
+plot_classes(rule(simulated_umis, "T", "CD3E",">", 1))
+}

@@ -34,3 +34,6 @@ relies on it).
 \description{
 Classify cells on previously defined rules
 }
+\examples{
+classify(rule(simulated_umis, "Tcell", "CD3E", ">", 1))
+}

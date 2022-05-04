@@ -1,3 +1,20 @@
+
+# example from docu (man file):
+# T cells are CD3E+
+obj <- rule(simulated_umis, "T", "CD3E", ">", .1)
+# T cells are MS4A1-
+obj <- rule(obj, "T", "MS4A1", "<", 1)
+# Tregs are a subset of T cells:
+obj <- rule(obj, "Treg", "FOXP3", ">", .1, parent="T") 
+
+test_that("rule Docu example works", {
+  expect_equal(tabulate(classify(obj, c("T", "Treg"))),
+               c(445, 42, 1413))
+})
+
+
+
+
 obj_min <- list(raw=t(matrix(rpois(12, .5),ncol=3)), embed=data.frame(u1=1:4, u2=4:1))
 
 

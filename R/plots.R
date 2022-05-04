@@ -20,6 +20,7 @@
 #' @importFrom cowplot plot_grid get_legend
 #'
 #' @examples
+#' plot_last(rule(simulated_umis, "T", "CD3E",">", 1))
 plot_last <- function(obj, show_feat=TRUE, what="rule",
                       legend_rel_width=0.3) {
   check_obj(obj)
@@ -93,6 +94,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
 #' @importFrom dplyr bind_cols
 #'
 #' @examples
+#' plot_classes(rule(simulated_umis, "T", "CD3E",">", 1))
 plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=15) {
   check_obj(obj)
   
@@ -135,7 +137,6 @@ plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=
 #'
 #' @return
 #'
-#' @examples
 feat_data <- function(obj, feature_name) {
   if (is.null(obj$totalUMI)) { 
     obj$totalUMI <- Matrix::colSums(obj$raw)

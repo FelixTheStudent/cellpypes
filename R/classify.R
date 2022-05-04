@@ -18,7 +18,6 @@
 #' @return
 #' @keywords internal
 #'
-#' @examples
 tree_leaf_nodes <- function(classes, invert=FALSE) {
   stopifnot(is_classes(classes))
   
@@ -121,6 +120,7 @@ tree_descendants <- function(classes, class, leafs) {
 #' @export
 #'
 #' @examples
+#' classify(rule(simulated_umis, "Tcell", "CD3E", ">", 1))
 classify <- function(
   obj,
   classes=NULL,

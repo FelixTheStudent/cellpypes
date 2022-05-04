@@ -8,8 +8,6 @@
 #' @param classes 
 #'
 #' @return
-#'
-#' @examples
 is_classes <- function(classes) {
   # Helpful messages to the user:
   if(!all(classes$parent %in% c("..root..",classes$class))) {
@@ -27,8 +25,6 @@ is_classes <- function(classes) {
 #' @param rules 
 #'
 #' @return
-#'
-#' @examples
 is_rules <- function(rules) {
     inherits(rules, "data.frame"  ) &&
     ncol(rules) > 0 &&  # handles this: `is_rules(data.frame())`
@@ -76,6 +72,13 @@ check_obj <- function(obj) {
 #' @export
 #'
 #' @examples
+#' # T cells are CD3E+:
+#' obj <- rule(simulated_umis, "T", "CD3E", ">", .1)
+#' # T cells are MS4A1-:
+#' obj <- rule(obj, "T", "MS4A1", "<", 1)
+#' # Tregs are a subset of T cells:
+#' obj <- rule(obj, "Treg", "FOXP3", ">", .1, parent="T") 
+#' 
 #' @importFrom rlang is_scalar_character is_scalar_double
 rule <- function(obj,
                  class,

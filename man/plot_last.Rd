@@ -20,3 +20,6 @@ Returns a ggplot2 object with the plot.
 \description{
 Plot the last modified rule or class
 }
+\examples{
+plot_last(rule(simulated_umis, "T", "CD3E",">", 1))
+}

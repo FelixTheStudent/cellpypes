@@ -18,8 +18,6 @@
 #' @export
 #' 
 #' @importFrom Seurat FetchData
-#'
-#' @examples
 pype_from_seurat <- function(seurat) {
   seurat_status <- requireNamespace("Seurat", quietly=TRUE)
   if(!seurat_status) stop("Install Seurat to use this function.")
