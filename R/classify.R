@@ -105,19 +105,12 @@ tree_descendants <- function(classes, class, leafs) {
 
 #' Classify cells on previously defined rules
 #' @template param_obj
-#' @param classes Character vector with one or more class names.
-#' If NULL (the default), all classes for which rules exist are used.
-#' @param replace_overlap_with 
-#' @param replace_unassigned_with 
-#' @param return_logical_matrix 
+#' @template classify_params
 #' 
-#' @template cellpypes_obj
 #'
-#' @return I think the order of factor levels is the same as classes, and
-#' if is.null(classes) then it's the same as in obj$classes$class, i.e. the
-#' order in which classes were created by the user. I am not sure, however,
-#' but realize this is important (see e.g. f1_all.Rmd, building an f1-data.frame
-#' relies on it).
+#' @return A factor with cell type labels.
+#' @template cellpypes_obj
+#' @template handling_overlap
 #' @export
 #'
 #' @examples
@@ -233,21 +226,12 @@ classify <- function(
 
 
 
-# skeleton:
-# obj %>%
-#   rule(  "A",       "gene1",          ">",   1e-3              )             %>%
-#   rule(  "A",       "gene1",          ">",   1e-3, parent = "A")             %>%
-#   rule(  "A",       "gene1",          ">",   1e-3, parent = "A")             
 
+# I think the order of factor levels is the same as classes, and
+# if is.null(classes) then it's the same as in obj$classes$class, i.e. the
+# order in which classes were created by the user. I am not sure, however,
+# but realize this is important (see e.g. f1_all.Rmd, building an f1-data.frame
+# relies on it).
 
-
-# Alternative parametrization, which I think is stupid (delete soon):
-# classes = c("Treg", "Ttox", "B"). 
-# 
-# overlap = c("common_parent", NA or any character string: "Unassigned"/"multiplelabels"/...)
-# resort_to_parent=TRUE/FALSE # for cells not assigned to classes 
-# # (leafs or user-defined)
-# output_logical=TRUE/FALSE  # ignore overlap/resort_to_parent and just output a logical
-# # matrix. If a single class is supplied, pipe it into "drop".
 
 

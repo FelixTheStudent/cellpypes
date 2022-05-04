@@ -16,7 +16,8 @@ classify(
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
 
 \item{classes}{Character vector with one or more class names.
-If NULL (the default), all classes for which rules exist are used.}
+If NULL (the default), plots finest available cell types
+(all classes that are not parent of any other class).}
 
 \item{replace_overlap_with}{}
 
@@ -25,11 +26,7 @@ If NULL (the default), all classes for which rules exist are used.}
 \item{return_logical_matrix}{}
 }
 \value{
-I think the order of factor levels is the same as classes, and
-if is.null(classes) then it's the same as in obj$classes$class, i.e. the
-order in which classes were created by the user. I am not sure, however,
-but realize this is important (see e.g. f1_all.Rmd, building an f1-data.frame
-relies on it).
+A factor with cell type labels.
 }
 \description{
 Classify cells on previously defined rules
@@ -53,6 +50,19 @@ available graph – check with names(seurat@graphs).
 }
 }
 }
+}
+
+\section{Handling overlap}{
+
+If cell types overlap, classify
+returns \code{Unassigned} for cells with
+mutually exclusive labels (such as Tcell and Bcell).
+For this reason it matters whether you call \code{classify("Tcell")} or
+\code{classify(c("Tcell","Bcell")} – any existing overlap between T and B cells
+is labelled as \code{Unassigned} in
+this second call, but not in the first.
+If a cell gets multiple labels but from the same lineage (e.g. Tcell and CD8+ T), the more detailed class is returned (CD8+ T).
+All of the above is also true for \code{plot_classes}, as it wraps \code{classify}.
 }
 
 \examples{

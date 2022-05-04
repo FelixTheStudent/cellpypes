@@ -9,9 +9,6 @@ plot_classes(obj, ..., point_size = 0.4, point_size_legend = 2, base_size = 15)
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
 
-\item{...}{Same parameters as \link[cellpypes]{classify}: classes,
-replace_overlap_with, replace_unassigned_with.}
-
 \item{point_size}{Dot size used by \link[ggplot2]{geom_point}.}
 
 \item{point_size_legend}{Dot size displayed in legend.
@@ -19,6 +16,16 @@ Legend colors are easier to read with larger points.}
 
 \item{base_size}{The base_size of \link[ggplot2]{theme_bw}, i.e.
 how large text is displayed. Default: 15.}
+
+\item{classes}{Character vector with one or more class names.
+If NULL (the default), plots finest available cell types
+(all classes that are not parent of any other class).}
+
+\item{replace_overlap_with}{}
+
+\item{replace_unassigned_with}{}
+
+\item{return_logical_matrix}{}
 }
 \value{
 
@@ -45,6 +52,19 @@ available graph – check with names(seurat@graphs).
 }
 }
 }
+}
+
+\section{Handling overlap}{
+
+If cell types overlap, classify
+returns \code{Unassigned} for cells with
+mutually exclusive labels (such as Tcell and Bcell).
+For this reason it matters whether you call \code{classify("Tcell")} or
+\code{classify(c("Tcell","Bcell")} – any existing overlap between T and B cells
+is labelled as \code{Unassigned} in
+this second call, but not in the first.
+If a cell gets multiple labels but from the same lineage (e.g. Tcell and CD8+ T), the more detailed class is returned (CD8+ T).
+All of the above is also true for \code{plot_classes}, as it wraps \code{classify}.
 }
 
 \examples{

@@ -80,16 +80,16 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
 #' Call and visualize 'classify' function
 #'
 #' @template param_obj
-#' @param ... Same parameters as \link[cellpypes]{classify}: classes,
-#' replace_overlap_with, replace_unassigned_with.
 #' @param point_size Dot size used by \link[ggplot2]{geom_point}.
 #' @param point_size_legend Dot size displayed in legend. 
 #' Legend colors are easier to read with larger points.
 #' @param base_size The base_size of \link[ggplot2]{theme_bw}, i.e. 
 #' how large text is displayed. Default: 15.
+#' @template classify_params
 #'
 #' @return
 #' @template cellpypes_obj
+#' @template handling_overlap
 #' 
 #' @export
 #' 
