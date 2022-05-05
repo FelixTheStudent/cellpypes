@@ -214,7 +214,7 @@ words:
 > cells with high CD3E expression. We just can’t prove they all had CD3E
 > mRNA due to data sparsity.
 
-### Math behind cellpypes
+### Math/statistics behind cellpypes
 
 -   cellpypes models UMI counts as Poisson random variable, which
     approximates the negative binomial distribution for small expression
@@ -274,8 +274,8 @@ pbmc %>%
     intensity, and is robust to colorblindness.
 -   Default UMAP setting produce crowded embeddings. To avoid
     overplotting, we recommend playing with UMAP’s `min_dist` and
-    `spread` parameters. Compute UMAP with `spread` to 5 and you’ll be
-    able to see much more in your embeddings!
+    `spread` parameters. Compute UMAP with `spread`=5 and you’ll be able
+    to see much more in your embeddings!
 -   Manual thresholding is easier if you know whether your gene is
     expressed highly or lowly. In above example, I’d start with a large
     threshold for NKG7 (e.g. 10 CP10K) and a moderate one for MS4A1
@@ -291,10 +291,10 @@ Create a few cell type `rule`s and plot the most recent one with
 pbmc %>%
   rule("CD14+ Mono",  "CD14",    ">", 1)                    %>%
   rule("CD14+ Mono",  "LYZ",     ">", 20)                   %>%
-  # uncomment this line to have a look at the LYZ+ rule again:
+  # uncomment this line to have a look at the LYZ+ rule:
   # plot_last()   
   rule("Tcell",       "CD3E",    ">", 3.5)                  %>% 
-  rule("CD8+ T",      "CD8A",    ">", 1,  parent="Tcell")      %>%
+  rule("CD8+ T",      "CD8A",    ">", 1,  parent="Tcell")   %>%
   plot_last()
 ```
 
@@ -312,6 +312,9 @@ pbmc %>%
 -   You can build hierarchy with the `parent` argument, to arbitrary
     depths. In this example, CD8+ T cells are `CD3E+CD8A+`, not just
     `CD8A+`, because their ancestor `Tcell` had a rule for CD3E.
+-   Above code chunk is a neat way to document your cell type
+    assignment. You can generate a template with neat text alignment
+    with `pype_code_template()`.
 
 ### classify and plot\_classes
 
@@ -321,7 +324,7 @@ Get cell type labels with `classify` or plot them directly with
 ``` r
 # rules for several cell types:
 pbmc2 <- pbmc %>%
-  rule("Bcell",           "MS4A1",   ">", 1)                    %>%
+  rule("Bcell",       "MS4A1",   ">", 1)                    %>%
   rule("CD14+ Mono",  "CD14",    ">", 1)                    %>%
   rule("CD14+ Mono",  "LYZ",     ">", 20)                   %>%
   rule("Tcell",       "CD3E",    ">", 3.5)                  %>% 
@@ -365,7 +368,7 @@ conditions (we made them up here for illustraion):
 
 ``` r
 head(pbmc_meta)
-#>   asatient treatment
+#>    patient treatment
 #> 1 patient1   treated
 #> 2 patient5   treated
 #> 3 patient1   control
@@ -417,41 +420,29 @@ cells randomly to treated/control.
 ### pseudobulk and pseudobulk\_id
 
 Instead of piping into DESeq2 directly, you can also form pseudobulks
-with `pseudobulk` and helper function `pseudobulk_id`:
+with `pseudobulk` and helper function `pseudobulk_id`. This can be
+applied to any single-cell count data, independent from cellpypes. For
+example, `counts` could be `seurat@assays$RNA@counts` and `meta_df`
+could be selected columns from `seurat@meta.data`.
 
 ``` r
 pbmc3 <- pbmc %>% rule("Tcell",   "CD3E",    ">", 3.5)
 is_class <- classify(pbmc3) == "Tcell" 
 counts <- pseudobulk(pbmc$raw[,is_class], 
                      pseudobulk_id(pbmc_meta[is_class,]))
-counts[1:6, 1:4]
-#> 6 x 4 Matrix of class "dgeMatrix"
-#>              patient1.control patient1.treated patient2.control
-#> MIR1302-10                  0                0                0
-#> FAM138A                     0                0                0
-#> OR4F5                       0                0                0
-#> RP11-34P13.7                0                0                0
-#> RP11-34P13.8                0                0                0
-#> AL627309.1                  1                0                0
-#>              patient2.treated
-#> MIR1302-10                  0
-#> FAM138A                     0
-#> OR4F5                       0
-#> RP11-34P13.7                0
-#> RP11-34P13.8                0
-#> AL627309.1                  0
+counts[35:37, 1:3]
+#> 3 x 3 Matrix of class "dgeMatrix"
+#>            patient1.control patient1.treated patient2.control
+#> AL645608.1                0                0                0
+#> NOC2L                    13                6               16
+#> KLHL17                    0                0                0
 ```
-
-Note that `pseudobulk(counts, pseudobulk_id(meta_df))` can be used to
-pseudobulk any single-cell data even without cellpypes. For example,
-`counts` could be `seurat@assays$RNA@counts` and `meta_df` could be
-selected columns from `seurat@meta.data`.
 
 # FAQ
 
 ### Should I report bugs?
 
-Yes. Do it. You can [read and create issues on
+Yes. Do it. You can [search similar problems or create new issues on
 gitHub](https://github.com/FelixTheStudent/cellpypes/issues). If you
 want to be nice and like fast help for free, try to provide a [minimal
 example](https://en.wikipedia.org/wiki/Minimal_reproducible_example) of
@@ -462,14 +453,16 @@ cellpypes installation, obtained e.g. with
 ### Why are some cells ‘Unassigned’?
 
 Unassigned cells (grey) are not necessarily bad but a way to respect the
-signal-to-noise limit. Unassigned cells arise for two reasons: \* Not
-enough signal for any rule to apply. For example, outlier cells
-typically get few neighbors in Seurat’s SNN graph, making them negative
-for most rules. \* Not enough separation. If two classes are highly
-similar, such as CD4+ and CD8+ T cells, cells in the noisy class border
-may be positive for rules from both classes. By default, cellpypes sets
-them to `Unassigned`, but this behaviour can be controlled with the
-`replace_overlap_with` argument in `classify` and `plot_classes`.
+signal-to-noise limit. Unassigned cells arise for two reasons:
+
+-   Not enough signal for any rule to apply. For example, outlier cells
+    typically get few neighbors in Seurat’s SNN graph, making them
+    negative for most rules.
+-   Not enough separation. If two classes are highly similar, such as
+    CD4+ and CD8+ T cell subsets, cells in the noisy class border may be
+    positive for rules from both classes. By default, cellpypes sets
+    them to `Unassigned`, but this behaviour can be controlled with the
+    `replace_overlap_with` argument in `classify` and `plot_classes`.
 
 ### How is DE different from cluster markers?
 
