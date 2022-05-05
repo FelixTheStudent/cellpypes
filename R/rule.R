@@ -5,7 +5,7 @@
 #'   is_classes(NULL)
 #'   is_classes(data.frame())
 #'   is_classes(data.frame(class=c("T","T"), parent=c("..root..","..root..")))
-#' @param classes 
+#' @param classes The obj$classes you want to check.
 #'
 #' @return
 is_classes <- function(classes) {
