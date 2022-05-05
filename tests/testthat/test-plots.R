@@ -35,7 +35,7 @@ test_that("plot_classes handles embed tibbles", {
   } else {
     obj$embed <- obj$embed
   }
-  obj <- obj %>% rule("T", "CD3E", ">", 1e-4)
+  obj <- obj %>% rule("T", "CD3E", ">", 1)
   expect_error(print(plot_classes(obj)), NA)
 })
 

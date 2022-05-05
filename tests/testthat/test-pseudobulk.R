@@ -16,7 +16,7 @@ test_that("class_to_deseq2 example working", {
       meta_data <- data.frame(patient=dummy_variable(paste0("patient", 1:6)),
                               treatment=dummy_variable(c("control", "treated")))
       
-      obj <- rule(simulated_umis, "T", "CD3E",">", 1e-4)
+      obj <- rule(simulated_umis, "T", "CD3E",">", 1)
       dds <- class_to_deseq2(obj, meta_data, "T", ~ treatment)
     }, NA)
 })
