@@ -11,7 +11,7 @@ is_classes(data.frame(class=c("T","T"), parent=c("..root..","..root..")))}
 is_classes(classes)
 }
 \arguments{
-\item{classes}{}
+\item{classes}{The obj$classes you want to check.}
 }
 \value{
 
