@@ -121,7 +121,6 @@ classify <- function(
     # If NULL, uses all childless classes (leafs).
     # unique(obj$classes$class) returns both leafs and parents.
   replace_overlap_with="Unassigned", # alternatives: 'common_parent', NA or any scalar character
-  replace_unassigned_with="Unassigned", # "common_parent", NA or any scalar character
   return_logical_matrix =FALSE # ignore overlap/unassigned rules and just output 
   # a logical matrix. If a single class is supplied, the matrix has exactly one
   # column and the user can pipe it into "drop" to convert it to a vector.
@@ -190,7 +189,7 @@ classify <- function(
     return(res[, classes, drop=FALSE])
     }
  
-  # massage according to replace_overlap_with, replace_unassigned_with, etc.
+  # massage according to replace_overlap_with, etc.
   
   if (replace_overlap_with=="common_parent" || is.na(replace_overlap_with))
     stop("Not implemented yet, sorry.")

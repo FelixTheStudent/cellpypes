@@ -19,6 +19,14 @@ test_that("plot_last does not require totalUMI", {
 })
 
 
+test_that("plot_classes has intelligible error message", {
+  obj <- rule(simulated_umis, "T", "CD3E", ">", 1) 
+  obj <- rule(obj, "B", "MS4A1", ">", 1)
+  expect_error(plot_classes(obj, return_logical_matrix=TRUE),
+               "Please set return_logical_matrix to FALSE.")
+  
+})
+
 
 test_that("plot_classes handles embed tibbles", {
   obj <- simulated_umis

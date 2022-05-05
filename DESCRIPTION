@@ -20,7 +20,8 @@ Suggests:
     Seurat,
     DESeq2,
     RcppAnnoy,
-    tibble
+    tibble,
+    SeuratObject
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 
@@ -31,6 +32,7 @@ Imports:
     viridis,
     patchwork,
     cowplot,
-    dplyr
+    dplyr,
+    scales
 Depends: 
     R (>= 2.10)

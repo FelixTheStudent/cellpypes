@@ -21,11 +21,12 @@ how large text is displayed. Default: 15.}
 If NULL (the default), plots finest available cell types
 (all classes that are not parent of any other class).}
 
-\item{replace_overlap_with}{}
+\item{replace_overlap_with}{Character string, by default: \code{"Unassigned"}.
+See section \strong{Handling overlap}.}
 
-\item{replace_unassigned_with}{}
-
-\item{return_logical_matrix}{}
+\item{return_logical_matrix}{logical. If TRUE, a logical matrix with
+classes in columns and cells in rows is returned instead of a
+factor with cell type labels.}
 }
 \value{
 
@@ -45,10 +46,14 @@ or tibble with two columns and one row per cell.}
 k is the number of nearest neighbors (we recommend 15<k<100, e.g. k=50).
 Here are two ways to get the neighbors index matrix:
 \itemize{
-\item Use find_knn(featureMatrix)$idx, where featureMatrix could be principal components, latent variables or normalized genes (features in rows, cells in columns).
-\item use as(seurat@graphs[\link{"RNA_nn"}], "dgCMatrix")>.1 to extract the kNN
-graph computed on RNA. This also works with RNA_snn, wknn/wsnn or any other
-available graph – check with names(seurat@graphs).
+\item Use \code{find_knn(featureMatrix)$idx}, where featureMatrix could be
+principal components, latent variables or normalized genes (features in
+rows, cells in columns).
+\item use \code{as(seurat@graphs[["RNA_nn"]], "dgCMatrix")> .1} to extract
+the kNN
+graph computed on RNA. The \code{> .1} ensures this also works with RNA_snn,
+wknn/wsnn or any other
+available graph – check with \code{names(seurat@graphs)}.
 }
 }
 }
@@ -56,14 +61,24 @@ available graph – check with names(seurat@graphs).
 
 \section{Handling overlap}{
 
-If cell types overlap, classify
-returns \code{Unassigned} for cells with
-mutually exclusive labels (such as Tcell and Bcell).
-For this reason it matters whether you call \code{classify("Tcell")} or
+Overlap denotes all cells
+for which rules from multiple classes apply, and these cells will be
+labeled as \code{Unassigned} by default.
+If you are in fact interested in where the overlap is,
+set \code{return_logical_matrix}=TRUE and inspect the result.
+Note that
+it matters whether you call \code{classify("Tcell")} or
 \code{classify(c("Tcell","Bcell")} – any existing overlap between T and B cells
 is labelled as \code{Unassigned} in
 this second call, but not in the first.
-If a cell gets multiple labels but from the same lineage (e.g. Tcell and CD8+ T), the more detailed class is returned (CD8+ T).
+
+Replacing overlap happens only between mutually
+exclusive labels (such as Tcell and Bcell), but
+not within a lineage.
+To make an example, overlap is NOT replaced between child (PD1+Ttox) and
+parent (Ttox) or any other ancestor (Tcell), but instead the
+most detailed cell type (PD1+Ttox) is returned.
+
 All of the above is also true for \code{plot_classes}, as it wraps \code{classify}.
 }
 

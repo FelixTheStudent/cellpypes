@@ -9,6 +9,8 @@
 #' @param show_feat If TRUE (default), a second panel shows the feature plot of
 #' the relevant gene.
 #' @param what Either "rule" or "class".
+#' @param legend_rel_width Relative width compared to the other two plots
+#' (only relevant if \code{show_feat=TRUE}). 
 #'
 #' @return Returns a ggplot2 object with the plot.
 #' 
@@ -101,6 +103,7 @@ plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=
   check_obj(obj)
   
   labels <- classify(obj, ...)
+  if(is.logical(labels)) stop("Please set return_logical_matrix to FALSE.")
   # manually set Unassigned color:
   colors <- scales::hue_pal()(length(levels(labels))-1) 
   names(colors) <- levels(labels)[levels(labels)!="Unassigned"]
