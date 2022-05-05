@@ -2,25 +2,51 @@
 % Please edit documentation in R/neighbor_pooling.R
 \name{evaluate_rule}
 \alias{evaluate_rule}
-\title{Title}
+\title{Evaluate rule to obtain positive / negative cells}
 \usage{
 evaluate_rule(obj, class, feature, operator, threshold)
 }
 \arguments{
-\item{obj}{}
+\item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
 
-\item{class}{}
+\item{class}{A character scalar with the class.}
 
-\item{feature}{}
+\item{feature}{Character scalar naming the gene you'd like to threshold.}
 
-\item{operator}{}
+\item{operator}{One of \code{c(">","<")}. Use ">" for positive (CD3E+) and
+"<" for negative markers (MS4A1-).}
 
 \item{threshold}{}
 }
 \value{
-
+logical vector stating for each cell whether the rule is true.
 }
 \description{
-Title
+The rule is defined by feature, operator and threshold.
 }
+\section{cellpypes Objects}{
+
+A cellpypes object is a \link[base]{list} with four slots:
+\itemize{
+\item{\code{raw }}{(sparse) matrix with genes in rows, cells in columns}
+\item{\code{totalUMI }}{the colSums of obj$raw}
+\item{\code{embed }}{two-dimensional embedding of the cells, provided as data.frame
+or tibble with two columns and one row per cell.}
+\item{\code{neighbors }}{index matrix with one row per cell and k columns, where
+k is the number of nearest neighbors (we recommend 15<k<100, e.g. k=50).
+Here are two ways to get the neighbors index matrix:
+\itemize{
+\item Use \code{find_knn(featureMatrix)$idx}, where featureMatrix could be
+principal components, latent variables or normalized genes (features in
+rows, cells in columns).
+\item use \code{as(seurat@graphs[["RNA_nn"]], "dgCMatrix")> .1} to extract
+the kNN
+graph computed on RNA. The \code{> .1} ensures this also works with RNA_snn,
+wknn/wsnn or any other
+available graph – check with \code{names(seurat@graphs)}.
+}
+}
+}
+}
+
 \keyword{internal}

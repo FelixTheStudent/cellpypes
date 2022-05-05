@@ -25,9 +25,8 @@ are literature cell types ("T cell") or any subpopulation of interest
 \item{feature}{Character scalar naming the gene you'd like to threshold.
 Must be a row name in \code{obj$raw}.}
 
-\item{operator}{One of the following: \code{c("<", ">", "<=", ">=")}.
-We recommend using ">" for positive (CD3E+) and "<" for negative markers
-(MS4A1-).}
+\item{operator}{One of \code{c(">","<")}. Use ">" for positive (CD3E+) and
+"<" for negative markers (MS4A1-).}
 
 \item{threshold}{Numeric scalar with the expression threshold separating positive
 from negative cells.

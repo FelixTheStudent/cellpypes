@@ -64,9 +64,7 @@ check_obj <- function(obj) {
 #' ("CD3E+TNF+LAG3-"). 
 #' @param feature Character scalar naming the gene you'd like to threshold. 
 #' Must be a row name in \code{obj$raw}.
-#' @param operator One of the following: \code{c("<", ">", "<=", ">=")}.
-#' We recommend using ">" for positive (CD3E+) and "<" for negative markers
-#' (MS4A1-).
+#' @template param_operator
 #' @param threshold Numeric scalar with the expression threshold separating positive
 #' from negative cells.
 #' Experiment with this value, until expression and selected cells agree well
@@ -134,8 +132,8 @@ rule <- function(obj,
   stopifnot( "operator must be a single string"= is.character(operator) && length(operator) == 1)
   stopifnot("threshold must be a single number"= is.numeric(threshold) && length(threshold) == 1)
   stopifnot(   "parent must be NULL or a single string"= is.null(parent) | is.character(parent) && length(parent) == 1)
-  stopifnot("operator has to be one of these: <, >, <=, >="=operator %in%
-              c("<", ">", "<=", ">="))
+  stopifnot("operator has to be one of these: <, >"=operator %in%
+              c("<", ">"))
   if(any(parent==class)) stop("Class and parent cannot be the same.")
   if(any(parent=="..root..")) stop("Cellpypes internally uses '..root..'. Call your parent something else!")
   stopifnot("feature must be in rownames(obj$raw)"= feature %in% rownames(obj$raw) )

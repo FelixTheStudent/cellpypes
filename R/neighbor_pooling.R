@@ -3,10 +3,10 @@
 #' Sum up x across neighbors in a nearest neighbor graph.
 #'
 #' @param x Numeric vector.
-#' @param neighbors Nearest neighbor graph provided as index matrix
-#' (nrows = \code{length(x)}, ncol is number of neighbors).
-#' Use the for example \code{find_knn(featureMatrix)$idx}, 
-#' see \link[cellpypes]{find_knn}.
+#' @param neighbors Nearest neighbor graph provided as NxK index matrix 
+#' (N observations, K neighbors) or NxN adjacency matrix.
+#' Index matrices can be obtained with \link[cellpypes]{find_knn}
+#' (specifically the slot \code{idx} in the list it returns). 
 #' 
 #' @description Neighbor pooling means that x is summed across 
 #' the nearest neighbors.
@@ -25,8 +25,8 @@
 #' 
 #' @importFrom rlang is_double is_integer
 pool_across_neighbors <- function(x, neighbors) {
-  stopifnot("x must be numeric"=is_double(x) || is_integer(x))
-  stopifnot(length(x)==nrow(neighbors))  
+  stopifnot("x must be numeric"=is.numeric(x))
+  stopifnot("length of x must match nrow of neighbors"=length(x)==nrow(neighbors))  
   
   if (ncol(neighbors)==nrow(neighbors)) {
     # assume neighbors is a graph matrix (typically with binary edge weights)
@@ -41,15 +41,20 @@ pool_across_neighbors <- function(x, neighbors) {
 
 
 
-#' Title
+#' Evaluate rule to obtain positive / negative cells 
 #'
-#' @param obj 
-#' @param class 
-#' @param feature 
-#' @param operator 
+#' @template param_obj
+#' @param class A character scalar with the class.
+#' @param feature Character scalar naming the gene you'd like to threshold. 
+#' @template param_operator
 #' @param threshold 
+#' 
+#' @description The rule is defined by feature, operator and threshold.
 #'
-#' @return
+#' @return logical vector stating for each cell whether the rule is true.
+#' 
+#' @template cellpypes_obj
+#' 
 #' @keywords internal
 #'
 evaluate_rule <- function(obj,
@@ -73,6 +78,7 @@ evaluate_rule <- function(obj,
 
   cdf <- ppois(K, S*threshold)
   switch(operator,
+         # >= and <= are currently prevented by stopifnot in rule
          ">" = cdf > .99,
          ">=" =cdf > .01,
          "<"  =cdf < .01,

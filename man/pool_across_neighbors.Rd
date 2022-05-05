@@ -9,10 +9,10 @@ pool_across_neighbors(x, neighbors)
 \arguments{
 \item{x}{Numeric vector.}
 
-\item{neighbors}{Nearest neighbor graph provided as index matrix
-(nrows = \code{length(x)}, ncol is number of neighbors).
-Use the for example \code{find_knn(featureMatrix)$idx},
-see \link[cellpypes]{find_knn}.}
+\item{neighbors}{Nearest neighbor graph provided as NxK index matrix
+(N observations, K neighbors) or NxN adjacency matrix.
+Index matrices can be obtained with \link[cellpypes]{find_knn}
+(specifically the slot \code{idx} in the list it returns).}
 }
 \value{
 Numeric vector of length x.
