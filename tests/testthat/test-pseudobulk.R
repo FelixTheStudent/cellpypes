@@ -57,10 +57,9 @@ meta_data <- data.frame(patient=dummy_variable(paste0("patient", 1:6)),
                         treatment=dummy_variable(c("control", "treated")))
 
 test_that("class_to_deseq2 stops gracefully if class has zero cells.", {
+  dds <- rule(simulated_umis, "T", "CD3E",">", 1000)
   expect_error(
-    dds <- simulated_umis         %>% 
-      rule("T", "CD3E",">", 1000) %>%
-      class_to_deseq2(meta_data, "T", ~ treatment),
+    class_to_deseq2(dds, meta_data, "T", ~ treatment),
     "contains no cells"
     
   )

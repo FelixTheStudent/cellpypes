@@ -9,10 +9,10 @@ test_that("plot_last does not require totalUMI", {
     embed=data.frame(u1=1:20, u2=20:1),
     neighbors  =matrix(1:20, nrow=20, ncol=10))
   plot_WO_feat <- function() plot_last(
-    obj_without_totalUMI %>% rule("T","CD3E",">",.1e-3),
+     rule(obj_without_totalUMI,"T","CD3E",">",.1e-3),
     show_feat = FALSE)
   plot_W_feat <- function() plot_last(
-    obj_without_totalUMI %>% rule("T","CD3E",">",.1e-3),
+    rule(obj_without_totalUMI, "T","CD3E",">",.1e-3),
     show_feat = TRUE)
   expect_error(plot_WO_feat(), NA) # NA checks that there is no error
   expect_error(plot_W_feat(),  NA) # NA checks that there is no error
@@ -35,7 +35,7 @@ test_that("plot_classes handles embed tibbles", {
   } else {
     obj$embed <- obj$embed
   }
-  obj <- obj %>% rule("T", "CD3E", ">", 1)
+  obj <- rule(obj, "T", "CD3E", ">", 1)
   expect_error(print(plot_classes(obj)), NA)
 })
 

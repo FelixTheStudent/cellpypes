@@ -79,10 +79,10 @@ test_that("rule adds rules as intended", {
 })
 
 test_that("rule can assign same feature to different classes.", {
-  obj <- simulated_umis %>%
-    rule("T", "CD3E", ">", 42) %>%
-    rule("B", "MS4A1",">", 42) %>%
-    rule("B", "CD3E", "<", 42)
+  obj <- simulated_umis 
+  obj <- rule(obj, "T", "CD3E", ">", 42)
+  obj <- rule(obj, "B", "MS4A1",">", 42)
+  obj <- rule(obj, "B", "CD3E", "<", 42)
   expect_equal(obj$rules,
                data.frame(
                  class=c("T","B","B"), 
@@ -94,11 +94,11 @@ test_that("rule can assign same feature to different classes.", {
 
 
 test_that("rule moves modified rule to position of most recent rule.", {
-  x <- simulated_umis %>%
-    rule("T", "CD3E", ">",    42) %>%
-    rule("B", "MS4A1",">",    42) %>%
-    rule("Treg", "FOXP3",">", 42, parent="T") %>%
-    rule("T", "CD3E", "<",    41)
+  x <- simulated_umis 
+  x <- rule(x, "T", "CD3E", ">",    42) 
+  x <- rule(x, "B", "MS4A1",">",    42)
+  x <- rule(x, "Treg", "FOXP3",">", 42, parent="T") 
+  x <- rule(x, "T", "CD3E", "<",    41)
   expect_equal(x$rules$class,
                c("B", "Treg", "T")
   )
@@ -110,8 +110,11 @@ test_that("Existing classes and existing features are handled correctly", {
   hasT <- rule(obj=hasT, class="T", feature="CD3E", operator=">",
                threshold=42)
   expect_equal(hasT$classes, data.frame(class="T", parent="..root.."))
-  expect_equal(hasT$rules, data.frame(class="T", feature="CD3E", operator=">",
-                                      threshold=42))
+  expect_equal(hasT$rules, data.frame(class="T",
+                                      feature="CD3E",
+                                      operator=">",
+                                      # e-4 makes it resemble internal CP10K value:
+                                      threshold=42e-4)) 
   hasT <- rule(obj=hasT, class="T", feature="MS4A1", operator="<",
                threshold=42) 
   expect_equal(hasT$classes, data.frame(class="T", parent="..root.."))
@@ -125,11 +128,9 @@ test_that("Existing classes and existing features are handled correctly", {
 
 test_that("Existing feature is handled well even if obj is saved into variable.", {
   x <- simulated_umis
-  x <- x %>% 
-   rule("T", "CD3E", threshold = .1e-3) %>%
-   rule("Treg", "FOXP3", threshold = .1e-3)
-  x <- x %>% 
-   rule("T", "CD3E", threshold = .1e-3)
+  x <- rule(x, "T", "CD3E", threshold = .1e-3) 
+  x <- rule(x, "Treg", "FOXP3", threshold = .1e-3)
+  x <- rule(x, "T", "CD3E", threshold = .1e-3)
   expect_true(is_rules(x$rules))
   
 })
