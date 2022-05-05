@@ -12,6 +12,11 @@ test_that("rule Docu example works", {
                c(445, 42, 1413))
 })
 
+test_that("mixing CP10K and fractions works", {
+  obj2 <- rule(obj, "T", "MS4A1", "<", 1e-4, use_CP10K = FALSE)
+  expect_equal(classify(obj),
+               classify(obj2))
+})
 
 
 
@@ -32,7 +37,7 @@ test_that("rule verifies its inputs are of expected class", {
   #    I'm not testing this currently, because the obj structure is still changing.
   
   # a wrong class in the input arguments gives error:
-  class_error <- "^all"
+  class_error <- "^Wrong format"
   expect_error( rule(obj=obj_min, class = 42, feature="b", threshold=1),  class_error )
   expect_error( rule(obj=obj_min, class = "a", feature=42, threshold=1),  class_error )
   expect_error( rule(obj=obj_min, class = "a", feature="b", threshold=1, operator=42),  class_error )

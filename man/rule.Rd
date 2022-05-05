@@ -17,28 +17,55 @@ rule(
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
 
-\item{class}{}
+\item{class}{Character scalar with the class name. Typically,
+cellpypes classes
+are literature cell types ("T cell") or any subpopulation of interest
+("CD3E+TNF+LAG3-").}
 
-\item{feature}{}
+\item{feature}{Character scalar naming the gene you'd like to threshold.
+Must be a row name in \code{obj$raw}.}
 
-\item{operator}{One of the following: \code{c("<", ">", "<=", ">=")}.}
+\item{operator}{One of the following: \code{c("<", ">", "<=", ">=")}.
+We recommend using ">" for positive (CD3E+) and "<" for negative markers
+(MS4A1-).}
 
-\item{threshold}{}
+\item{threshold}{Numeric scalar with the expression threshold separating positive
+from negative cells.
+Experiment with this value, until expression and selected cells agree well
+in UMAP (see examples on
+\href{https://github.com/FelixTheStudent/cellpypes}{gitHub}).}
 
-\item{parent}{The parent class (e.g. "T" or "T cell").
-If NULL, new classes get "..root.." and
-existing classes keep their current parent.}
+\item{parent}{Character scalar with the parent class
+(e.g. "T cell" for "Cytotoxic T cells").
+Only has to be specified once per class (else most recent one is taken),
+and defaults to
+"..root.." if NULL is passed in all rules.}
 
-\item{use_CP10K}{Is the threshold provided as counts per 10 thousand UMIs
-(CP10K)? If TRUE, cellpypes multiplies the threshold with 1e-4.}
+\item{use_CP10K}{If TRUE, \code{threshold} is taken to be
+counts per 10 thousand UMI counts, a measure for RNA molecule fractions.
+We recommend CP10K for human intuition (1 CP10K is roughly 1 UMI per cell),
+but the results are the exact same whether you use
+\code{threshold=1,CP10K=TRUE} or
+\code{threshold=1e-4,CP10K=FALSE}.}
 }
 \value{
-
+\code{obj} is returned, but with the rule and class stored in
+\code{obj$rules} and \code{obj$classes}, to be used by
+\link[cellpypes]{classify}.
 }
 \description{
-This is the heart of cellpypes and best used in
-pipes \code{\%>\%}. Check out examples at
-https://github.com/FelixTheStudent/cellpypes!
+This is the heart of cellpypes and best used by piping from
+one rule into the next
+with \code{magrittr::\verb{\%>\%}}. Check out examples at
+\href{https://github.com/FelixTheStudent/cellpypes}{gitHub})!
+}
+\details{
+Calling \code{rule} is computationally cheap because it only stores
+the cell type rule while all computations
+happen in \link[cellpypes]{classify}.
+If you have classes with multiple rules, the most recent \code{parent} and
+\code{feature}-\code{threshold} combination counts.
+It is ok to mix rules with and without \code{use_CP10K=TRUE}.
 }
 \section{cellpypes Objects}{
 
@@ -73,4 +100,8 @@ obj <- rule(obj, "T", "MS4A1", "<", 1)
 # Tregs are a subset of T cells:
 obj <- rule(obj, "Treg", "FOXP3", ">", .1, parent="T") 
 
+}
+\seealso{
+To have nicely formatted code in the end, copy the output of
+\code{pype_code_template()} to your script and start editing.
 }

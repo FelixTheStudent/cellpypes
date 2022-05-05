@@ -58,23 +58,56 @@ check_obj <- function(obj) {
 #' Add a cell type rule.
 #'
 #' @template param_obj
-#' @param class 
-#' @param feature 
+#' @param class Character scalar with the class name. Typically, 
+#' cellpypes classes
+#' are literature cell types ("T cell") or any subpopulation of interest
+#' ("CD3E+TNF+LAG3-"). 
+#' @param feature Character scalar naming the gene you'd like to threshold. 
+#' Must be a row name in \code{obj$raw}.
 #' @param operator One of the following: \code{c("<", ">", "<=", ">=")}.
-#' @param threshold 
-#' @param use_CP10K Is the threshold provided as counts per 10 thousand UMIs
-#' (CP10K)? If TRUE, cellpypes multiplies the threshold with 1e-4.
-#' @param parent The parent class (e.g. "T" or "T cell").
-#' If NULL, new classes get "..root.." and
-#' existing classes keep their current parent.
+#' We recommend using ">" for positive (CD3E+) and "<" for negative markers
+#' (MS4A1-).
+#' @param threshold Numeric scalar with the expression threshold separating positive
+#' from negative cells.
+#' Experiment with this value, until expression and selected cells agree well
+#' in UMAP (see examples on 
+#' \href{https://github.com/FelixTheStudent/cellpypes}{gitHub}).
+#' @param use_CP10K If TRUE, \code{threshold} is taken to be 
+#' counts per 10 thousand UMI counts, a measure for RNA molecule fractions. 
+#' We recommend CP10K for human intuition (1 CP10K is roughly 1 UMI per cell),
+#' but the results are the exact same whether you use  
+#' \code{threshold=1,CP10K=TRUE} or
+#' \code{threshold=1e-4,CP10K=FALSE}.
+#' @param parent Character scalar with the parent class 
+#' (e.g. "T cell" for "Cytotoxic T cells").
+#' Only has to be specified once per class (else most recent one is taken),
+#' and defaults to
+#' "..root.." if NULL is passed in all rules.
 #' 
-#' @description This is the heart of cellpypes and best used in 
-#' pipes \code{%>%}. Check out examples at
-#' https://github.com/FelixTheStudent/cellpypes!
+#' @description This is the heart of cellpypes and best used by piping from
+#' one rule into the next
+#' with \code{magrittr::`%>%`}. Check out examples at
+#' \href{https://github.com/FelixTheStudent/cellpypes}{gitHub})!
+#' 
+#' @details Calling \code{rule} is computationally cheap because it only stores
+#' the cell type rule while all computations
+#' happen in \link[cellpypes]{classify}.
+#' If you have classes with multiple rules, the most recent \code{parent} and
+#' \code{feature}-\code{threshold} combination counts.
+#' It is ok to mix rules with and without \code{use_CP10K=TRUE}.
+#' 
+#' 
+#' @seealso 
+#' To have nicely formatted code in the end, copy the output of
+#' \code{pype_code_template()} to your script and start editing.
+#' 
+#' 
+#' @return \code{obj} is returned, but with the rule and class stored in
+#' \code{obj$rules} and \code{obj$classes}, to be used by
+#' \link[cellpypes]{classify}.
 #' 
 #' @template cellpypes_obj
 #' 
-#' @return
 #' @export
 #'
 #' @examples
@@ -97,14 +130,17 @@ rule <- function(obj,
   check_obj(obj)
   if( any(is.null(obj), is.null(class), is.null(feature), is.null(threshold) )) { 
     stop("rule does not accept NULL input for arguments: obj, class, feature and threshold.", call. = F) }
-  stopifnot(all(
+  stopifnot("Wrong format in input (class/feature/operator/threshold/parent)"=all(
     is_scalar_character(class),    is_scalar_character(feature),
     is_scalar_character(operator), is_scalar_character(parent)|is.null(parent),
     is_scalar_double(threshold) ) )
-  stopifnot(operator %in% c("<", ">", "<=", ">="))
+  stopifnot("operator has to be one of these: <, >, <=, >="=operator %in%
+              c("<", ">", "<=", ">="))
   if(any(parent==class)) stop("Class and parent cannot be the same.")
   if(any(parent=="..root..")) stop("Cellpypes internally uses '..root..'. Call your parent something else!")
-
+  stopifnot("feature must be in rownames(obj$raw)"= feature %in% rownames(obj$raw) )
+  
+  
   
   # is_classes also checks if obj$classes is NULL
   existing_class <- ifelse(
