@@ -29,9 +29,10 @@ test_that("replace_overlap_with may be one of the classes", {
 
 
 test_that("classify's boolean output is as expected.", {
-  obj <- simulated_umis %>% rule("T", "CD3E", ">", 10) %>%
-    rule("notT", "CD3E", "<", 10) %>%
-    rule("B", "MS4A1", ">", 10, parent="notT") 
+  obj <- simulated_umis 
+  obj <- rule(obj, "T",    "CD3E", ">", 10)
+  obj <- rule(obj, "notT", "CD3E", "<", 10)
+  obj <- rule(obj, "B",    "MS4A1",">", 10, parent="notT") 
   res <- classify(obj, classes="B", return_logical_matrix=T )
   expect_equal(dim(res),
                dim(matrix(rep(FALSE,ncol(simulated_umis$raw)),
@@ -49,10 +50,10 @@ test_that("classify does not require totalUMI", {
     embed=data.frame(u1=1:20, u2=20:1),
     neighbors  =matrix(1:20, nrow=20, ncol=10))
   # NA checks that there is no error:
-  expect_error(classify(obj_without_totalUMI %>% rule("T","CD3E",">",.1e-3)),
+  expect_error(classify( rule(obj_without_totalUMI,"T","CD3E",">",.1e-3)),
                NA)
   # Next to running without error, classify should return class labels:
-  expect_equal( as.character(classify(obj_without_totalUMI %>% rule("T","CD3E",">",.1e-3))),
+  expect_equal( as.character(classify( rule(obj_without_totalUMI,"T","CD3E",">",.1e-3))),
                 rep("T", 20))
 })
 
@@ -63,10 +64,10 @@ test_that("classify does not require totalUMI", {
 
 
 test_that("overlap between class and its ancestry is not replaced.", {
-  obj2 <- simulated_umis %>% 
-    rule("B", "MS4A1", ">", 1) %>% 
-    rule("T", "CD3E", ">", .1) %>% 
-    rule("Treg", "FOXP3", ">", .05, parent="T") 
+  obj2 <- simulated_umis 
+  obj2 <- rule(obj2, "B", "MS4A1", ">", 1)
+  obj2 <- rule(obj2, "T", "CD3E", ">", .1)
+  obj2 <- rule(obj2, "Treg", "FOXP3", ">", .05, parent="T") 
     
   class_labels <- classify(obj2, classes=c("B","T","Treg"))
   # All Tregs overlap with Ts. In this case, I want Treg, not Unassigned:
@@ -87,20 +88,20 @@ test_that("overlap between class and its ancestry is not replaced.", {
 
 
 test_that("Non-existing parent gives intelligible error message.", {
-  obj <- simulated_umis %>%
-    rule("B", "MS4A1", ">", 1) %>% 
-    rule("T", "CD3E", ">", .1) %>% 
-    rule("Treg", "FOXP3", ">", .05, parent="non-existing!") 
+  obj <- simulated_umis 
+  obj <- rule(obj, "B", "MS4A1", ">", 1) 
+  obj <- rule(obj, "T", "CD3E", ">", .1) 
+  obj <- rule(obj, "Treg", "FOXP3", ">", .05, parent="non-existing!") 
   expect_error(classify(obj), regexp = "A class has parent that does not exist -- double-check your rules!")
 })
 
 
 
 test_that("Factor instead of character gives intelligible error message.", {
-  obj <- simulated_umis %>%
-    rule("B", "MS4A1", ">", 1) %>% 
-    rule("T", "CD3E", ">", .1) %>% 
-    rule("Treg", "FOXP3", ">", .05, parent="T") 
+  obj <- simulated_umis 
+  obj <- rule(obj, "B", "MS4A1", ">", 1) 
+  obj <- rule(obj, "T", "CD3E", ">", .1)
+  obj <- rule(obj, "Treg", "FOXP3", ">", .05, parent="T") 
   expect_error(classify(obj, classes = factor(c("B", "T", "Treg"))),
                regexp = "Argument classes should be character, not factor. Use as.character!")
 })
