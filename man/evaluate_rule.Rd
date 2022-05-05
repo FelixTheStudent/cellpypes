@@ -16,7 +16,8 @@ evaluate_rule(obj, class, feature, operator, threshold)
 \item{operator}{One of \code{c(">","<")}. Use ">" for positive (CD3E+) and
 "<" for negative markers (MS4A1-).}
 
-\item{threshold}{}
+\item{threshold}{Numeric scalar with the expression threshold separating positive
+from negative cells.}
 }
 \value{
 logical vector stating for each cell whether the rule is true.

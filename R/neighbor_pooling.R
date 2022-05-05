@@ -47,7 +47,8 @@ pool_across_neighbors <- function(x, neighbors) {
 #' @param class A character scalar with the class.
 #' @param feature Character scalar naming the gene you'd like to threshold. 
 #' @template param_operator
-#' @param threshold 
+#' @param threshold Numeric scalar with the expression threshold separating positive
+#' from negative cells.
 #' 
 #' @description The rule is defined by feature, operator and threshold.
 #'
