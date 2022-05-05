@@ -1,11 +1,17 @@
 
 
-#' Title
+#' Sum up x across neighbors in a nearest neighbor graph.
 #'
-#' @param x 
-#' @param neighbors 
+#' @param x Numeric vector.
+#' @param neighbors Nearest neighbor graph provided as index matrix
+#' (nrows = \code{length(x)}, ncol is number of neighbors).
+#' Use the for example \code{find_knn(featureMatrix)$idx}, 
+#' see \link[cellpypes]{find_knn}.
+#' 
+#' @description Neighbor pooling means that x is summed across 
+#' the nearest neighbors.
 #'
-#' @return
+#' @return Numeric vector of length x.
 #' @export
 #'
 #' @examples
@@ -19,7 +25,7 @@
 #' 
 #' @importFrom rlang is_double is_integer
 pool_across_neighbors <- function(x, neighbors) {
-  stopifnot(is_double(x) || is_integer(x))
+  stopifnot("x must be numeric"=is_double(x) || is_integer(x))
   stopifnot(length(x)==nrow(neighbors))  
   
   if (ncol(neighbors)==nrow(neighbors)) {

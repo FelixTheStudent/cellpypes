@@ -38,11 +38,16 @@ test_that("rule verifies its inputs are of expected class", {
   
   # a wrong class in the input arguments gives error:
   class_error <- "^Wrong format"
-  expect_error( rule(obj=obj_min, class = 42, feature="b", threshold=1),  class_error )
-  expect_error( rule(obj=obj_min, class = "a", feature=42, threshold=1),  class_error )
-  expect_error( rule(obj=obj_min, class = "a", feature="b", threshold=1, operator=42),  class_error )
-  expect_error( rule(obj=obj_min, class = "a", feature="b", threshold="forty-two"),class_error )
-  expect_error( rule(obj=obj_min, class = "a", feature="b", threshold=42, parent=5),class_error )
+  expect_error( rule(obj=obj_min, class = 42, feature="b", threshold=1), 
+                "^class must be a single string")
+  expect_error( rule(obj=obj_min, class = "a", feature=42, threshold=1),  
+                "^feature must be a single string")
+  expect_error( rule(obj=obj_min, class = "a", feature="b", threshold=1, operator=42),  
+                "^operator must be a single string")
+  expect_error( rule(obj=obj_min, class = "a", feature="b", threshold="forty-two"),
+                "^threshold must be a single number")
+  expect_error( rule(obj=obj_min, class = "a", feature="b", threshold=42, parent=5),
+                "^parent must be NULL or a single string")
   # currently I don't check obj:
   # expect_error( rule(obj="lol", class = "a", feature="b", threshold=1),      class_error )
 })

@@ -118,7 +118,6 @@ check_obj <- function(obj) {
 #' # Tregs are a subset of T cells:
 #' obj <- rule(obj, "Treg", "FOXP3", ">", .1, parent="T") 
 #' 
-#' @importFrom rlang is_scalar_character is_scalar_double
 rule <- function(obj,
                  class,
                  feature,
@@ -130,10 +129,11 @@ rule <- function(obj,
   check_obj(obj)
   if( any(is.null(obj), is.null(class), is.null(feature), is.null(threshold) )) { 
     stop("rule does not accept NULL input for arguments: obj, class, feature and threshold.", call. = F) }
-  stopifnot("Wrong format in input (class/feature/operator/threshold/parent)"=all(
-    is_scalar_character(class),    is_scalar_character(feature),
-    is_scalar_character(operator), is_scalar_character(parent)|is.null(parent),
-    is_scalar_double(threshold) ) )
+  stopifnot(    "class must be a single string"= is.character(class) && length(class) == 1)
+  stopifnot(  "feature must be a single string"= is.character(feature) && length(feature) == 1)
+  stopifnot( "operator must be a single string"= is.character(operator) && length(operator) == 1)
+  stopifnot("threshold must be a single number"= is.numeric(threshold) && length(threshold) == 1)
+  stopifnot(   "parent must be NULL or a single string"= is.null(parent) | is.character(parent) && length(parent) == 1)
   stopifnot("operator has to be one of these: <, >, <=, >="=operator %in%
               c("<", ">", "<=", ">="))
   if(any(parent==class)) stop("Class and parent cannot be the same.")

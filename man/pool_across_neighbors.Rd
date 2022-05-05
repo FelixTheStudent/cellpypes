@@ -2,20 +2,24 @@
 % Please edit documentation in R/neighbor_pooling.R
 \name{pool_across_neighbors}
 \alias{pool_across_neighbors}
-\title{Title}
+\title{Sum up x across neighbors in a nearest neighbor graph.}
 \usage{
 pool_across_neighbors(x, neighbors)
 }
 \arguments{
-\item{x}{}
+\item{x}{Numeric vector.}
 
-\item{neighbors}{}
+\item{neighbors}{Nearest neighbor graph provided as index matrix
+(nrows = \code{length(x)}, ncol is number of neighbors).
+Use the for example \code{find_knn(featureMatrix)$idx},
+see \link[cellpypes]{find_knn}.}
 }
 \value{
-
+Numeric vector of length x.
 }
 \description{
-Title
+Neighbor pooling means that x is summed across
+the nearest neighbors.
 }
 \examples{
 set.seed(42)
