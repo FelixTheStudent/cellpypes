@@ -1,10 +1,14 @@
 ## Test environments
-* local R installation, R 4.1.3
-* ubuntu 16.04 (on travis-ci), R 4.1.3
+* local R installation (ubuntu), R 4.1.3
 * win-builder (devel)
+* win-builder (release)
+* win-builder (oldrelease)
+* macOS 10.13.6 High Sierra, R-release, CRAN's setup (rhub::check())
+
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 1 notes
 
-* This is a new release.
+   
+* The Note was: New submission.
