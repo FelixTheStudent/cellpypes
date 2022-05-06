@@ -15,7 +15,7 @@
 # column. 
 fac2matrix <- function(factor){
     tmp <- factor
-    p <- model.matrix(~0+tmp)
+    p <- stats::model.matrix(~0+tmp)
     colnames(p) <- gsub("^tmp", "", colnames(p))
     return(p)
 }
