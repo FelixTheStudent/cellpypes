@@ -5,9 +5,13 @@ Authors@R:
     person(given = "Felix",
            family = "Frauhammer",
            role = c("aut", "cre"),
-           email = "felixfrauhammer@gmail.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "felixfrauhammer@gmail.com")
+Description: cellpypes implements manual thresholding of marker genes to annotate
+    cell types in single-cell RNA sequencing data.
+    cellpypes models technical noise to find positive and negative cells for
+    a given expression threshold, 
+    and the popular piping operator %>% is used to combine rules to complex
+    cell type hierarchies.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
