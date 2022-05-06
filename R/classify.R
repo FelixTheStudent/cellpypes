@@ -165,8 +165,9 @@ classify <- function(
       } 
       S <- pool_across_neighbors(obj$totalUMI,
                                  obj$neighbors)
-      cdf <- ppois(K, S*threshold)
+      cdf <- stats::ppois(K, S*threshold)
       switch(operator,
+             # >= and <= are currently prevented by stopifnot in rule
              ">" = cdf > .99,
              ">=" =cdf > .01,
              "<"  =cdf < .01,

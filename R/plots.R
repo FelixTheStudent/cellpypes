@@ -108,7 +108,10 @@ plot_classes <- function(obj,
                          base_size=15) {
   check_obj(obj)
   
-  labels <- classify(obj, ...)
+  labels <- classify(obj,
+                     classes=classes, 
+                     replace_overlap_with=replace_overlap_with, 
+                     return_logical_matrix=return_logical_matrix) 
   if(is.logical(labels)) stop("Please set return_logical_matrix to FALSE.")
   # manually set Unassigned color:
   colors <- scales::hue_pal()(length(levels(labels))-1) 
