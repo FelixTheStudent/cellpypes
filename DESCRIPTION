@@ -1,6 +1,6 @@
 Package: cellpypes
 Title: Cell type pipes for Single-Cell RNA Sequencing data in R
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person(given = "Felix",
            family = "Frauhammer",
@@ -30,7 +30,6 @@ Imports:
     Matrix,
     rlang,
     viridis,
-    patchwork,
     cowplot,
     dplyr,
     scales,
