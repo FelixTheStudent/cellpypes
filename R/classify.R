@@ -156,26 +156,11 @@ classify <- function(
   #   Its columns correspond directly to the columns in rules_eval by design,
   #   so we can use rules_info to subset rules_eval below.
   rules_info <-obj$rules[obj$rules$class %in% relevant_classes, ]
-  rules_eval <- mapply(
-    FUN = function(feature, operator, threshold) {
-      K <- pool_across_neighbors(obj$raw[feature,], 
-                                 obj$neighbors)
-      if (is.null(obj$totalUMI)) { 
-        obj$totalUMI <- Matrix::colSums(obj$raw)
-      } 
-      S <- pool_across_neighbors(obj$totalUMI,
-                                 obj$neighbors)
-      cdf <- stats::ppois(K, S*threshold)
-      switch(operator,
-             # >= and <= are currently prevented by stopifnot in rule
-             ">" = cdf > .99,
-             ">=" =cdf > .01,
-             "<"  =cdf < .01,
-             "<=" =cdf < .99)
-      },
-    rules_info$feature,
-    rules_info$operator,
-    rules_info$threshold)
+  rules_eval <- mapply(FUN=evaluate_rule,
+                       MoreArgs=list(obj=obj),
+                       feature=rules_info$feature,
+                       operator=rules_info$operator,
+                       threshold=rules_info$threshold)
   # mapply sets (non-unique) features as colnames, preclude confusion with NULL:
   colnames(rules_eval) <- NULL
 

@@ -59,10 +59,14 @@ pool_across_neighbors <- function(x, neighbors) {
 #' @keywords internal
 #'
 evaluate_rule <- function(obj,
-                          class,
                           feature,
                           operator,
                           threshold) {
+  # This is a separate function for two reasons:
+  #    * evaluate_rule uses Poisson, I was considering NB at some point as well
+  #    * it's being used by classify AND by plot_last, so separate function.
+  
+  
   # check that obj has everything this rule needs:
   stopifnot(feature %in% rownames(obj$raw))
   

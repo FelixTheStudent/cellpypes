@@ -4,12 +4,10 @@
 \alias{evaluate_rule}
 \title{Evaluate rule to obtain positive / negative cells}
 \usage{
-evaluate_rule(obj, class, feature, operator, threshold)
+evaluate_rule(obj, feature, operator, threshold)
 }
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
-
-\item{class}{A character scalar with the class.}
 
 \item{feature}{Character scalar naming the gene you'd like to threshold.}
 
@@ -18,6 +16,8 @@ evaluate_rule(obj, class, feature, operator, threshold)
 
 \item{threshold}{Numeric scalar with the expression threshold separating positive
 from negative cells.}
+
+\item{class}{A character scalar with the class.}
 }
 \value{
 logical vector stating for each cell whether the rule is true.

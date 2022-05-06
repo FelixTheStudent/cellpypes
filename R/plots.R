@@ -29,9 +29,10 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
   check_obj(obj)
   if(what=="rule") {
     last_rule <- obj$rules[nrow(obj$rules),]
-    boolean=evaluate_rule(obj,
-                          last_rule$class, last_rule$feature,
-                          last_rule$operator,   last_rule$threshold)
+    boolean=evaluate_rule(obj      = obj,
+                          feature  = last_rule$feature,
+                          operator = last_rule$operator, 
+                          threshold=last_rule$threshold)
     plot_title <- paste0(last_rule$feature, " ", last_rule$operator, " ",
                          1e4*last_rule$threshold, " CP10K")
   } else if (what=="class") {
