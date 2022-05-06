@@ -28,7 +28,7 @@ pype_from_seurat <- function(seurat) {
   # WNN_snn, SCT_snn, RNA_snn.
   all_graphs <- names(seurat@graphs)
   if (is.null(all_graphs)) {
-    seurat <- FindNeighbors(seurat)
+    seurat <- Seurat::FindNeighbors(seurat)
     all_graphs <- names(seurat@graphs)
   }
   snn_graphs <- all_graphs[grepl("_snn$", all_graphs)]
@@ -51,7 +51,7 @@ pype_from_seurat <- function(seurat) {
   
   list(
     raw      =SeuratObject::GetAssayData(seurat, "counts"),
-    neighbors=as(seurat@graphs[[graph_choice]], "dgCMatrix")>.1,
+    neighbors=methods::as(seurat@graphs[[graph_choice]], "dgCMatrix")>.1,
     embed    =Seurat::FetchData(seurat, dimension_names),
     totalUMI = seurat$nCount_RNA
   ) 

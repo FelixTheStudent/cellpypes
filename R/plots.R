@@ -18,7 +18,7 @@
 #' 
 #' @export
 #' 
-#' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle
+#' @importFrom ggplot2 ggplot aes_string geom_point coord_fixed xlab ylab ggtitle
 #' @importFrom ggplot2 scale_color_manual theme_bw element_text margin
 #' @importFrom cowplot plot_grid get_legend
 #'
@@ -44,7 +44,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
   p <- ggplot(data=data.frame(V1=obj$embed[,1, drop=T], # tbl makes drop necessary
                          V2=obj$embed[,2, drop=T],
                          last=boolean),
-         aes(V1, V2, col=last))+coord_fixed()+
+         aes_string("V1", "V2", col="last"))+coord_fixed()+
     geom_point()  +
     xlab( colnames(obj$embed)[1] ) + 
     ylab( colnames(obj$embed)[2] ) +
@@ -128,7 +128,7 @@ plot_classes <- function(obj,
   } else {
     colnames(obj$embed)
   }
-  ggplot(plot_dat, aes(dim1, dim2, col=class))+
+  ggplot(plot_dat, aes_string("dim1", "dim2", col="class"))+
     coord_fixed()+
     geom_point(size=point_size) +
     scale_color_manual(values=colors) + 
@@ -164,7 +164,7 @@ plot_classes <- function(obj,
 #' @template cellpypes_obj
 #' 
 #' @export
-#' @importFrom ggplot2 ggplot aes geom_point coord_fixed xlab ylab ggtitle theme
+#' @importFrom ggplot2 ggplot aes_string geom_point coord_fixed xlab ylab ggtitle theme
 #' @importFrom ggplot2 element_blank element_rect element_text
 #' @examples
 #' feat(simulated_umis, "CD3E")
@@ -222,7 +222,7 @@ feat <- function(obj, features, ...) {
                          min(dat$expr[dat$expr>0])/10)
     }
     ggplot(dat,
-           aes(x = X1, y = X2, col = expr)) +
+           aes_string(x = "X1", y = "X2", col = "expr")) +
       coord_fixed() +
       geom_point(size=.4) +
       ggtitle(gene) + xlab(axis_names[1]) + ylab(axis_names[2]) +

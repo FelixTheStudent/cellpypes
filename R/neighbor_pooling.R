@@ -30,7 +30,7 @@ pool_across_neighbors <- function(x, neighbors) {
   
   if (ncol(neighbors)==nrow(neighbors)) {
     # assume neighbors is a graph matrix (typically with binary edge weights)
-    return( as.numeric( as(neighbors, "dgCMatrix") %*% x ) )
+    return( as.numeric( methods::as(neighbors, "dgCMatrix") %*% x ) )
   } else if (ncol(neighbors)<nrow(neighbors)) {
     # neighbors is assumed to be a matrix with neighbor indices for each cell
     rowSums(matrix(data=x[c(neighbors)], ncol=ncol(neighbors)))

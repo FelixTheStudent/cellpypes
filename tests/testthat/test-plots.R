@@ -55,3 +55,4 @@ test_that("feat gives intelligible error messages", {
   
  
 })
+

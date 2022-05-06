@@ -33,6 +33,7 @@ Imports:
     patchwork,
     cowplot,
     dplyr,
-    scales
+    scales,
+    methods
 Depends: 
     R (>= 2.10)

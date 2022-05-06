@@ -40,7 +40,7 @@ find_knn <- function(featureMatrix, k=50,
   # Find nearest neighbors for UMAP and Louvain clustering:
   set.seed(100) # seed ensures that UMAP gives reproducible result
   k_nn <- k 
-  annoy <- new( RcppAnnoy::AnnoyEuclidean, ncol(featureMatrix) )
+  annoy <- methods::new( RcppAnnoy::AnnoyEuclidean, ncol(featureMatrix) )
   for( i in 1:nrow(featureMatrix) )
     annoy$addItem( i-1, featureMatrix[i,] )
   annoy$build( n_trees ) # builds a forest  of n_trees trees. More trees gives higher precision when querying.
