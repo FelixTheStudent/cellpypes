@@ -118,7 +118,7 @@ analysis:
 
 # Annotating PBMCs
 
-Here, we annote the same PBMC data set as in the popular [Seurat
+Here, we annotate the same PBMC data set as in the popular [Seurat
 tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html),
 using the Seurat object `seurat_object` that comes out of it.
 
@@ -450,7 +450,7 @@ your problem if possible. Make sure to include the version of your
 cellpypes installation, obtained e.g. with
 `packageVersion("cellpypes")`.
 
-### Why are some cells ‘Unassigned’?
+### Why are some cells unassigned?
 
 Unassigned cells (grey) are not necessarily bad but a way to respect the
 signal-to-noise limit. Unassigned cells arise for two reasons:
@@ -461,7 +461,7 @@ signal-to-noise limit. Unassigned cells arise for two reasons:
 -   Not enough separation. If two classes are highly similar, such as
     CD4+ and CD8+ T cell subsets, cells in the noisy class border may be
     positive for rules from both classes. By default, cellpypes sets
-    them to `Unassigned`, but this behaviour can be controlled with the
+    them to `Unassigned`, but this behavior can be controlled with the
     `replace_overlap_with` argument in `classify` and `plot_classes`.
 
 ### How is DE different from cluster markers?
