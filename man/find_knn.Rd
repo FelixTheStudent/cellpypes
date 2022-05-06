@@ -17,10 +17,19 @@ components.}
 More trees gives higher precision when querying. Default: 50.}
 }
 \value{
-
+List with two slots:
+\itemize{
+\item \code{idx} A NxK matrix (N cells, K neighbors) containing the integer
+indexes of the approximate nearest neighbors in featureMatrix.
+Each cell is considered to be its own nearest neighbor, next to
+K-1 other neighbors.
+\item \code{dist} A NxK matrix containing the distances of the nearest neighbors.
+}
+Inspired by \code{uwot::umap}'s return value when setting \code{ret_nn=TRUE}.
 }
 \description{
-Find approximate k-nearest neighbors
+Implements RcppAnnoy's approximate nearest neighbor search
+(very fast).
 }
 \examples{
   # Imagine we have 30 cells and 100 features:

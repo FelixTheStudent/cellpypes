@@ -13,7 +13,7 @@ created with the rule function.}
 \item{invert.}{If TRUE, return classes that are NOT leafs instead of leaf nodes.}
 }
 \value{
-
+Character vector with the tree's leafs.
 }
 \description{
 Finds leaf nodes, i.e. classes without children

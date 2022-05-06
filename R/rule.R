@@ -7,7 +7,7 @@
 #'   is_classes(data.frame(class=c("T","T"), parent=c("..root..","..root..")))
 #' @param classes The obj$classes you want to check.
 #'
-#' @return
+#' @return logical scalar.
 is_classes <- function(classes) {
   # Helpful messages to the user:
   if(!all(classes$parent %in% c("..root..",classes$class))) {
@@ -22,9 +22,9 @@ is_classes <- function(classes) {
 
 #' Check if obj$rules looks as expected.
 #'
-#' @param rules 
+#' @param rules The obj$rules slot of a cellpypes object.
 #'
-#' @return
+#' @return logical scalar
 is_rules <- function(rules) {
     inherits(rules, "data.frame"  ) &&
     ncol(rules) > 0 &&  # handles this: `is_rules(data.frame())`
@@ -84,10 +84,10 @@ check_obj <- function(obj) {
 #' 
 #' @description This is the heart of cellpypes and best used by piping from
 #' one rule into the next
-#' with \code{magrittr::`%>%`}. Check out examples at
+#' with `magrittr::%>%`. Check out examples at
 #' \href{https://github.com/FelixTheStudent/cellpypes}{gitHub})!
 #' 
-#' @details Calling \code{rule} is computationally cheap because it only stores
+#' @details Calling `rule` is computationally cheap because it only stores
 #' the cell type rule while all computations
 #' happen in \link[cellpypes]{classify}.
 #' If you have classes with multiple rules, the most recent \code{parent} and

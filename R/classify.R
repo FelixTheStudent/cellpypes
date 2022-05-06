@@ -15,7 +15,7 @@
 #' created with the rule function.
 #' @param invert. If TRUE, return classes that are NOT leafs instead of leaf nodes.
 #'
-#' @return
+#' @return Character vector with the tree's leafs.
 #' @keywords internal
 #'
 tree_leaf_nodes <- function(classes, invert=FALSE) {
@@ -37,7 +37,7 @@ tree_leaf_nodes <- function(classes, invert=FALSE) {
 #' @param classes The class definitions of a cellpypes object, i.e. obj$classes.
 #' @param class A character vector of length one with the class.
 #'
-#' @return
+#' @return Character vector with the ancestry of a class.
 #' @keywords internal
 #'
 tree_ancestry <- function(classes, class) {

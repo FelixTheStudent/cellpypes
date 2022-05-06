@@ -14,7 +14,7 @@ is_classes(classes)
 \item{classes}{The obj$classes you want to check.}
 }
 \value{
-
+logical scalar.
 }
 \description{
 Check if obj$classes looks as expected.

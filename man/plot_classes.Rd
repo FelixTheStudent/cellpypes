@@ -4,18 +4,18 @@
 \alias{plot_classes}
 \title{Call and visualize 'classify' function}
 \usage{
-plot_classes(obj, ..., point_size = 0.4, point_size_legend = 2, base_size = 15)
+plot_classes(
+  obj,
+  classes = NULL,
+  replace_overlap_with = "Unassigned",
+  return_logical_matrix = FALSE,
+  point_size = 0.4,
+  point_size_legend = 2,
+  base_size = 15
+)
 }
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
-
-\item{point_size}{Dot size used by \link[ggplot2]{geom_point}.}
-
-\item{point_size_legend}{Dot size displayed in legend.
-Legend colors are easier to read with larger points.}
-
-\item{base_size}{The base_size of \link[ggplot2]{theme_bw}, i.e.
-how large text is displayed. Default: 15.}
 
 \item{classes}{Character vector with one or more class names.
 If NULL (the default), plots finest available cell types
@@ -24,12 +24,22 @@ If NULL (the default), plots finest available cell types
 \item{replace_overlap_with}{Character string, by default: \code{"Unassigned"}.
 See section \strong{Handling overlap}.}
 
-\item{return_logical_matrix}{logical. If TRUE, a logical matrix with
-classes in columns and cells in rows is returned instead of a
-factor with cell type labels.}
+\item{return_logical_matrix}{logical. If TRUE,
+a logical matrix with
+classes in columns and cells in rows is returned instead of resolving
+overlaps with \code{replace_overlap_with}.
+If a single class is supplied, the matrix has exactly one}
+
+\item{point_size}{Dot size used by \link[ggplot2]{geom_point}.}
+
+\item{point_size_legend}{Dot size displayed in legend.
+Legend colors are easier to read with larger points.}
+
+\item{base_size}{The base_size of \link[ggplot2]{theme_bw}, i.e.
+how large text is displayed. Default: 15.}
 }
 \value{
-
+A ggplot2 object.
 }
 \description{
 Call and visualize 'classify' function

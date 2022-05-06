@@ -55,7 +55,7 @@ but the results are the exact same whether you use
 \description{
 This is the heart of cellpypes and best used by piping from
 one rule into the next
-with \code{magrittr::\verb{\%>\%}}. Check out examples at
+with \verb{magrittr::\%>\%}. Check out examples at
 \href{https://github.com/FelixTheStudent/cellpypes}{gitHub})!
 }
 \details{

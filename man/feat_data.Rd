@@ -2,18 +2,18 @@
 % Please edit documentation in R/plots.R
 \name{feat_data}
 \alias{feat_data}
-\title{Title}
+\title{Simple accessor function in case I change my obj structure.}
 \usage{
 feat_data(obj, feature_name)
 }
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
 
-\item{feature_name}{}
+\item{feature_name}{Name of the gene you want to plot.}
 }
 \value{
-
+data.frame with four columns (embedding, k and s).
 }
 \description{
-Title
+Simple accessor function in case I change my obj structure.
 }

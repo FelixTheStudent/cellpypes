@@ -21,9 +21,11 @@ If NULL (the default), plots finest available cell types
 \item{replace_overlap_with}{Character string, by default: \code{"Unassigned"}.
 See section \strong{Handling overlap}.}
 
-\item{return_logical_matrix}{logical. If TRUE, a logical matrix with
-classes in columns and cells in rows is returned instead of a
-factor with cell type labels.}
+\item{return_logical_matrix}{logical. If TRUE,
+a logical matrix with
+classes in columns and cells in rows is returned instead of resolving
+overlaps with \code{replace_overlap_with}.
+If a single class is supplied, the matrix has exactly one}
 }
 \value{
 A factor with cell type labels.

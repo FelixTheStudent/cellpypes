@@ -89,7 +89,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
 #' how large text is displayed. Default: 15.
 #' @template classify_params
 #'
-#' @return
+#' @return A ggplot2 object.
 #' @template cellpypes_obj
 #' @template handling_overlap
 #' 
@@ -99,7 +99,13 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
 #'
 #' @examples
 #' plot_classes(rule(simulated_umis, "T", "CD3E",">", 1))
-plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=15) {
+plot_classes <- function(obj,
+                         classes=NULL,
+                         replace_overlap_with="Unassigned", 
+                         return_logical_matrix =FALSE,
+                         point_size=.4,
+                         point_size_legend=2,
+                         base_size=15) {
   check_obj(obj)
   
   labels <- classify(obj, ...)
@@ -135,12 +141,12 @@ plot_classes <- function(obj,..., point_size=.4, point_size_legend=2, base_size=
 
 
 
-#' Title
+#' Simple accessor function in case I change my obj structure.
 #'
 #' @template param_obj
-#' @param feature_name 
+#' @param feature_name Name of the gene you want to plot.
 #'
-#' @return
+#' @return data.frame with four columns (embedding, k and s).
 #'
 feat_data <- function(obj, feature_name) {
   if (is.null(obj$totalUMI)) { 

@@ -7,10 +7,10 @@
 is_rules(rules)
 }
 \arguments{
-\item{rules}{}
+\item{rules}{The obj$rules slot of a cellpypes object.}
 }
 \value{
-
+logical scalar
 }
 \description{
 Check if obj$rules looks as expected.

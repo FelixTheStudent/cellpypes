@@ -12,7 +12,7 @@ tree_ancestry(classes, class)
 \item{class}{A character vector of length one with the class.}
 }
 \value{
-
+Character vector with the ancestry of a class.
 }
 \description{
 Find parent, parent's parent and so on for a class using recursive programming
