@@ -1,5 +1,5 @@
 Package: cellpypes
-Title: Cell type pipes for Single-Cell RNA Sequencing data in R
+Title: Cell Type Pipes for Single-Cell RNA Sequencing Data in R
 Version: 0.1.0
 Authors@R: 
     person(given = "Felix",
