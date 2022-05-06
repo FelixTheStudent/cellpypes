@@ -12,6 +12,8 @@ Description: cellpypes implements manual thresholding of marker genes to annotat
     a given expression threshold, 
     and the popular piping operator %>% is used to combine rules to complex
     cell type hierarchies.
+URL: https://github.com/FelixTheStudent/cellpypes
+BugReports: https://github.com/FelixTheStudent/cellpypes/issues
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
