@@ -145,25 +145,6 @@ plot_classes <- function(obj,
 
 
 
-#' Simple accessor function in case I change my obj structure.
-#'
-#' @template param_obj
-#' @param feature_name Name of the gene you want to plot.
-#'
-#' @return data.frame with four columns (embedding, k and s).
-#'
-feat_data <- function(obj, feature_name) {
-  if (is.null(obj$totalUMI)) { 
-    obj$totalUMI <- Matrix::colSums(obj$raw)
-  } 
-  df <- data.frame(obj$embed,
-                   obj$raw[feature_name,],
-                   obj$totalUMI)
-  colnames(df) <- c("X1","X2","k","s")
-  
-  return(df)
-}
-
 
 
 
@@ -217,8 +198,20 @@ feat <- function(obj, features, ...) {
     )}
   
   
+  if (is.null(obj$totalUMI) & inherits(obj$raw, "Matrix")) { 
+    obj$totalUMI <- Matrix::colSums(obj$raw)
+  }  
+  if (is.null(obj$totalUMI) & inherits(obj$raw, "matrix")) { 
+    obj$totalUMI <- base::colSums(obj$raw)
+  }  
+  
   l = lapply(features, function(gene) {
-    dat <- feat_data(obj, gene)
+
+    dat <- data.frame(obj$embed,
+                     obj$raw[gene,],
+                     obj$totalUMI)
+    colnames(dat) <- c("X1","X2","k","s")
+    
     dat$expr <- 1e4*dat$k/dat$s # UMI per ten thousand (per10k)
     # Replacing zeros with a tenth of minimum works well I found:
     if(all(dat$k==0)) {
