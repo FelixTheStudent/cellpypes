@@ -6,12 +6,13 @@ Authors@R:
            family = "Frauhammer",
            role = c("aut", "cre"),
            email = "felixfrauhammer@gmail.com")
-Description: cellpypes implements manual thresholding of marker genes to annotate
-    cell types in single-cell RNA sequencing data.
-    cellpypes models technical noise to find positive and negative cells for
-    a given expression threshold, 
-    and the popular piping operator %>% is used to combine rules to complex
+Description: Annotate single-cell RNA sequencing data manually based on
+    marker gene thresholds.
+    Find cell type rules (gene+threshold) through exploration,
+    use the popular piping operator %>% to reconstruct complex
     cell type hierarchies.
+    cellpypes models technical noise to find positive and negative cells for
+    a given expression threshold and returns cell type labels or pseudobulks.
 URL: https://github.com/FelixTheStudent/cellpypes
 BugReports: https://github.com/FelixTheStudent/cellpypes/issues
 License: GPL (>= 3)
