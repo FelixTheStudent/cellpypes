@@ -9,6 +9,7 @@
 #' @param show_feat If TRUE (default), a second panel shows the feature plot of
 #' the relevant gene.
 #' @param what Either "rule" or "class".
+#' @template param_fast
 #' @param legend_rel_width Relative width compared to the other two plots
 #' (only relevant if \code{show_feat=TRUE}). 
 #'
@@ -24,9 +25,13 @@
 #'
 #' @examples
 #' plot_last(rule(simulated_umis, "T", "CD3E",">", 1))
-plot_last <- function(obj, show_feat=TRUE, what="rule",
+plot_last <- function(obj, show_feat=TRUE, what="rule", fast=NULL,
                       legend_rel_width=0.3) {
   check_obj(obj)
+  if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
+  stopifnot(is.logical(fast) && length(fast)==1)
+  
+  
   if(what=="rule") {
     last_rule <- obj$rules[nrow(obj$rules),]
     boolean=evaluate_rule(obj      = obj,
@@ -45,7 +50,6 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
                          V2=obj$embed[,2, drop=T],
                          last=boolean),
          aes_string("V1", "V2", col="last"))+coord_fixed()+
-    geom_point()  +
     xlab( colnames(obj$embed)[1] ) + 
     ylab( colnames(obj$embed)[2] ) +
     ggtitle(plot_title) + 
@@ -54,13 +58,15 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
                                   "FALSE"="#888888")) +
     theme_bw()+
     theme(plot.title = element_text(color="#44AA99"), legend.position = "none")
+  if(fast) {p <- p + geom_point()} else {p <- p+scattermore::geom_scattermore()}
+    
  
   # For saving etc. it is convenient to return the plot directly. 
   # I wanted plotting as side-effect, so with return(invisible(obj)),
   # to enable pipes like rule %>% plot_last %>% rule, but I learned
   # from Sveta that a T-pipe can do this anyways.
   if(show_feat&what=="rule") {
-    pfeat <- feat(obj, last_rule$feature)
+    pfeat <- feat(obj, last_rule$feature, fast=fast)
     legend <- cowplot::get_legend(pfeat +
                                     # create some space to the right of the legend
                                     theme(legend.box.margin = margin(0, 12, 0, 0))
@@ -89,6 +95,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule",
 #' @param base_size The base_size of \link[ggplot2]{theme_bw}, i.e. 
 #' how large text is displayed. Default: 15.
 #' @template classify_params
+#' @template param_fast
 #'
 #' @return A ggplot2 object.
 #' @template cellpypes_obj
@@ -104,10 +111,13 @@ plot_classes <- function(obj,
                          classes=NULL,
                          replace_overlap_with="Unassigned", 
                          return_logical_matrix =FALSE,
+                         fast = NULL,
                          point_size=.4,
                          point_size_legend=2,
                          base_size=15) {
   check_obj(obj)
+  if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
+  stopifnot(is.logical(fast) && length(fast)==1)
   
   labels <- classify(obj,
                      classes=classes, 
@@ -128,9 +138,8 @@ plot_classes <- function(obj,
   } else {
     colnames(obj$embed)
   }
-  ggplot(plot_dat, aes_string("dim1", "dim2", col="class"))+
+  p <- ggplot(plot_dat, aes_string("dim1", "dim2", col="class"))+
     coord_fixed()+
-    geom_point(size=point_size) +
     scale_color_manual(values=colors) + 
     xlab(axis_names[1]) +
     ylab(axis_names[2]) +
@@ -138,6 +147,12 @@ plot_classes <- function(obj,
     ggplot2::guides(
       colour = ggplot2::guide_legend(override.aes = list(size = point_size_legend)))
   
+  if(fast) { 
+    p + geom_point(size=point_size) 
+  } else {
+    p+scattermore::geom_scattermore(pointsize = point_size)
+  }
+    
 }
 
 
@@ -156,6 +171,7 @@ plot_classes <- function(obj,
 #'
 #' @template param_obj
 #' @param features A vector of genes (features) to colour by.
+#' @template param_fast
 #' @param ... Arguments passed to cowplot's \link[cowplot]{plot_grid} function,
 #' for example ncol or rel_widths.
 #' 
@@ -168,8 +184,24 @@ plot_classes <- function(obj,
 #' @importFrom ggplot2 element_blank element_rect element_text
 #' @examples
 #' feat(simulated_umis, "CD3E")
-feat <- function(obj, features, ...) {
+feat <- function(obj, features, fast=NULL, ...) {
   check_obj(obj)
+
+  if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
+  # User may pass features individuall, not as vector, by accident.
+  # This happens to myself once per day, so I want an intelligible error message:
+  if(fast %in% rownames(obj$raw)) stop(paste0(
+    "Make sure to pass features as vector, not individually.\n",
+    "This error appears because the fast is not logical but instead a gene in your object." )
+    )
+  stopifnot(is.logical(fast) && length(fast)==1)
+  
+  # old code from before I had the argument 'fast':
+  #plotgrid_args <- list(...)
+  #if(any(plotgrid_args %in% rownames(obj$raw))) {
+  #  warning(paste0("Make sure to pass features as vector, not individually.\n",
+  #  "This warning appears because arguments in ... are genes in your object." )
+  #  )}
  
   axis_names <- if (is.null(colnames(obj$embed))) {
     c("Dim1", "Dim2")
@@ -189,13 +221,7 @@ feat <- function(obj, features, ...) {
   }
   features <- features[does_exist]
   
-  # User may pass features individuall, not as vector, by accident.
-  # This happens to myself once per day, so I want an intelligible error message:
-  plotgrid_args <- list(...)
-  if(any(plotgrid_args %in% rownames(obj$raw))) {
-    warning(paste0("Make sure to pass features as vector, not individually.\n",
-    "This warning appears because arguments in ... are genes in your object." )
-    )}
+
   
   
   if (is.null(obj$totalUMI) & inherits(obj$raw, "Matrix")) { 
@@ -221,10 +247,9 @@ feat <- function(obj, features, ...) {
                          dat$expr,
                          min(dat$expr[dat$expr>0])/10)
     }
-    ggplot(dat,
+    p <- ggplot(dat,
            aes_string(x = "X1", y = "X2", col = "expr")) +
       coord_fixed() +
-      geom_point(size=.4) +
       ggtitle(gene) + xlab(axis_names[1]) + ylab(axis_names[2]) +
       viridis::scale_color_viridis(
         name = "CP10K",
@@ -235,6 +260,8 @@ feat <- function(obj, features, ...) {
           min_is_zero = any(dat$k==0))
       ) +
       theme_bw()
+    
+    if(fast) {p + geom_point(size=.4) } else {p+scattermore::geom_scattermore()}
       # declutter plots:
       # theme(axis.ticks = element_blank(),
       #       axis.text = element_blank(),
@@ -243,7 +270,7 @@ feat <- function(obj, features, ...) {
       
   })
   
-  if(length(l) == 1) return(l[[1]])   # single plot
+  if(length(l) == 1) return(l[[1]])   # single plot need not be list
 
   cowplot::plot_grid(plotlist = l, ...) 
 }

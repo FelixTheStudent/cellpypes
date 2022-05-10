@@ -39,6 +39,7 @@ Imports:
     cowplot,
     dplyr,
     scales,
-    methods
+    methods,
+    scattermore
 Depends: 
     R (>= 2.10)

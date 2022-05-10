@@ -9,6 +9,7 @@ plot_classes(
   classes = NULL,
   replace_overlap_with = "Unassigned",
   return_logical_matrix = FALSE,
+  fast = NULL,
   point_size = 0.4,
   point_size_legend = 2,
   base_size = 15
@@ -29,6 +30,10 @@ a logical matrix with
 classes in columns and cells in rows is returned instead of resolving
 overlaps with \code{replace_overlap_with}.
 If a single class is supplied, the matrix has exactly one}
+
+\item{fast}{Set this to TRUE if you want fast plotting in spite of many cells
+(using the scattermore package). If NULL (default), cellpypes decides
+automatically and fast plotting is done for more than 10k cells.}
 
 \item{point_size}{Dot size used by \link[ggplot2]{geom_point}.}
 

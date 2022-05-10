@@ -4,7 +4,13 @@
 \alias{plot_last}
 \title{Plot the last modified rule or class}
 \usage{
-plot_last(obj, show_feat = TRUE, what = "rule", legend_rel_width = 0.3)
+plot_last(
+  obj,
+  show_feat = TRUE,
+  what = "rule",
+  fast = NULL,
+  legend_rel_width = 0.3
+)
 }
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
@@ -13,6 +19,10 @@ plot_last(obj, show_feat = TRUE, what = "rule", legend_rel_width = 0.3)
 the relevant gene.}
 
 \item{what}{Either "rule" or "class".}
+
+\item{fast}{Set this to TRUE if you want fast plotting in spite of many cells
+(using the scattermore package). If NULL (default), cellpypes decides
+automatically and fast plotting is done for more than 10k cells.}
 
 \item{legend_rel_width}{Relative width compared to the other two plots
 (only relevant if \code{show_feat=TRUE}).}

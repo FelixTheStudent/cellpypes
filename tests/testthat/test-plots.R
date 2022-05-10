@@ -50,8 +50,11 @@ test_that(
 
 
 test_that("feat gives intelligible error messages", {
-  res <- evaluate_promise(feat(simulated_umis, "CD3E", "MS4A1"))
-  expect_true(grepl("Make sure to pass features as vector", res$warnings[1]))
+  expect_error(feat(simulated_umis, "CD3E", "MS4A1"),
+               "Make sure to pass features as vector")
+  # old code from before I had argument 'fast':
+  # res <- evaluate_promise()
+  # expect_true(grepl("Make sure to pass features as vector", res$warnings[1]))
   
  
 })
