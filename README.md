@@ -269,7 +269,7 @@ pbmc %>%
 <img src="man/figures/README-feat-1.png" width="100%" />
 
 -   The [viridis color
-    scale](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+    scale](https://cran.r-project.org/web/packages/viridis/index.html)
     is used because it encodes higher expression with higher color
     intensity, and is robust to colorblindness.
 -   Default UMAP setting produce crowded embeddings. To avoid
