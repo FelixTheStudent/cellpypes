@@ -58,7 +58,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule", fast=NULL,
                                   "FALSE"="#888888")) +
     theme_bw()+
     theme(plot.title = element_text(color="#44AA99"), legend.position = "none")
-  if(fast) {p <- p + geom_point()} else {p <- p+scattermore::geom_scattermore()}
+  if(fast) {p <- p+scattermore::geom_scattermore()} else {p <- p + geom_point()}
     
  
   # For saving etc. it is convenient to return the plot directly. 
@@ -148,9 +148,9 @@ plot_classes <- function(obj,
       colour = ggplot2::guide_legend(override.aes = list(size = point_size_legend)))
   
   if(fast) { 
-    p + geom_point(size=point_size) 
-  } else {
     p+scattermore::geom_scattermore(pointsize = point_size)
+  } else {
+    p + geom_point(size=point_size) 
   }
     
 }
@@ -261,7 +261,11 @@ feat <- function(obj, features, fast=NULL, ...) {
       ) +
       theme_bw()
     
-    if(fast) {p + geom_point(size=.4) } else {p+scattermore::geom_scattermore()}
+    if(fast) {
+      p+scattermore::geom_scattermore()
+    } else {
+      p + geom_point(size=.4)
+    }
       # declutter plots:
       # theme(axis.ticks = element_blank(),
       #       axis.text = element_blank(),
