@@ -1,0 +1,12 @@
+citHeader("To cite cellpypes in publications use:")
+
+citEntry(
+  entry    = "Manual",
+  title    = "cellpypes - Cell Type Pipes for R",
+  author   = "Felix Frauhammer",
+  journal  = "gitHub package",
+  year     = "2022",
+  url      = "https://github.com/FelixTheStudent/cellpypes",
+  doi      = "10.5281/zenodo.6555728",
+  textVersion = NULL
+)

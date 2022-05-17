@@ -18,6 +18,8 @@ cellpypes – Cell type pipes for R
 }
 </style>
 <!-- badges: start -->
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6555728.svg)](https://doi.org/10.5281/zenodo.6555728)
 <!-- badges: end -->
 
 # Pipe your types!
