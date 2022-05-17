@@ -276,9 +276,9 @@ pbmc %>%
 <img src="man/figures/README-feat-1.png" width="100%" />
 
 -   The [viridis color
-    scale](https://cran.r-project.org/web/packages/viridis/index.html)
-    is used because it encodes higher expression with higher color
-    intensity, and is robust to colorblindness.
+    scale](https://CRAN.R-project.org/package=viridis) is used because
+    it encodes higher expression with higher color intensity, and is
+    robust to colorblindness.
 -   Default UMAP setting produce crowded embeddings. To avoid
     overplotting, we recommend playing with UMAP’s `min_dist` and
     `spread` parameters. Compute UMAP with `spread`=5 and you’ll be able
