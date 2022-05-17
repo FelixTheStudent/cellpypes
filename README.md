@@ -13,11 +13,6 @@ cellpypes – Cell type pipes for R
 -   [FAQ](#faq)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<style type="text/css">
-  body{
-  font-size: 12pt;
-}
-</style>
 <!-- badges: start -->
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6555728.svg)](https://doi.org/10.5281/zenodo.6555728)
