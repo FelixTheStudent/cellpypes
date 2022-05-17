@@ -1,3 +1,11 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* removed the VignetteBuilder field as there are no vignettes in this package
+* updated links to CRAN packages, now using the canonical URL
+* updated link to Bioconductor package, now starting with 'https'
+
+
 ## Test environments
 * local R installation (ubuntu), R 4.1.3
 * win-builder (devel)
