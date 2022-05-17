@@ -3,6 +3,7 @@ cellpypes – Cell type pipes for R
 
 -   [Pipe your types!](#pipe-your-types)
 -   [Installation](#installation)
+-   [Citation](#citation)
 -   [cellpypes input](#cellpypes-input)
 -   [List of functions](#list-of-functions)
 -   [Annotating PBMCs](#annotating-pbmcs)
@@ -55,6 +56,15 @@ Install cellpypes with the following commands:
 # install.packages("devtools")
 devtools::install_github("FelixTheStudent/cellpypes")
 ```
+
+# Citation
+
+To cite cellpypes, download your favorite citation style from
+[zenodo](https://zenodo.org/record/6555728#.YoNNl1xBxH4), type
+`citation("cellpypes")` in R or simply use:
+
+> Frauhammer, Felix, & Anders, Simon. (2022). cellpypes: Cell Type Pipes
+> for R (0.1.1). Zenodo. <https://doi.org/10.5281/zenodo.6555728>
 
 # cellpypes input
 
