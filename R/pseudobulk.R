@@ -132,7 +132,7 @@ pseudobulk_id <- function(factor_df) {
 #' 
 #' @description 
 #' Create a DESeq2 data set (`dds' in the 
-#' \href{www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html}{DESeq2 vignette})
+#' \href{https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html}{DESeq2 vignette})
 #' for the specified class (cell type).
 #'
 #' @return A DESeq2 object (e.g. dds)
