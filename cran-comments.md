@@ -11,4 +11,11 @@
 0 errors | 0 warnings | 1 notes
 
    
-* The Note was: New submission.
+* Note1: New submission.
+
+
+## CRAN incoming feasibility
+
+* Note: Possibly misspelled words in DESCRIPTION:
+    cellpypes  (that's the name of this package, no spelling error)
+    pseudobulks (that's jargon/terminology, no spelling error)
