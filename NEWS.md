@@ -1,3 +1,11 @@
+# cellpypes 0.1.3
+
+* introduced `verbose` argument in function `feat`
+* introduced `seed` argument in function `find_knn`. 
+* fulfill CRAN requirements:
+  - improved DESCRIPTION
+  - replace \dontrun with \donttest in docu examples
+
 # cellpypes 0.1.2
 
 * DOI added
