@@ -172,6 +172,9 @@ plot_classes <- function(obj,
 #' @template param_obj
 #' @param features A vector of genes (features) to colour by.
 #' @template param_fast
+#' @param verbose feat ignores gene names not present in your object and 
+#' warns you about them by default. `verbose`=FALSE will suppress the warning
+#' (not recommended in interactive use).
 #' @param ... Arguments passed to cowplot's \link[cowplot]{plot_grid} function,
 #' for example ncol or rel_widths.
 #' 
@@ -184,7 +187,7 @@ plot_classes <- function(obj,
 #' @importFrom ggplot2 element_blank element_rect element_text
 #' @examples
 #' feat(simulated_umis, "CD3E")
-feat <- function(obj, features, fast=NULL, ...) {
+feat <- function(obj, features, fast=NULL, verbose=TRUE, ...) {
   check_obj(obj)
 
   if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
@@ -213,7 +216,7 @@ feat <- function(obj, features, fast=NULL, ...) {
   features <- unique(features)
   does_exist<- features %in% rownames(obj$raw)
   if(sum(does_exist)==0) stop("None of the supplied features were found in your object.") 
-  if(sum(does_exist) < length(does_exist)) {
+  if(verbose && (sum(does_exist) < length(does_exist))) {
     cat("These features were not found and will be ignored: ",
         "\n",
         paste(features[!does_exist], sep=", "),

@@ -4,7 +4,7 @@
 \alias{feat}
 \title{Feature plots: Color gene expression in 2D embeddings}
 \usage{
-feat(obj, features, fast = NULL, ...)
+feat(obj, features, fast = NULL, verbose = TRUE, ...)
 }
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}
@@ -14,6 +14,10 @@ feat(obj, features, fast = NULL, ...)
 \item{fast}{Set this to TRUE if you want fast plotting in spite of many cells
 (using the scattermore package). If NULL (default), cellpypes decides
 automatically and fast plotting is done for more than 10k cells.}
+
+\item{verbose}{feat ignores gene names not present in your object and
+warns you about them by default. \code{verbose}=FALSE will suppress the warning
+(not recommended in interactive use).}
 
 \item{...}{Arguments passed to cowplot's \link[cowplot]{plot_grid} function,
 for example ncol or rel_widths.}
