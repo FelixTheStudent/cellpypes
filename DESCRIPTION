@@ -1,6 +1,6 @@
 Package: cellpypes
-Title: Cell Type Pipes for Single-Cell RNA Sequencing Data in R
-Version: 0.1.2
+Title: Cell Type Pipes for Single-Cell RNA Sequencing Data
+Version: 0.1.3
 Authors@R: 
     person(given = "Felix",
            family = "Frauhammer",
@@ -9,10 +9,13 @@ Authors@R:
 Description: Annotate single-cell RNA sequencing data manually based on
     marker gene thresholds.
     Find cell type rules (gene+threshold) through exploration,
-    use the popular piping operator %>% to reconstruct complex
+    use the popular piping operator '%>%' to reconstruct complex
     cell type hierarchies.
-    cellpypes models technical noise to find positive and negative cells for
+    'cellpypes' models technical noise to find positive and negative cells for
     a given expression threshold and returns cell type labels or pseudobulks.
+    Cite this package as Frauhammer (2022) <doi:10.5281/zenodo.6555728> and
+    visit <https://github.com/FelixTheStudent/cellpypes> for tutorials and newest
+    features.
 URL: https://github.com/FelixTheStudent/cellpypes
 BugReports: https://github.com/FelixTheStudent/cellpypes/issues
 License: GPL (>= 3)
