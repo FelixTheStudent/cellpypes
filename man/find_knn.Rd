@@ -4,7 +4,7 @@
 \alias{find_knn}
 \title{Find approximate k-nearest neighbors}
 \usage{
-find_knn(featureMatrix, k = 50, n_trees = 50)
+find_knn(featureMatrix, k = 50, n_trees = 50, seed = 42)
 }
 \arguments{
 \item{featureMatrix}{Numeric matrix with features in rows, cells in columns.
@@ -15,6 +15,8 @@ components.}
 
 \item{n_trees}{RccpAnnoy builds a forest  of \code{n_trees} trees.
 More trees gives higher precision when querying. Default: 50.}
+
+\item{seed}{Random seed for neighbor search, default: 42.}
 }
 \value{
 List with two slots:
@@ -29,7 +31,11 @@ Inspired by \code{uwot::umap}'s return value when setting \code{ret_nn=TRUE}.
 }
 \description{
 Implements RcppAnnoy's approximate nearest neighbor search
-(very fast).
+(much faster than precise neighbors).
+Random search is made reproducible using \code{set.seed(seed)}.
+Hint: If you pass \code{find_knn}'s output directly to \code{uwot::umap} via the
+\code{nn_method} argument, make sure to set \code{umap}'s argument \code{n_sgd_threads}
+to <=1 to ensure the UMAP embedding is reproducible.
 }
 \examples{
   # Imagine we have 30 cells and 100 features:

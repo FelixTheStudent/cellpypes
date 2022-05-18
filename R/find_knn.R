@@ -8,9 +8,15 @@
 #' @param k Number of neighbors to find.
 #' @param n_trees RccpAnnoy builds a forest  of \code{n_trees} trees.
 #' More trees gives higher precision when querying. Default: 50.
+#' @param seed Random seed for neighbor search, default: 42.
+#' 
 #' 
 #' @description Implements RcppAnnoy's approximate nearest neighbor search
-#' (very fast).
+#' (much faster than precise neighbors).
+#' Random search is made reproducible using `set.seed(seed)`.
+#' Hint: If you pass `find_knn`'s output directly to `uwot::umap` via the 
+#' `nn_method` argument, make sure to set `umap`'s argument `n_sgd_threads`
+#' to <=1 to ensure the UMAP embedding is reproducible.
 #'
 #' @return List with two slots: 
 #' \itemize{
@@ -29,8 +35,10 @@
 #'  fmat <- matrix(rnorm(3000), ncol=30)
 #'  nn <- find_knn(fmat,k=15)
 #'  # nn$idx has 30 rows and 15 columns.
-find_knn <- function(featureMatrix, k=50,
-                     n_trees = 50) {
+find_knn <- function(featureMatrix,
+                     k=50,
+                     n_trees = 50,
+                     seed=42) {
   
   stopifnot(requireNamespace("RcppAnnoy", quietly = TRUE)) 
   
@@ -38,7 +46,7 @@ find_knn <- function(featureMatrix, k=50,
   featureMatrix <- t(featureMatrix)
   
   # Find nearest neighbors for UMAP and Louvain clustering:
-  set.seed(100) # seed ensures that UMAP gives reproducible result
+  set.seed(seed) # seed ensures that UMAP gives reproducible result
   k_nn <- k 
   annoy <- methods::new( RcppAnnoy::AnnoyEuclidean, ncol(featureMatrix) )
   for( i in 1:nrow(featureMatrix) )
