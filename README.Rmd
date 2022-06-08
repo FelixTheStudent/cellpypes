@@ -125,12 +125,10 @@ obj <- list(
 
 # Object from Seurat:
 obj <- list(
-   list(
     raw      =SeuratObject::GetAssayData(seurat, "counts"),
     neighbors=as(seurat@graphs[["RNA_nn"]], "dgCMatrix")>.1, # sometims "wknn"
     embed    =FetchData(seurat, dimension_names),
     totalUMI = seurat$nCount_RNA
-  ) 
 )
 
 # Object from Seurat (experimental short-cut):
