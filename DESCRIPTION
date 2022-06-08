@@ -1,6 +1,6 @@
 Package: cellpypes
 Title: Cell Type Pipes for Single-Cell RNA Sequencing Data
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: 
     person(given = "Felix",
            family = "Frauhammer",
