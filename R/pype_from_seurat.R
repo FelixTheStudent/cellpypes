@@ -41,7 +41,13 @@ pype_from_seurat <- function(seurat, graph_name=NULL) {
     seurat_graph_prefixes <- c("integrated","WNN", "SCT", "RNA") 
     graph_choices <- c(paste0(seurat_graph_prefixes, "_snn"),
                        paste0(seurat_graph_prefixes, "_nn"))
-    graph_choice <- graph_choices[graph_choices %in% names(seurat@graphs)][1]
+    
+    graph_choices <- graph_choices[graph_choices %in% names(seurat@graphs)]
+    if(length(graph_choices)>0) {
+      graph_choice <- graph_choices[1]
+    } else {
+      stop("No neighbor graph found. Try passing names(seurat@graphs) to argument graph_name.")
+    }
     
   } else { # user-supplied graph_name
     stopifnot("graph_name not present in names(seurat@graphs)"=graph_name %in% names(seurat@graphs))
