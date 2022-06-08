@@ -33,7 +33,8 @@ If a single class is supplied, the matrix has exactly one}
 
 \item{fast}{Set this to TRUE if you want fast plotting in spite of many cells
 (using the scattermore package). If NULL (default), cellpypes decides
-automatically and fast plotting is done for more than 10k cells.}
+automatically and fast plotting is done for more than 10k cells, if FALSE
+it always uses \code{geom_point}.}
 
 \item{point_size}{Dot size used by \link[ggplot2]{geom_point}.}
 

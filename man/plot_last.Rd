@@ -22,7 +22,8 @@ the relevant gene.}
 
 \item{fast}{Set this to TRUE if you want fast plotting in spite of many cells
 (using the scattermore package). If NULL (default), cellpypes decides
-automatically and fast plotting is done for more than 10k cells.}
+automatically and fast plotting is done for more than 10k cells, if FALSE
+it always uses \code{geom_point}.}
 
 \item{legend_rel_width}{Relative width compared to the other two plots
 (only relevant if \code{show_feat=TRUE}).}

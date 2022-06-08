@@ -4,10 +4,14 @@
 \alias{pype_from_seurat}
 \title{Convert Seurat to cellpypes object.}
 \usage{
-pype_from_seurat(seurat)
+pype_from_seurat(seurat, graph_name = NULL)
 }
 \arguments{
 \item{seurat}{A Seurat object.}
+
+\item{graph_name}{Supply one of the graphs. To see options, type
+\code{names(seurat@graphs)}. If left empty (\code{NULL}, the default),
+\code{pype_from_seurat} will try to guess the correct name for you.}
 }
 \value{
 A cellpypes object.
