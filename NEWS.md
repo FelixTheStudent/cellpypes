@@ -1,6 +1,6 @@
 # cellpypes 0.1.4
 
-* pype_from_seurat has parameter `graph_name` now. 
+* pype_from_seurat has parameter `graph_name` now (#17). 
 * minor:
   - pype_code_template checks it's input is integer
 
