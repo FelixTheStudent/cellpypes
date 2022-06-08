@@ -38,7 +38,7 @@ pype_from_seurat <- function(seurat, graph_name=NULL) {
     }
     
     # order matters:
-    seurat_graph_prefixes <- c("Integrated","WNN", "SCT", "RNA") 
+    seurat_graph_prefixes <- c("integrated","WNN", "SCT", "RNA") 
     graph_choices <- c(paste0(seurat_graph_prefixes, "_snn"),
                        paste0(seurat_graph_prefixes, "_nn"))
     graph_choice <- graph_choices[graph_choices %in% names(seurat@graphs)][1]
