@@ -17,7 +17,7 @@
 #' @examples
 #' pype_code_template()
 pype_code_template <- function(n_rules=3) {
-  rlang::is_integerish(n_rules)
+  stopifnot("n_rules must be an integer"=rlang::is_integerish(n_rules))
   stopifnot("n_rules must be scalar."=length(n_rules)==1)
   stopifnot("n_rules must be a positive integer."=n_rules>0)
   is_integerish <- is.integer(n_rules) || (is.numeric(n_rules) && 
