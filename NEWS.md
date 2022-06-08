@@ -1,3 +1,10 @@
+# cellpypes 0.1.4
+
+* pype_from_seurat has parameter `graph_name` now. 
+* minor:
+  - pype_code_template checks it's input is integer
+
+
 # cellpypes 0.1.3
 
 * introduced `verbose` argument in function `feat`
