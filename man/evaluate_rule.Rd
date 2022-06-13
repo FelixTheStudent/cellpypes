@@ -4,7 +4,7 @@
 \alias{evaluate_rule}
 \title{Evaluate rule to obtain positive / negative cells}
 \usage{
-evaluate_rule(obj, feature, operator, threshold)
+evaluate_rule(obj, feature, operator, threshold, overdispersion = 0.01)
 }
 \arguments{
 \item{obj}{A cellpypes object, see section \strong{cellpypes Objects} below.}

@@ -285,18 +285,17 @@ We just can't prove they all had CD3E mRNA due to data sparsity.
 ### Math/statistics behind cellpypes 
 
 
-  * cellpypes models UMI counts as Poisson random variable,
-  which approximates the negative binomial distribution for 
-  small expression strengths
-  and
-  [appears to fit single-cell data well](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1861-6).
+  * cellpypes models UMI counts as negative binomial (NB) random variable
+    with a fixed overdisperions of 0.01 (`size` parameter of 100 in R's `pnbinom`),
+    as recommended by Lause, Berens and Kobak 
+    ([Genome Biology 2021](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02451-7#Sec1)).
   * The marker gene UMI counts are summed up across a cell and its neighbors,
   forming the pooled counts `K`. 
-  * Summation allows cellpypes to use the Poisson distribution when comparing
+  * Summation allows cellpypes to use the NB distribution when comparing
   expression `K` with the user-provided threshold `t`, because 
-  [the sum across Poisson random variables is again a Poisson random variable](https://en.wikipedia.org/wiki/Poisson_distribution#Sums_of_Poisson-distributed_random_variables).
+  [the sum across NB random variables is again an NB random variable](https://en.wikipedia.org/wiki/Negative_binomial_distribution#Distribution_of_a_sum_of_geometrically_distributed_random_variables).
   * cellpypes checks if the summed counts `K` are likely to have come from 
-  a Poisson distribution with rate parameter `t*S`, where `t` is the CP10K
+  an NB distribution with rate parameter `t*S`, where `t` is the CP10K
   threshold supplied through the `rule` function, 
   and `S` is the sum of totalUMI counts from the cell and its neighbors.
   If it is very likely, the counts are too close to the threshold to 

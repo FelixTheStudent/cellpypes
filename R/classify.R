@@ -121,9 +121,10 @@ classify <- function(
     # If NULL, uses all childless classes (leafs).
     # unique(obj$classes$class) returns both leafs and parents.
   replace_overlap_with="Unassigned", # alternatives: 'common_parent', NA or any scalar character
-  return_logical_matrix =FALSE # ignore overlap/unassigned rules and just output 
+  return_logical_matrix =FALSE, # ignore overlap/unassigned rules and just output 
   # a logical matrix. If a single class is supplied, the matrix has exactly one
   # column and the user can pipe it into "drop" to convert it to a vector.
+  overdispersion=0.01
 ) {
   # checks specific for classify: classes have to be present in obj$classes
   # other sanity checks:
@@ -157,7 +158,7 @@ classify <- function(
   #   so we can use rules_info to subset rules_eval below.
   rules_info <-obj$rules[obj$rules$class %in% relevant_classes, ]
   rules_eval <- mapply(FUN=evaluate_rule,
-                       MoreArgs=list(obj=obj),
+                       MoreArgs=list(obj=obj, overdispersion=overdispersion),
                        feature=rules_info$feature,
                        operator=rules_info$operator,
                        threshold=rules_info$threshold)

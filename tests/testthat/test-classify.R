@@ -8,7 +8,7 @@ test_that("Classify returns the expected factor", {
   x <- rule(x, "B", "CD3E", "<", 1)
   expect_equal(
     as.numeric(table(classify(obj=x, classes=c("T", "Treg", "Treg_act", "B")))),
-    c(551, 24, 27, 654, 644))
+    c(551, 24, 27, 653, 645))
 
 })
 
@@ -23,7 +23,7 @@ test_that("replace_overlap_with may be one of the classes", {
   expect_error(replace_with_class(), NA)
   # check that same numbers as last time come out:
   expect_equal(tabulate(replace_with_class()),
-               c(339, 270, 1291)
+               c(356, 253, 1291)
                )
 })
 
@@ -37,7 +37,7 @@ test_that("classify's boolean output is as expected.", {
   expect_equal(dim(res),
                dim(matrix(rep(FALSE,ncol(simulated_umis$raw)),
                           ncol=1)))
-  expect_equal(sum(res), 133)
+  expect_equal(sum(res), 103)
   expect_true(is.logical(res))
 })
 

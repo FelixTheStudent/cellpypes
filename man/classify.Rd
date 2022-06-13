@@ -8,7 +8,8 @@ classify(
   obj,
   classes = NULL,
   replace_overlap_with = "Unassigned",
-  return_logical_matrix = FALSE
+  return_logical_matrix = FALSE,
+  overdispersion = 0.01
 )
 }
 \arguments{
@@ -25,7 +26,16 @@ See section \strong{Handling overlap}.}
 a logical matrix with
 classes in columns and cells in rows is returned instead of resolving
 overlaps with \code{replace_overlap_with}.
-If a single class is supplied, the matrix has exactly one}
+If a single class is supplied, the matrix has exactly one
+column and the user can pipe it into "drop" to convert it to a vector.}
+
+\item{overdispersion}{Defaults to 0.01, only change it if you know
+what you are doing.
+If set to 0, the NB simplifies to the Poisson distribution, and larger
+values give more variance.
+The 0.01 default value follows the recommendation by
+Lause, Berens and Kobak (Genome Biology 2021) to use
+\code{size=100} in \link[stats]{pnbinom} for typical data sets.}
 }
 \value{
 A factor with cell type labels.

@@ -12,6 +12,8 @@
 #' @template param_fast
 #' @param legend_rel_width Relative width compared to the other two plots
 #' (only relevant if \code{show_feat=TRUE}). 
+#' @param overdisperions Defaults to 0.01, only change if you know what you
+#' are doing. See further \link[cellpypes]{classify}.
 #'
 #' @return Returns a ggplot2 object with the plot.
 #' 
@@ -26,7 +28,7 @@
 #' @examples
 #' plot_last(rule(simulated_umis, "T", "CD3E",">", 1))
 plot_last <- function(obj, show_feat=TRUE, what="rule", fast=NULL,
-                      legend_rel_width=0.3) {
+                      legend_rel_width=0.3, overdispersion=0.01) {
   check_obj(obj)
   if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
   stopifnot(is.logical(fast) && length(fast)==1)
@@ -37,7 +39,8 @@ plot_last <- function(obj, show_feat=TRUE, what="rule", fast=NULL,
     boolean=evaluate_rule(obj      = obj,
                           feature  = last_rule$feature,
                           operator = last_rule$operator, 
-                          threshold=last_rule$threshold)
+                          threshold=last_rule$threshold,
+                          overdispersion=overdispersion)
     plot_title <- paste0(last_rule$feature, " ", last_rule$operator, " ",
                          1e4*last_rule$threshold, " CP10K")
   } else if (what=="class") {
@@ -114,7 +117,8 @@ plot_classes <- function(obj,
                          fast = NULL,
                          point_size=.4,
                          point_size_legend=2,
-                         base_size=15) {
+                         base_size=15,
+                         overdisperion=0.01) {
   check_obj(obj)
   if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
   stopifnot(is.logical(fast) && length(fast)==1)

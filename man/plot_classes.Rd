@@ -12,7 +12,8 @@ plot_classes(
   fast = NULL,
   point_size = 0.4,
   point_size_legend = 2,
-  base_size = 15
+  base_size = 15,
+  overdisperion = 0.01
 )
 }
 \arguments{
@@ -29,7 +30,8 @@ See section \strong{Handling overlap}.}
 a logical matrix with
 classes in columns and cells in rows is returned instead of resolving
 overlaps with \code{replace_overlap_with}.
-If a single class is supplied, the matrix has exactly one}
+If a single class is supplied, the matrix has exactly one
+column and the user can pipe it into "drop" to convert it to a vector.}
 
 \item{fast}{Set this to TRUE if you want fast plotting in spite of many cells
 (using the scattermore package). If NULL (default), cellpypes decides
@@ -43,6 +45,14 @@ Legend colors are easier to read with larger points.}
 
 \item{base_size}{The base_size of \link[ggplot2]{theme_bw}, i.e.
 how large text is displayed. Default: 15.}
+
+\item{overdispersion}{Defaults to 0.01, only change it if you know
+what you are doing.
+If set to 0, the NB simplifies to the Poisson distribution, and larger
+values give more variance.
+The 0.01 default value follows the recommendation by
+Lause, Berens and Kobak (Genome Biology 2021) to use
+\code{size=100} in \link[stats]{pnbinom} for typical data sets.}
 }
 \value{
 A ggplot2 object.

@@ -9,7 +9,8 @@ plot_last(
   show_feat = TRUE,
   what = "rule",
   fast = NULL,
-  legend_rel_width = 0.3
+  legend_rel_width = 0.3,
+  overdispersion = 0.01
 )
 }
 \arguments{
@@ -27,6 +28,9 @@ it always uses \code{geom_point}.}
 
 \item{legend_rel_width}{Relative width compared to the other two plots
 (only relevant if \code{show_feat=TRUE}).}
+
+\item{overdisperions}{Defaults to 0.01, only change if you know what you
+are doing. See further \link[cellpypes]{classify}.}
 }
 \value{
 Returns a ggplot2 object with the plot.

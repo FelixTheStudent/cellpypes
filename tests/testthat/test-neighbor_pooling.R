@@ -46,6 +46,6 @@ test_that("pooling with square matrix gives expected result", {
 
 test_that("evaluate_rule gives expected result", {
   expect_equal(602, sum(evaluate_rule(simulated_umis, "CD3E", ">", 1e-04)))
-  expect_equal(66, sum(evaluate_rule(simulated_umis, "FOXP3", ">", 1e-04)))
+  expect_equal(64, sum(evaluate_rule(simulated_umis, "FOXP3", ">", 1e-04)))
 })
 

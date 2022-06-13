@@ -1,5 +1,6 @@
 # cellpypes 0.1.4
 
+* use Negative Binomial instead of Poisson
 * pype_from_seurat has parameter `graph_name` now (#17). 
 * minor:
   - pype_code_template checks it's input is integer
