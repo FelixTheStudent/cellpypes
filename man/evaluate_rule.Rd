@@ -15,7 +15,8 @@ evaluate_rule(obj, feature, operator, threshold, overdispersion = 0.01)
 "<" for negative markers (MS4A1-).}
 
 \item{threshold}{Numeric scalar with the expression threshold separating positive
-from negative cells.}
+from negative cells. Evaluate_rule expects a plain fraction, not CP10K
+(while rule has the use_CP10K argument).}
 
 \item{class}{A character scalar with the class.}
 }
