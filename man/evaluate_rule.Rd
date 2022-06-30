@@ -18,6 +18,14 @@ evaluate_rule(obj, feature, operator, threshold, overdispersion = 0.01)
 from negative cells. Evaluate_rule expects a plain fraction, not CP10K
 (while rule has the use_CP10K argument).}
 
+\item{overdispersion}{Defaults to 0.01, only change it if you know
+what you are doing.
+If set to 0, the NB simplifies to the Poisson distribution, and larger
+values give more variance.
+The 0.01 default value follows the recommendation by
+Lause, Berens and Kobak (Genome Biology 2021) to use
+\code{size=100} in \link[stats]{pnbinom} for typical data sets.}
+
 \item{class}{A character scalar with the class.}
 }
 \value{

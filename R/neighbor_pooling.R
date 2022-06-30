@@ -50,6 +50,14 @@ pool_across_neighbors <- function(x, neighbors) {
 #' @param threshold Numeric scalar with the expression threshold separating positive
 #' from negative cells. Evaluate_rule expects a plain fraction, not CP10K
 #' (while rule has the use_CP10K argument).
+#' @param overdispersion Defaults to 0.01, only change it if you know
+#' what you are doing.
+#' If set to 0, the NB simplifies to the Poisson distribution, and larger
+#' values give more variance.
+#' The 0.01 default value follows the recommendation by
+#' Lause, Berens and Kobak (Genome Biology 2021) to use
+#' `size=100` in \link[stats]{pnbinom} for typical data sets.
+#' 
 #' 
 #' @description The rule is defined by feature, operator and threshold.
 #'
@@ -65,7 +73,7 @@ evaluate_rule <- function(obj,
                           threshold,
                           overdispersion=0.01) {
   # This is a separate function for two reasons:
-  #    * evaluate_rule uses Poisson, I was considering NB at some point as well
+  #    * count pooling with NB is just one of many options I might implement
   #    * it's being used by classify AND by plot_last, so separate function.
   
   
