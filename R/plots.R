@@ -103,6 +103,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule", fast=NULL,
 #' @return A ggplot2 object.
 #' @template cellpypes_obj
 #' @template handling_overlap
+#' @template knn_refine
 #' 
 #' @export
 #' 
@@ -112,6 +113,7 @@ plot_last <- function(obj, show_feat=TRUE, what="rule", fast=NULL,
 #' plot_classes(rule(simulated_umis, "T", "CD3E",">", 1))
 plot_classes <- function(obj,
                          classes=NULL,
+                         knn_refine=0,
                          replace_overlap_with="Unassigned", 
                          return_logical_matrix =FALSE,
                          fast = NULL,
@@ -125,6 +127,7 @@ plot_classes <- function(obj,
   
   labels <- classify(obj,
                      classes=classes, 
+                     knn_refine = knn_refine,
                      replace_overlap_with=replace_overlap_with, 
                      return_logical_matrix=return_logical_matrix) 
   if(is.logical(labels)) stop("Please set return_logical_matrix to FALSE.")

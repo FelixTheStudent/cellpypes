@@ -7,6 +7,7 @@
 plot_classes(
   obj,
   classes = NULL,
+  knn_refine = 0,
   replace_overlap_with = "Unassigned",
   return_logical_matrix = FALSE,
   fast = NULL,
@@ -22,6 +23,11 @@ plot_classes(
 \item{classes}{Character vector with one or more class names.
 If NULL (the default), plots finest available cell types
 (all classes that are not parent of any other class).}
+
+\item{knn_refine}{Numeric between 0 and 1. If 0, do not refine labels
+obtained from UMI count pooling.
+If larger than 0 (recommended: 0.1), cellpypes will try to label
+unassigned cells by majority vote, see section \strong{knn_refine} below.}
 
 \item{replace_overlap_with}{Character string, by default: \code{"Unassigned"}.
 See section \strong{Handling overlap}.}
@@ -106,6 +112,35 @@ parent (Ttox) or any other ancestor (Tcell), but instead the
 most detailed cell type (PD1+Ttox) is returned.
 
 All of the above is also true for \code{plot_classes}, as it wraps \code{classify}.
+}
+
+\section{knn_refine}{
+
+With \code{knn_refine > 0}, cellpypes refines cell type labels with a kNN classifier.
+
+By default, cellpypes only assigns cells to a class if all relevant rules
+apply.
+In other words, marker gene UMI counts in the cell's neighborhood all have to
+be clearly above/below their threshold.
+Since UMI counts are sparse (even after neighbor pooling done by cellpypes),
+this can leave many cells unassigned.
+
+It is reasonable to assume a unassigned cell is of the same cell type as the
+majority of its nearest neighbors.
+Therefore, cellpypes implements a kNN classifier to refine the labels from
+manually thresholding UMI counts.
+\code{knn_refine = 0.3} means a cell is assigned the class label held by
+most of its neighbors unless no class gets more than 30 \%.
+If most neighbors are unassigned, the cell will also be set to "Unassigned".
+Choosing \code{knn_refine = 0.3} gives results reminiscent of clustering
+(which assigns all cells),
+while \code{knn_refine = 0.5} leaves cells 'in between' two similar
+cell types unassigned.
+We recommend looking at \code{knn_refine =  0} first as it's faster and
+more directly tied to marker gene expression.
+If assigning all cells is desired, we recommend \code{knn_refine = 0.3} or lower,
+while \code{knn_refine = 0.5} makes cell types more 'crisp' by setting cells
+'in between' related subtypes to "Unassigned".
 }
 
 \examples{
