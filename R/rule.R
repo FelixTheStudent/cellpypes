@@ -123,6 +123,7 @@ rule <- function(obj,
                  threshold,
                  parent = NULL,
                  use_CP10K=TRUE) {
+  if(inherits(obj, "Seurat")) {obj <- pype_from_seurat(obj)}
   # check inputs:
   check_obj(obj)
   if( any(is.null(obj), is.null(class), is.null(feature), is.null(threshold) )) { 

@@ -195,6 +195,7 @@ plot_classes <- function(obj,
 #' @examples
 #' feat(simulated_umis, "CD3E")
 feat <- function(obj, features, fast=NULL, verbose=TRUE, ...) {
+  if(inherits(obj, "Seurat")) {obj <- pype_from_seurat(obj)}
   check_obj(obj)
 
   if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
