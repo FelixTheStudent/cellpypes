@@ -14,7 +14,7 @@ plot_classes(
   point_size = 0.4,
   point_size_legend = 2,
   base_size = 15,
-  overdisperion = 0.01
+  overdispersion = 0.01
 )
 }
 \arguments{

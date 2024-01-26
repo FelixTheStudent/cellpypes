@@ -12,7 +12,7 @@
 #' @template param_fast
 #' @param legend_rel_width Relative width compared to the other two plots
 #' (only relevant if \code{show_feat=TRUE}). 
-#' @param overdisperion Defaults to 0.01, only change if you know what you
+#' @param overdispersion Defaults to 0.01, only change if you know what you
 #' are doing. See further \link[cellpypes]{classify}.
 #'
 #' @return Returns a ggplot2 object with the plot.
@@ -120,7 +120,7 @@ plot_classes <- function(obj,
                          point_size=.4,
                          point_size_legend=2,
                          base_size=15,
-                         overdisperion=0.01) {
+                         overdispersion=0.01) {
   check_obj(obj)
   if(is.null(fast)) fast <- ifelse(ncol(obj$raw)>10e3, TRUE, FALSE)
   stopifnot(is.logical(fast) && length(fast)==1)
