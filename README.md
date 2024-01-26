@@ -71,13 +71,13 @@ cellpypes input has four slots:
     data.frame or tibble with two columns and one row per cell.
 -   `neighbors`: index matrix with one row per cell and k-nearest
     neighbor indices in columns. We recommend k=50, but generally
-    15&lt;k&lt;100 works well. Here are two ways to get the `neighbors`
+    15\<k\<100 works well. Here are two ways to get the `neighbors`
     index matrix:
     -   Use `find_knn(featureMatrix)$idx`, where featureMatrix could be
         principal components, latent variables or normalized genes
         (features in rows, cells in columns).
     -   use `as(seurat@graphs[["RNA_nn"]], "dgCMatrix")>.1` to extract
-        the kNN graph computed on RNA. This also works with RNA\_snn,
+        the kNN graph computed on RNA. This also works with RNA_snn,
         wknn/wsnn or any other available graph – check with
         `names(seurat@graphs)`.
 
@@ -148,6 +148,7 @@ pype <- seurat_object %>%
   rule("Memory CD4+",  "S100A4", ">", 13,  parent="CD4+ T")
 
 plot_classes(pype)+ggtitle("PBMCs annotated with cellpypes")
+#> as(<lgCMatrix>, "dgCMatrix") is deprecated since Matrix 1.5-0; do as(., "dMatrix") instead
 ```
 
 <img src="man/figures/README-pbmc_rules-1.png" width="100%" />
@@ -182,7 +183,7 @@ cellpypes uses CP10K (counts per 10 thousand) in functions `rule` and
     between 0.1 and 10 CP10K.
 -   A typical mammalian cell can be expected to have around 10K UMIs in
     total ([100K
-    mRNAs](http://book.bionumbers.org/how-many-mrnas-are-in-a-cell/)
+    mRNAs](https://book.bionumbers.org/how-many-mrnas-are-in-a-cell/)
     captured with [10 % conversion
     rate](https://kb.10xgenomics.com/hc/en-us/articles/360001539051-What-fraction-of-mRNA-transcripts-are-captured-per-cell-)),
     so 1 CP10K means roughly 1 UMI in a typical cell.
@@ -287,7 +288,7 @@ pbmc %>%
     (e.g. 1 CP10K), simply because NKG7 goes up to 381 CP10K in some
     cells.
 
-### rule and plot\_last
+### rule and plot_last
 
 Create a few cell type `rule`s and plot the most recent one with
 `plot_last`:
@@ -321,7 +322,7 @@ pbmc %>%
     assignment. You can generate a template with neat text alignment
     with `pype_code_template()`.
 
-### classify and plot\_classes
+### classify and plot_classes
 
 Get cell type labels with `classify` or plot them directly with
 `plot_classes` (which wraps ggplot2 code around `classify`):
@@ -348,7 +349,10 @@ pbmc2 %>% plot_classes(c("Tcell", "CD8+ T")) + ggtitle("T cells")
 
 ``` r
 head(classify(pbmc2))
-#> [1] Unassigned Bcell      Unassigned Unassigned Unassigned Unassigned
+#> AAACATACAACCAC-1 AAACATTGAGCTAC-1 AAACATTGATCAGC-1 AAACCGTGCTTCCG-1 
+#>       Unassigned            Bcell       Unassigned       Unassigned 
+#> AAACCGTGTATGCG-1 AAACGCACTGGTAC-1 
+#>       Unassigned       Unassigned 
 #> Levels: Bcell CD14+ Mono CD8+ T Unassigned
 ```
 
@@ -366,7 +370,7 @@ head(classify(pbmc2))
     (e.g. `Tcell` and `CD8+ T`), the more detailed class is returned
     (`CD8+ T`).
 
-### class\_to\_deseq2
+### class_to_deseq2
 
 Let’s imagine the PBMC data had multiple patients and treatment
 conditions (we made them up here for illustraion):
@@ -422,7 +426,7 @@ data.frame(results(dds)) %>% arrange(padj) %>% head
 In this dummy example, there is no real DE to find because we assigned
 cells randomly to treated/control.
 
-### pseudobulk and pseudobulk\_id
+### pseudobulk and pseudobulk_id
 
 Instead of piping into DESeq2 directly, you can also form pseudobulks
 with `pseudobulk` and helper function `pseudobulk_id`. This can be

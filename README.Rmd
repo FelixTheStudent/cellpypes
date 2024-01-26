@@ -237,7 +237,7 @@ This is why and what that means:
   * For marker genes, CP10K 
     typically lie in the human-friendly range between 0.1 and 10 CP10K.
   * A typical mammalian cell can be expected to have around 10K UMIs in total
-  ([100K mRNAs](http://book.bionumbers.org/how-many-mrnas-are-in-a-cell/) 
+  ([100K mRNAs](https://book.bionumbers.org/how-many-mrnas-are-in-a-cell/) 
   captured with 
   [10 % conversion rate](https://kb.10xgenomics.com/hc/en-us/articles/360001539051-What-fraction-of-mRNA-transcripts-are-captured-per-cell-)),
   so 1 CP10K means roughly 1 UMI in a typical cell.
