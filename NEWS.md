@@ -1,3 +1,7 @@
+# cellpypes 0.2.1
+
+* fix documentation to pass new CRAN checks
+
 # cellpypes 0.2.0
 
 * use Negative Binomial instead of Poisson
