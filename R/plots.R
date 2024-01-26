@@ -256,7 +256,7 @@ feat <- function(obj, features, fast=NULL, verbose=TRUE, ...) {
     } else {
       dat$expr <- ifelse(dat$expr > 0,
                          dat$expr,
-                         min(dat$expr[dat$expr>0])/10)
+                         min(dat$expr[dat$expr>0], na.rm = TRUE)/10)
     }
     p <- ggplot(dat,
            aes_string(x = "X1", y = "X2", col = "expr")) +
