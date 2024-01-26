@@ -29,7 +29,7 @@ it always uses \code{geom_point}.}
 \item{legend_rel_width}{Relative width compared to the other two plots
 (only relevant if \code{show_feat=TRUE}).}
 
-\item{overdisperions}{Defaults to 0.01, only change if you know what you
+\item{overdisperion}{Defaults to 0.01, only change if you know what you
 are doing. See further \link[cellpypes]{classify}.}
 }
 \value{

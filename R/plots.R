@@ -12,7 +12,7 @@
 #' @template param_fast
 #' @param legend_rel_width Relative width compared to the other two plots
 #' (only relevant if \code{show_feat=TRUE}). 
-#' @param overdisperions Defaults to 0.01, only change if you know what you
+#' @param overdisperion Defaults to 0.01, only change if you know what you
 #' are doing. See further \link[cellpypes]{classify}.
 #'
 #' @return Returns a ggplot2 object with the plot.
