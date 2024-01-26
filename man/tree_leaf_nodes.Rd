@@ -7,10 +7,10 @@
 tree_leaf_nodes(classes, invert = FALSE)
 }
 \arguments{
-\item{classes.}{Put obj$classes here, i.e. a tree of class definitions
+\item{classes}{Put obj$classes here, i.e. a tree of class definitions
 created with the rule function.}
 
-\item{invert.}{If TRUE, return classes that are NOT leafs instead of leaf nodes.}
+\item{invert}{If TRUE, return classes that are NOT leafs instead of leaf nodes.}
 }
 \value{
 Character vector with the tree's leafs.

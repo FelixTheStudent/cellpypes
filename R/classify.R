@@ -11,9 +11,9 @@
 
 #' Finds leaf nodes, i.e. classes without children
 #'
-#' @param classes. Put obj$classes here, i.e. a tree of class definitions 
+#' @param classes Put obj$classes here, i.e. a tree of class definitions 
 #' created with the rule function.
-#' @param invert. If TRUE, return classes that are NOT leafs instead of leaf nodes.
+#' @param invert If TRUE, return classes that are NOT leafs instead of leaf nodes.
 #'
 #' @return Character vector with the tree's leafs.
 #' @keywords internal
