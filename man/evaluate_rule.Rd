@@ -25,8 +25,6 @@ values give more variance.
 The 0.01 default value follows the recommendation by
 Lause, Berens and Kobak (Genome Biology 2021) to use
 \code{size=100} in \link[stats]{pnbinom} for typical data sets.}
-
-\item{class}{A character scalar with the class.}
 }
 \value{
 logical vector stating for each cell whether the rule is true.
