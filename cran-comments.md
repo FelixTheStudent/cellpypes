@@ -1,21 +1,18 @@
 
 ## Test environments
-* local R installation (ubuntu), R 4.1.3
+* local R installation (ubuntu), R 4.2.1
 * win-builder (devel)
-* win-builder (release)
-* win-builder (oldrelease)
-* macOS 10.13.6 High Sierra, R-release, CRAN's setup (rhub::check())
 
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 notes
 
    
+## Note to reviewer
+I was asked to correct before 2024-02-19: Rd \usage sections check NOTEs.
 
 
 ## CRAN incoming feasibility
-
-* Note: Possibly misspelled words in DESCRIPTION:
-    cellpypes  (that's the name of this package, no spelling error)
-    pseudobulks (that's jargon/terminology, no spelling error)
+* Note: possible invalid URL is valid
+  (https://kb.10xgenomics.com/hc/en-us/articles/360001539051-What-fraction-of-mRNA-transcripts-are-captured-per-cell-)
